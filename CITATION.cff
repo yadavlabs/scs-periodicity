@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software or its released data archive, please cite the archived release."
+title: "Axonal spike-count regimes link spinal cord stimulation periodicity to artificial sensory detection and discrimination in rodents"
+type: software
+version: 1.0.0
+authors:
+  - family-names: Tvrdy
+    given-names: Taylor J.
+    affiliation: "University of North Carolina at Chapel Hill"
+  - family-names: Bhattacharya
+    given-names: Aditi
+    affiliation: "Max Planck Institute for Biological Intelligence"
+  - family-names: Radhakrishna
+    given-names: Rahul
+    affiliation: "University of North Carolina at Chapel Hill"
+  - family-names: Slack
+    given-names: Jacob C.
+    affiliation: "University of North Carolina at Chapel Hill"
+  - family-names: Yadav
+    given-names: Amol P.
+    affiliation: "University of North Carolina at Chapel Hill"
+keywords:
+  - spinal cord stimulation
+  - computational model
+  - aperiodic stimulation
+  - artificial sensations
+  - axonal spikes

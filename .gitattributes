@@ -1,0 +1,13 @@
+# Normalize line endings: store LF in the repository.
+* text=auto eol=lf
+*.ipynb text eol=lf
+*.sbatch text eol=lf
+*.sh text eol=lf
+
+# Preserve non-text data and figure assets byte-for-byte.
+*.pdf binary
+*.png binary
+*.xlsx binary
+*.npz binary
+*.pkl binary
+*.zip binary

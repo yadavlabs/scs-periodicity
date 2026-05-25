@@ -1,0 +1,35 @@
+{
+  "title": "Axonal spike-count regimes link spinal cord stimulation periodicity to artificial sensory detection and discrimination in rodents",
+  "upload_type": "software",
+  "description": "Reviewer-facing notebooks, figure-generation code, and reproducibility materials accompanying the manuscript \"Axonal spike-count regimes link spinal cord stimulation periodicity to artificial sensory detection and discrimination in rodents.\"",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Tvrdy, Taylor J.",
+      "affiliation": "University of North Carolina at Chapel Hill"
+    },
+    {
+      "name": "Bhattacharya, Aditi",
+      "affiliation": "Max Planck Institute for Biological Intelligence"
+    },
+    {
+      "name": "Radhakrishna, Rahul",
+      "affiliation": "University of North Carolina at Chapel Hill"
+    },
+    {
+      "name": "Slack, Jacob C.",
+      "affiliation": "University of North Carolina at Chapel Hill"
+    },
+    {
+      "name": "Yadav, Amol P.",
+      "affiliation": "University of North Carolina at Chapel Hill"
+    }
+  ],
+  "keywords": [
+    "spinal cord stimulation",
+    "computational model",
+    "aperiodic stimulation",
+    "artificial sensations",
+    "axonal spikes"
+  ]
+}

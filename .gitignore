@@ -1,0 +1,67 @@
+# Python bytecode and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Notebook/editor state
+.ipynb_checkpoints/
+.jupyter_ignore_results
+*.code-workspace
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+
+# Local logs and temporary files
+*.log
+*.tmp
+logs/
+
+# GitHub Release / Zenodo archive products
+scs-periodicity-release-data*.zip
+scs-periodicity-release-data*.sha256
+scs-periodicity-release-data*-manifest.csv
+scs-periodicity-hpc-data.tar.gz
+scs-periodicity-hpc.tar.gz
+
+# Generated data products distributed through Zenodo
+data/detection/generated/
+data/discrimination/data_manifest.json
+data/discrimination/run_config.json
+data/discrimination/per-block/
+data/discrimination/per-point/
+data/partials/
+data/space-time-V/generated/
+data/time-patterns/generated/
+data_old/
+
+# Derived reviewer caches distributed through Zenodo, except static composites
+notebooks/cache/*
+!notebooks/cache/README.md
+!notebooks/cache/static-figures/
+!notebooks/cache/static-figures/**
+
+# HPC/generated outputs
+results/discrimination/
+results/executed_notebooks/
+results/figures/
+results/npz_files.txt
+
+# NEURON build artifacts
+hpc_tools/MRG_model/*.o
+hpc_tools/MRG_model/*.c
+hpc_tools/MRG_model/*.dll
+hpc_tools/MRG_model/*.cpp
+hpc_tools/MRG_model/AXNODE.mod
+hpc_tools/MRG_model/MRGaxon.hoc
+hpc_tools/MRG_model/MRGaxon.ses
+hpc_tools/MRG_model/mosinit.hoc
+hpc_tools/MRG_model/README
+hpc_tools/MRG_model/MODELDB_SOURCE.txt
+hpc_tools/MRG_model/x86_64/
+
+# COMSOL binaries
+*.mph
+*.mphbin
+*.mphz
