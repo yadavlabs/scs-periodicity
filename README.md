@@ -26,10 +26,10 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-5. Open `notebooks/06_FigureGeneration.ipynb`, or execute it directly:
+5. Open `notebooks/06_FigureGeneration.ipynb` and run its cells:
 
 ```powershell
-jupyter nbconvert --to notebook --execute "notebooks/06_FigureGeneration.ipynb" --output-dir "results/executed_notebooks" --ExecutePreprocessor.timeout=-1
+jupyter lab notebooks/06_FigureGeneration.ipynb
 ```
 
 Generated manuscript figures are written to `results/figures/`.
@@ -42,7 +42,7 @@ notebooks/cache/ Cached intermediate tables and static composite figures
 src/             Analysis, plotting, and local release-packaging code
 data/            Small pipeline inputs in Git; full outputs from release ZIP
 hpc_tools/       Longleaf/SLURM regeneration workflow and MRG installer
-results/         Local figure and executed-notebook outputs
+results/         Local manuscript figure outputs
 ```
 
 The notebooks follow the analysis in order:
@@ -70,9 +70,12 @@ scs-periodicity-release-data.zip
   CITATION.cff
 ```
 
-The same ZIP and SHA-256 checksum should be attached to the GitHub Release and
-uploaded to Zenodo. This gives reviewers one extraction step while preserving
-an archived DOI-backed copy of the released data.
+Attach the ZIP, its SHA-256 checksum, and the generated manifest CSV to each
+GitHub Release. Because Zenodo's GitHub integration may archive only the source
+ZIP, assemble the matching Zenodo version as a draft containing the GitHub
+source ZIP and these three release-data assets, then publish the complete
+version once. This gives reviewers one extraction step while preserving an
+archived DOI-backed copy of the released data.
 
 The figure notebook uses computed cache files by default for fast redraws. To
 recompute figure intermediates from the archived pipeline data, set
@@ -91,11 +94,21 @@ maintainer creates the release asset locally with:
 python src/package_data.py
 ```
 
+This writes:
+
+```text
+scs-periodicity-release-data.zip
+scs-periodicity-release-data.sha256
+scs-periodicity-release-data-manifest.csv
+```
+
 ## Citation
 
 Citation metadata are provided in [`CITATION.cff`](CITATION.cff) and
-[`.zenodo.json`](.zenodo.json). Once the first Zenodo release is published,
-the DOI should be added here and cited for the archived release.
+[`.zenodo.json`](.zenodo.json). Archived releases are available from Zenodo
+through the version-independent concept DOI
+[10.5281/zenodo.20370976](https://doi.org/10.5281/zenodo.20370976); cite the
+specific version used for an analysis.
 
 ## License
 

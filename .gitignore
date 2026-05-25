@@ -44,7 +44,6 @@ notebooks/cache/*
 
 # HPC/generated outputs
 results/discrimination/
-results/executed_notebooks/
 results/figures/
 results/npz_files.txt
 

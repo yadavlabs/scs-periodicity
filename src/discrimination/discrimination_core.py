@@ -4447,6 +4447,85 @@ def model_comparison_pivot(data: DiscriminationData, *, include_block_means: boo
     return pd.concat(frames).loc[:, pivot.columns]
 
 
+def _holm_adjust(p_values: Sequence[float]) -> np.ndarray:
+    values = np.asarray(p_values, dtype=float)
+    adjusted = np.full(values.shape, np.nan, dtype=float)
+    valid = np.flatnonzero(np.isfinite(values))
+    if valid.size == 0:
+        return adjusted
+    ordered = valid[np.argsort(values[valid])]
+    running = 0.0
+    for rank, index in enumerate(ordered):
+        running = max(running, min(1.0, float(values[index]) * (len(ordered) - rank)))
+        adjusted[index] = running
+    return adjusted
+
+
+def _significance_tier(p_value: float) -> str:
+    if not np.isfinite(p_value):
+        return "NA"
+    if p_value < 0.001:
+        return "***"
+    if p_value < 0.01:
+        return "**"
+    if p_value < 0.05:
+        return "*"
+    return "ns"
+
+
+def model_performance_statistics_table(data: DiscriminationData) -> pd.DataFrame:
+    """Return Supplementary Table 2 paired RMSE model comparisons.
+
+    Each observation is a Monte Carlo block-mean RMSE, averaged across the
+    four manuscript frequencies. All fixed per-block model pairs are tested
+    with two-sided paired Wilcoxon tests, with Holm correction within block.
+    """
+
+    from scipy.stats import wilcoxon
+
+    unit = (
+        data.per_block_results[data.per_block_results["model_bank"].isin(RELEASE_MODEL_BANKS)]
+        .groupby(["block", "mc", "model_bank"], as_index=False)
+        .agg(rmse=("rmse_test", "mean"))
+    )
+    rows: list[dict[str, Any]] = []
+    for block in BLOCKS:
+        paired = (
+            unit[unit["block"] == block]
+            .pivot(index="mc", columns="model_bank", values="rmse")
+            .dropna(subset=list(RELEASE_MODEL_BANKS))
+        )
+        block_rows: list[dict[str, Any]] = []
+        p_values: list[float] = []
+        for first_index, model_a in enumerate(RELEASE_MODEL_BANKS):
+            for model_b in RELEASE_MODEL_BANKS[first_index + 1 :]:
+                a = paired[model_a].to_numpy(dtype=float)
+                b = paired[model_b].to_numpy(dtype=float)
+                p_value = float(wilcoxon(a, b, alternative="two-sided", zero_method="wilcox").pvalue)
+                mean_a = float(np.mean(a))
+                mean_b = float(np.mean(b))
+                block_rows.append(
+                    {
+                        "block": block,
+                        "model_a": MODEL_LABELS[model_a],
+                        "model_b": MODEL_LABELS[model_b],
+                        "n_paired_mc": int(len(paired)),
+                        "mean_rmse_a": mean_a,
+                        "mean_rmse_b": mean_b,
+                        "mean_difference_a_minus_b": mean_a - mean_b,
+                        "lower_rmse_model": MODEL_LABELS[model_a if mean_a <= mean_b else model_b],
+                        "p_raw": p_value,
+                    }
+                )
+                p_values.append(p_value)
+        adjusted = _holm_adjust(p_values)
+        for row, p_value in zip(block_rows, adjusted):
+            row["p_holm"] = float(p_value)
+            row["significance"] = _significance_tier(float(p_value))
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def best_per_block_models(data: DiscriminationData) -> pd.DataFrame:
     """Identify the lowest-RMSE per-block model in each panel."""
 
@@ -4693,6 +4772,7 @@ __all__ = [
     "run_table",
     "model_comparison_pivot",
     "model_comparison_table",
+    "model_performance_statistics_table",
     "per_block_model_winners",
     "per_block_regime_weight_summary",
     "per_block_weight_summary",

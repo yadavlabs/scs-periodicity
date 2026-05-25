@@ -1,6 +1,7 @@
 {
   "title": "Axonal spike-count regimes link spinal cord stimulation periodicity to artificial sensory detection and discrimination in rodents",
   "upload_type": "software",
+  "version": "1.0.2",
   "description": "Reviewer-facing notebooks, figure-generation code, and reproducibility materials accompanying the manuscript \"Axonal spike-count regimes link spinal cord stimulation periodicity to artificial sensory detection and discrimination in rodents.\"",
   "access_right": "open",
   "creators": [

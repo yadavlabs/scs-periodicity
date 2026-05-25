@@ -8,6 +8,10 @@ pipeline outputs.
   `04_FeatureEngineering.ipynb`.
 - `cache_detection_isi_rep_stats_absref_1.10ms.csv`: detection
   inter-spike-interval summary cache used by `06_FigureGeneration.ipynb`.
+- `table_supp02_periodicity_model_performance_statistics.csv`: paired
+  Wilcoxon/Holm model-comparison results reported in Supplementary Table 2.
+- `rate_reliance_*.csv`: repetition-level Figure 5 summaries and the paired
+  block/frequency comparisons used for displayed significance markers.
 - `static-figures/`: static schematic panels extracted from the manuscript draft
   for display in `06_FigureGeneration.ipynb`.
 
