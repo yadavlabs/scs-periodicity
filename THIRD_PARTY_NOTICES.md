@@ -13,10 +13,14 @@ mammalian nerve fibers: influence of afterpotentials on the recovery cycle.
 *Journal of Neurophysiology* 87:995-1006, 2002.
 
 No explicit redistribution license was identified for these files. This
-repository therefore does not redistribute the upstream model source. During
-optional HPC setup, `hpc_tools/install_mrg_model.py` downloads the upstream
-ModelDB mirror at a pinned revision for the user's local computation. Users
-should cite both ModelDB and McIntyre et al. when using the model.
+repository therefore does not redistribute the upstream model source or the
+derived population HOC. During HPC setup, `hpc_tools/install_mrg_model.py`
+downloads the upstream ModelDB mirror at a pinned revision and
+`hpc_tools/build_population_mrg.py` generates the population HOC locally.
+The generator replaces fixed geometry values with the six-diameter,
+phase-dependent node configuration and removes the interactive IClamp panel;
+the biophysical equations and diameter table remain those of the upstream
+model. Users should cite both ModelDB and McIntyre et al. when using the model.
 
 ## BioRender Content in Figures 1 and 2
 

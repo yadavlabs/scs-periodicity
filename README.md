@@ -1,120 +1,58 @@
-# SCS Periodicity Behavioral Prediction
+# SCS periodicity: population analysis
 
-This repository accompanies the manuscript:
-
+This repository is being updated for the accepted population-axon version of
 **Axonal spike-count regimes link spinal cord stimulation periodicity to
-artificial sensory detection and discrimination in rodents**
+artificial sensory detection and discrimination in rodents**. The current
+working tree is a v1.1.0 release candidate; the published v1.0.2 archive remains
+the historical single-axon release.
 
-It contains reviewer-facing notebooks, figure-generation code, and an optional
-HPC workflow for regenerating the simulation and behavioral-model outputs.
+The population cohort has 35 COMSOL trajectories, six MRG diameters, and two
+nodal phases per trajectory (420 axons). An index axon defines the stimulation
+amplitudes; responses across the full cohort support detection and periodicity
+discrimination analyses.
 
-## Quick Start
+## Repository contents
 
-The easiest way to inspect the analysis or recreate manuscript figures is:
+- `notebooks/population/`: ordered notebooks for time patterns, Ve bases,
+  detection, features, discrimination, and manuscript figures.
+- `src/population/`: the population simulation, analysis, and figure code.
+- `data/`: source COMSOL cutlines, Slack inputs, generated time patterns, the
+  420 Ve bases, and the reference index screen.
+- `hpc_tools/` and `slurm/population/`: Longleaf upload, pilot, and full
+  regeneration workflows.
+- `tests/`: population analysis and figure checks.
 
-1. Clone this GitHub repository.
-2. Download `scs-periodicity-release-data.zip` from the GitHub Release
-   or the matching Zenodo record.
-3. Extract the ZIP into the repository root. It populates `data/` and
-   `notebooks/cache/`.
-4. Install the notebook environment:
+The upstream MRG files are downloaded at a pinned ModelDB commit during HPC
+setup. A small generator makes the HOC geometry configurable for the six axon
+diameters and two spatial phases; it preserves the upstream biophysics and does
+not redistribute the upstream HOC. See [MRG_model/README.md](MRG_model/README.md)
+and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-```
+## HPC test run
 
-5. Open `notebooks/06_FigureGeneration.ipynb` and run its cells:
+The transferred cohort passes the local preflight: 35 cutlines, 55 time
+patterns, 420 Ve bases, and reference index axon `S01_140um_ph1`. Longleaf
+pilot job `7866889` completed successfully with three passing checks across
+two diameters and both nodal phases. See [hpc_tools/README.md](hpc_tools/README.md)
+for the pilot and full-run commands. The pilot wrote only under
+`results/population/pilot/`.
 
-```powershell
-jupyter lab notebooks/06_FigureGeneration.ipynb
-```
+## Data release
 
-Generated manuscript figures are written to `results/figures/`.
-
-## Contents
-
-```text
-notebooks/       Ordered review notebooks for stages 01-06
-notebooks/cache/ Cached intermediate tables and static composite figures
-src/             Analysis, plotting, and local release-packaging code
-data/            Small pipeline inputs in Git; full outputs from release ZIP
-hpc_tools/       Longleaf/SLURM regeneration workflow and MRG installer
-results/         Local manuscript figure outputs
-```
-
-The notebooks follow the analysis in order:
-
-1. `01_TimePatterns_Generator.ipynb`
-2. `02_SpaceTimeV_Generator.ipynb`
-3. `03_DetectionThresholds.ipynb`
-4. `04_FeatureEngineering.ipynb`
-5. `05_PeriodicityDiscrimination.ipynb`
-6. `06_FigureGeneration.ipynb`
-
-## Data Distribution
-
-Git tracks the code and the small source inputs needed for full regeneration,
-including COMSOL exports, source data tables, and the static composite figures.
-Generated pipeline outputs and computed notebook caches are distributed in one
-release archive:
-
-```text
-scs-periodicity-release-data.zip
-  data/
-  notebooks/cache/
-  LICENSE
-  THIRD_PARTY_NOTICES.md
-  CITATION.cff
-```
-
-Attach the ZIP, its SHA-256 checksum, and the generated manifest CSV to each
-GitHub Release. Because Zenodo's GitHub integration may archive only the source
-ZIP, assemble the matching Zenodo version as a draft containing the GitHub
-source ZIP and these three release-data assets, then publish the complete
-version once. This gives reviewers one extraction step while preserving an
-archived DOI-backed copy of the released data.
-
-The figure notebook uses computed cache files by default for fast redraws. To
-recompute figure intermediates from the archived pipeline data, set
-`USE_NB_CACHE = False` in its first cell and rerun the notebook.
-
-## Full Regeneration
-
-Full regeneration requires an HPC system with SLURM and NEURON. Instructions
-for uploading a minimal HPC workspace, running a pilot, running the full
-pipeline, and retrieving the resulting data are in [hpc_tools/README.md](hpc_tools/README.md).
-
-After retrieving new HPC outputs and rebuilding the local notebook cache, a
-maintainer creates the release asset locally with:
-
-```powershell
-python src/package_data.py
-```
-
-This writes:
-
-```text
-scs-periodicity-release-data.zip
-scs-periodicity-release-data.sha256
-scs-periodicity-release-data-manifest.csv
-```
-
-## Citation
-
-Citation metadata are provided in [`CITATION.cff`](CITATION.cff) and
-[`.zenodo.json`](.zenodo.json). Archived releases are available from Zenodo
-through the version-independent concept DOI
-[10.5281/zenodo.20370976](https://doi.org/10.5281/zenodo.20370976); cite the
-specific version used for an analysis.
+Generated population response tables and fitted observer outputs are too large
+for the Git source tree. `src/package_data.py` selects them and the figure
+exports for the v1.1.0 data ZIP. The source ZIP contains the COMSOL, Slack,
+time-pattern, Ve-basis, and reference inputs; the data ZIP adds only generated
+outputs, so the two archives have no duplicate paths.
+Run `python src/package_data.py --dry-run` to inspect the selection, then
+`python src/package_data.py` to build the ZIP, SHA-256 checksum, and file
+manifest. The packager rejects missing production outputs and historical
+single-axon paths. After depositing the validated archive as a new Zenodo
+version, use that version's DOI in the manuscript Data Availability statement.
+The exact four-file deposit is described in [RELEASE_V1.1.0.md](RELEASE_V1.1.0.md).
 
 ## License
 
-Original project code is released under the BSD 3-Clause License, and
-project-authored research data and derived tables are released under CC BY 4.0.
-The upstream MRG model is retrieved from ModelDB only when running optional HPC
-regeneration. Figures 1 and 2 include BioRender content and are excluded from
-the CC BY data grant. See [`LICENSE`](LICENSE) and
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+Original project code is BSD 3-Clause; project-authored research data and
+derived tables are CC BY 4.0. Upstream MRG files and BioRender material have
+separate rights described in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

@@ -1,4 +1,4 @@
-"""Print SLURM resource information useful for choosing pipeline flags."""
+"""Print Longleaf/SLURM and NEURON information relevant to this pipeline."""
 
 from __future__ import annotations
 
@@ -6,51 +6,56 @@ import argparse
 import os
 import shutil
 import subprocess
+import sys
 
 
-def _run_probe(label: str, cmd: list[str]) -> int:
+def _probe(label: str, command: list[str]) -> int:
     print(f"\n[{label}]")
-    if shutil.which(cmd[0]) is None:
-        print(f"{cmd[0]} not found on PATH.")
+    if shutil.which(command[0]) is None:
+        print(f"{command[0]} not found on PATH")
         return 127
-    proc = subprocess.run(
-        cmd,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
+    result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    if result.stdout.strip():
+        print(result.stdout.strip())
+    if result.stderr.strip():
+        print(result.stderr.strip())
+    if result.returncode:
+        print(f"Command exited with status {result.returncode}")
+    return int(result.returncode)
+
+
+def _slurm_limits() -> int:
+    print("\n[SLURM configured limits]")
+    if shutil.which("scontrol") is None:
+        print("scontrol not found on PATH")
+        return 127
+    result = subprocess.run(
+        ["scontrol", "show", "config"], text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
     )
-    if proc.stdout.strip():
-        print(proc.stdout.strip())
-    if proc.stderr.strip():
-        print(proc.stderr.strip())
-    if proc.returncode != 0:
-        print(f"Command exited with status {proc.returncode}.")
-    return int(proc.returncode)
+    wanted = ("MaxArraySize", "MaxJobCount", "MaxStepCount")
+    lines = [line.strip() for line in result.stdout.splitlines() if line.strip().startswith(wanted)]
+    print("\n".join(lines) if lines else "No array/job limit lines returned")
+    if result.stderr.strip():
+        print(result.stderr.strip())
+    return int(result.returncode)
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Query SLURM limits for HPC pipeline submission.")
-    parser.add_argument("--user", default=os.environ.get("USER") or os.environ.get("USERNAME"), help="Cluster username.")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--user", default=os.environ.get("USER") or os.environ.get("USERNAME"))
     args = parser.parse_args()
-
     user = args.user or "$USER"
-    print("SLURM resource query")
-    print("Use these values to choose --partition, --account, --qos, CPU, memory, and wall-time flags.")
+    print(f"Python: {sys.version.split()[0]} ({sys.executable})")
     statuses = [
-        _run_probe("sbatch", ["sbatch", "--version"]),
-        _run_probe("partitions", ["sinfo", "-s", "-o", "%P %c %m %l %a"]),
-        _run_probe(
+        _probe("SLURM", ["sbatch", "--version"]),
+        _slurm_limits(),
+        _probe("partitions", ["sinfo", "-s", "-o", "%P %c %m %l %a"]),
+        _probe(
             "user associations",
-            [
-                "sacctmgr",
-                "show",
-                "assoc",
-                f"user={user}",
-                "format=Account,Partition,QOS,MaxTRESPerJob,MaxWall",
-                "-P",
-            ],
+            ["sacctmgr", "show", "assoc", f"user={user}", "format=Account,Partition,QOS,MaxTRESPerJob,MaxWall", "-P"],
         ),
+        _probe("NEURON", [sys.executable, "-c", "import neuron; print(neuron.__version__)"]),
     ]
     return 0 if any(status == 0 for status in statuses) else 1
 

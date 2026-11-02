@@ -7,7 +7,10 @@ import shutil
 import tempfile
 import urllib.request
 import zipfile
+import subprocess
 from pathlib import Path
+
+from build_population_mrg import build
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -57,17 +60,25 @@ def install_model(target: Path, *, force: bool = False) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Install the pinned upstream MRG model from ModelDB for HPC regeneration."
-    )
+    parser = argparse.ArgumentParser(description="Install pinned MRG sources and build the population model locally.")
     parser.add_argument(
         "--target",
-        default=str(REPO_ROOT / "hpc_tools" / "MRG_model"),
+        default=str(REPO_ROOT / "MRG_model"),
         help="Directory receiving the ModelDB model files.",
     )
     parser.add_argument("--force", action="store_true", help="Replace any existing model files.")
+    parser.add_argument("--compile", action="store_true", help="Compile AXNODE.mod for the current NEURON platform.")
     args = parser.parse_args()
-    install_model(Path(args.target).resolve(), force=bool(args.force))
+    target = Path(args.target).resolve()
+    existing = [target / name for name in MODEL_FILES if (target / name).is_file()]
+    if args.force or not existing:
+        install_model(target, force=bool(args.force))
+    elif len(existing) != len(MODEL_FILES):
+        raise FileNotFoundError(f"Incomplete MRG installation at {target}; use --force to replace it")
+    template = build(target / "MRGaxon.hoc", target / "MRGaxon_population_template.hoc")
+    print(f"Built population template: {template}")
+    if args.compile:
+        subprocess.run(["nrnivmodl"], cwd=target, check=True)
     return 0
 
 

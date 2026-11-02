@@ -1,5 +1,7 @@
+# Minimal runtime for the population SpaceTimeV and detection stages.
 joblib==1.5.2
 numpy==2.4.4
 pandas==2.3.3
 scipy==1.16.3
 tqdm==4.67.1
+neuron>=8.2

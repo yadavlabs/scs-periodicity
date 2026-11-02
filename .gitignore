@@ -17,48 +17,23 @@ Thumbs.db
 *.log
 *.tmp
 logs/
+.legacy-single-axon/
 
 # GitHub Release / Zenodo archive products
-scs-periodicity-release-data*.zip
-scs-periodicity-release-data*.sha256
-scs-periodicity-release-data*-manifest.csv
-scs-periodicity-hpc-data.tar.gz
-scs-periodicity-hpc.tar.gz
+scs-periodicity-[0-9]*.zip
+scs-periodicity-population-release-data*.zip
+scs-periodicity-population-release-data*.sha256
+scs-periodicity-population-release-data*-manifest.csv
 
-# Generated data products distributed through Zenodo
-data/detection/generated/
-data/discrimination/data_manifest.json
-data/discrimination/run_config.json
-data/discrimination/per-block/
-data/discrimination/per-point/
-data/partials/
-data/space-time-V/generated/
-data/time-patterns/generated/
-data_old/
+# The population model is generated locally from the pinned ModelDB download.
+MRG_model/*
+!MRG_model/README.md
 
-# Derived reviewer caches distributed through Zenodo, except static composites
-notebooks/cache/*
-!notebooks/cache/README.md
-!notebooks/cache/static-figures/
-!notebooks/cache/static-figures/**
-
-# HPC/generated outputs
-results/discrimination/
-results/figures/
-results/npz_files.txt
-
-# NEURON build artifacts
-hpc_tools/MRG_model/*.o
-hpc_tools/MRG_model/*.c
-hpc_tools/MRG_model/*.dll
-hpc_tools/MRG_model/*.cpp
-hpc_tools/MRG_model/AXNODE.mod
-hpc_tools/MRG_model/MRGaxon.hoc
-hpc_tools/MRG_model/MRGaxon.ses
-hpc_tools/MRG_model/mosinit.hoc
-hpc_tools/MRG_model/README
-hpc_tools/MRG_model/MODELDB_SOURCE.txt
-hpc_tools/MRG_model/x86_64/
+# Population simulation outputs are distributed as release data, not Git objects.
+data/space-time-V/population/*SpaceTimeV.npz
+data/detection/population/
+data/features/population/
+results/population/
 
 # COMSOL binaries
 *.mph
