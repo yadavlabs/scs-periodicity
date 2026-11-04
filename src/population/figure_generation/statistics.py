@@ -26,10 +26,10 @@ from population.manuscript_v2 import select
 
 FREQS = (20., 50., 100., 200.)
 GAINS = ('gain_rate_1ms', 'gain_rate_10ms', 'gain_timing_1ms', 'gain_timing_10ms')
-FOCUS = 'results/population/discrimination_v5_scope_hypothesis_full'
-LOCKED = 'results/population/discrimination_locked_mixture_followup'
-CONTROL = 'results/population/discrimination'
-EVIDENCE = 'data/features/population/population_cv0_template_evidence.csv'
+FOCUS = 'results/discrimination_v5_scope_hypothesis_full'
+LOCKED = 'results/discrimination_locked_mixture_followup'
+CONTROL = 'results/discrimination'
+EVIDENCE = 'data/features/population_cv0_template_evidence.csv'
 SCOPES = {'primary_hybrid': 'primary', 'crossed_hybrid': 'crossed', 'per_panel_hybrid': 'per_panel'}
 
 
@@ -294,7 +294,7 @@ would be a separate analysis. Failure to reject is not equivalence.
 
 def run_statistics(root, output=None, *, seed=20260929, n_perm=10000, n_boot=5000):
     root = Path(root).resolve()
-    output = Path(output) if output else root / 'results/population/figures_v3/statistics'
+    output = Path(output) if output else root / 'results/figures/statistics'
     output.mkdir(parents=True, exist_ok=True)
     inputs = set()
 

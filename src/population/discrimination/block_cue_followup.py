@@ -35,7 +35,7 @@ def main():
         print("Follow-up fingerprints verified.")
         return
     from population.discrimination.discrimination_core import preflight
-    evidence = root / "data/features/population/population_cv0_template_evidence.csv"
+    evidence = root / "data/features/population_cv0_template_evidence.csv"
     behavior = root / "data/discrimination/slack"
     report = preflight(str(evidence), str(behavior), (20., 50., 100., 200.))
     if report["simulation_replicates"] != 100 or report["behavior_rows"] != 88:

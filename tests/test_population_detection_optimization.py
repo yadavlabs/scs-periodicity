@@ -325,7 +325,7 @@ class PopulationDetectionOptimizationTests(unittest.TestCase):
     def test_population_manifest_selects_cohort_without_deleting_old_bases(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            basis_dir = root / "data" / "space-time-V" / "population"
+            basis_dir = root / "data" / "space-time-V"
             basis_dir.mkdir(parents=True)
             for axon_id in ("C01_57um", "C02_57um", "C03_57um"):
                 (basis_dir / f"{axon_id}_1uA_VeBasis.npz").touch()

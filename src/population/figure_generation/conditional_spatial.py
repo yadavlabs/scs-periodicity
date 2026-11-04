@@ -54,8 +54,8 @@ def extract_statistics(root, output, trials):
     """Read all 100 reps at Imax, audit against independent trial totals, cache only aggregates."""
     paths = response_paths(root)
     index_path = root / 'data/detection/population/index_regime_amplitudes.csv'
-    refresh = root / 'results/population/detection/imax_population_refresh'
-    if json.loads((refresh / 'merge_manifest.json').read_text())['index_sha256'] != digest(index_path):
+    refresh = root / 'results/detection'
+    if json.loads((refresh / 'true_population_trial_summary_manifest.json').read_text())['index_sha256'] != digest(index_path):
         raise ValueError('True-CV responses do not match current index amplitudes')
     fingerprints = dict(version=1, index_sha256=digest(index_path), cvs=MAP_CVS,
                         frequencies=FREQUENCIES, n_repetitions=100, regime='I_all',
@@ -83,7 +83,7 @@ def extract_statistics(root, output, trials):
     trial_keys = ['mode', 'freq', 'cv', 'rep_index', 'thresh_type']
     if data.duplicated(trial_keys + ['target_axon_id']).any() or not data.groupby(trial_keys).size().eq(420).all():
         raise ValueError('Invalid per-trial axon coverage')
-    basis = pd.read_csv(root / 'data/space-time-V/population/axon_basis_manifest.csv')
+    basis = pd.read_csv(root / 'data/space-time-V/axon_basis_manifest.csv')
     identities = data[['target_axon_id', 'target_cutline_id', 'target_diameter_um']].drop_duplicates()
     if set(identities.target_axon_id) != set(basis.axon_id):
         raise ValueError('Response axon identities differ from the 420-axon basis')
@@ -189,8 +189,8 @@ def draw_figure(stats, summaries):
 def prepare_data(root, output):
     """Validate current sources and export plot data and interpretation notes."""
     (output / '_data').mkdir(parents=True, exist_ok=True)
-    true_path = root / 'results/population/detection/imax_population_refresh/true_population_trial_summary.csv'
-    cv0_path = root / 'data/features/population/population_cv0_based_features.csv'
+    true_path = root / 'results/detection/true_population_trial_summary.csv'
+    cv0_path = root / 'data/features/population_cv0_based_features.csv'
     true = pd.read_csv(true_path).rename(columns={'total_population_spikes': 'population_spikes'})
     cv0 = pd.read_csv(cv0_path)
     cv0['population_spikes'] = cv0.source_total_population_spikes
@@ -247,7 +247,7 @@ def manuscript_figure(v2):
 def main():
     plt.switch_backend('Agg')
     root = Path(__file__).resolve().parents[3]
-    output = root / 'results/population/figures_v3/exploratory_s5/consolidated_prototype/conditional_mean_opacity'
+    output = root / 'results/figures/exploratory_s5/consolidated_prototype/conditional_mean_opacity'
     stats, summaries = prepare_data(root, output)
     fig = draw_figure(stats, summaries)
     for ext in ['png', 'pdf']:

@@ -65,12 +65,12 @@ def extract(root, output, frequencies=None, cvs=None, repetitions=None):
     if set(repetitions) != set(frequencies):
         raise ValueError('Provide exactly one repetition for each requested frequency')
     output.mkdir(parents=True, exist_ok=True)
-    refresh = root / 'results/population/detection/imax_population_refresh'
+    refresh = root / 'results/detection'
     index_path = root / 'data/detection/population/index_regime_amplitudes.csv'
-    manifest = json.loads((refresh / 'merge_manifest.json').read_text())
+    manifest = json.loads((refresh / 'true_population_trial_summary_manifest.json').read_text())
     if manifest['index_sha256'] != digest(index_path):
         raise ValueError('True-response refresh does not match the current index amplitudes')
-    paths = {'true': refresh / 'population_responses.csv',
+    paths = {'true': root / 'data/detection/population/population_responses.csv',
              'cv0': root / 'data/detection/population/population_cv0_based_responses.csv'}
     fingerprint = {'version': 1, 'index_sha256': digest(index_path),
                    'sources': {mode: dict(path=str(p), size=p.stat().st_size, mtime_ns=p.stat().st_mtime_ns)
@@ -105,7 +105,7 @@ def extract(root, output, frequencies=None, cvs=None, repetitions=None):
         raise ValueError('Cached responses do not match selected repetitions')
     if len(data) != 2 * len(frequencies) * len(cvs) * 9 * 420 or not data.groupby(keys).size().eq(420).all():
         raise ValueError('Incomplete spatial response subset')
-    basis = pd.read_csv(root / 'data/space-time-V/population/axon_basis_manifest.csv')
+    basis = pd.read_csv(root / 'data/space-time-V/axon_basis_manifest.csv')
     if set(data.target_axon_id) != set(basis.axon_id) or len(basis) != 420:
         raise ValueError('Spatial axon identities do not match the 420-axon basis')
     identities = data[['target_axon_id', 'target_cutline_id', 'target_diameter_um']].drop_duplicates().merge(
@@ -129,7 +129,7 @@ def extract(root, output, frequencies=None, cvs=None, repetitions=None):
             source = pd.read_csv(refresh / 'true_population_trial_summary.csv')
             spike_column = 'total_population_spikes'
         else:
-            source = pd.read_csv(root / 'data/features/population/population_cv0_based_features.csv')
+            source = pd.read_csv(root / 'data/features/population_cv0_based_features.csv')
             spike_column = 'source_total_population_spikes'
         paired = observed.reset_index().merge(source, on=['freq', 'cv', 'rep_index', 'thresh_type'], validate='one_to_one')
         if len(paired) != len(frequencies) * len(cvs) * 9 or not np.allclose(paired.total_spikes, paired[spike_column]):
@@ -344,7 +344,7 @@ def main():
     if args.legacy and args.max_cv0_recruitment:
         parser.error('--max-cv0-recruitment applies to dense sheets, not --legacy')
     root = Path(__file__).resolve().parents[3]
-    output = root / 'results/population/figures_v3/exploratory_s5'
+    output = root / 'results/figures/exploratory_s5'
     if not args.legacy:
         frequencies = [10, 20, 50, 100, 200]
         cvs = np.round(np.linspace(0, 1, 11), 1).tolist()
@@ -352,7 +352,7 @@ def main():
         if args.max_cv0_recruitment:
             output = output / 'max_cv0_recruitment'
             (output / '_data').mkdir(parents=True, exist_ok=True)
-            feature_path = root / 'data/features/population/population_cv0_based_features.csv'
+            feature_path = root / 'data/features/population_cv0_based_features.csv'
             ranking = rank_recruitment_repetitions(pd.read_csv(feature_path), frequencies, cvs)
             winners = ranking[ranking.selected]
             repetitions = {int(r.freq): int(r.rep_index) for r in winners.itertuples()}

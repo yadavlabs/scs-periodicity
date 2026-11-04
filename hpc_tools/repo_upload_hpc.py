@@ -1,7 +1,7 @@
 """Package or stream the population workspace to Longleaf.
 
 The default upload includes code, SLURM files, population input bases,
-and compact population-observer inputs. The MRG model is installed remotely.
+and behavioral source inputs. The MRG model is installed remotely.
 Complete remote environments and large generated outputs are excluded.
 """
 
@@ -28,19 +28,20 @@ CODE_PATHS = (
     "requirements.txt",
     "hpc_tools",
     "src",
-    "notebooks/population",
-    "slurm/population",
+    "notebooks",
+    "slurm",
 )
 UPSTREAM_INPUT_PATHS = (
     "data/comsol",
+    "data/time-patterns/slack",
     "data/time-patterns/population",
-    "data/population/reference/index-screen",
+    "data/reference/index-screen",
+    "data/detection/behavior_fit_inputs",
 )
 DETECTION_INPUT_PATHS = (
-    "data/space-time-V/population",
+    "data/space-time-V",
 )
 OBSERVER_INPUT_PATHS = (
-    "data/features/population/population_cv0_template_evidence.csv",
     "data/detection/slack",
     "data/discrimination/slack",
 )
@@ -195,12 +196,12 @@ def remote_command(
     if submit_pilot:
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
-            "sbatch --parsable slurm/population/pilot/00_smoke.sbatch",
+            "sbatch --parsable slurm/pilot/00_smoke.sbatch",
         ])
     elif submit:
         submit_script = (
-            "slurm/population/detection/run_detection_pipeline.sh"
-            if detection_only else "slurm/population/run_population_pipeline.sh"
+            "slurm/detection/run_detection_pipeline.sh"
+            if detection_only else "slurm/run_population_pipeline.sh"
         )
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
@@ -209,7 +210,7 @@ def remote_command(
     elif submit_discrimination:
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
-            "bash slurm/population/discrimination/run_population_discrimination_pipeline.sh",
+            "bash slurm/discrimination/run_population_discrimination_pipeline.sh",
         ])
     return "; ".join(commands)
 
@@ -347,9 +348,9 @@ def main() -> int:
     print(f"Longleaf project: {args.host}:{project_dir}")
     if not args.submit and not args.submit_discrimination and not args.submit_pilot:
         if args.skip_upstream_inputs and args.skip_detection_inputs and not args.skip_observer_inputs:
-            submit_script = "slurm/population/discrimination/run_population_discrimination_pipeline.sh"
+            submit_script = "slurm/discrimination/run_population_discrimination_pipeline.sh"
         else:
-            submit_script = "slurm/population/run_population_pipeline.sh"
+            submit_script = "slurm/run_population_pipeline.sh"
         print(
             f"Submit later: ssh {args.host} "
             f"'cd {project_dir} && PROJECT={project_dir} bash {submit_script}'"

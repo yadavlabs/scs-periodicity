@@ -23,12 +23,11 @@ python scripts/verify_population_archive.py
 The resulting Zenodo upload has four files:
 
 - `scs-periodicity-1.1.0.zip` — population code and source inputs.
-- `scs-periodicity-population-release-data.zip` — 221 generated data and result files.
+- `scs-periodicity-population-release-data.zip` — generated data and result files.
 - `scs-periodicity-population-release-data-manifest.csv` — per-file SHA-256 hashes.
 - `scs-periodicity-population-release-data.sha256` — data ZIP SHA-256.
 
-The data ZIP's verified SHA-256 is
-`c8a710c29a6bdd895b9f60f8e609853f493027ff82e77bdc2912f57f7bb86e50`.
+The `.sha256` file records the verified data ZIP digest.
 No single-axon paths or upstream MRG model files are present in either ZIP.
 Extract the source ZIP first and the data ZIP into its top-level directory; the
 archives have no overlapping file paths.

@@ -84,7 +84,7 @@ from population.detection.threshold_search import (
 # ---------------- Configuration ----------------
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DATA_DIR = (PROJECT_ROOT / "data" / "space-time-V" / "population").resolve()
+DATA_DIR = (PROJECT_ROOT / "data" / "space-time-V").resolve()
 RESULTS_DIR = (PROJECT_ROOT / "data" / "detection" / "population").resolve()
 MRG_MODEL_DIR = (PROJECT_ROOT / "MRG_model").resolve()
 
@@ -96,7 +96,7 @@ POPULATION_RESPONSES_CSV = RESULTS_DIR / "population_responses.csv"
 POPULATION_CV0_RESPONSES_CSV = RESULTS_DIR / "population_cv0_based_responses.csv"
 POPULATION_PARTIAL_DIR = RESULTS_DIR / "partials"
 DETECTION_BEHAVIOR_XLSX = PROJECT_ROOT / "data" / "detection" / "slack" / "DetectionThresholds.xlsx"
-DETECTION_BEHAVIORAL_MATCHING_DIR = PROJECT_ROOT / "results" / "population" / "detection" / "behavioral_matching"
+DETECTION_BEHAVIORAL_MATCHING_DIR = PROJECT_ROOT / "results" / "detection" / "behavioral_matching"
 
 # This is deliberately the same condition grid produced by the time-pattern
 # stage.  Keeping it explicit makes SLURM array indices stable and auditable.
@@ -141,7 +141,7 @@ def _detection_partial_dir(root: Path, family: str) -> Path:
         "EXPECTED_INDEX_AXON_ID", DEFAULT_EXPECTED_INDEX_AXON_ID,
     )
     return (
-        root / "results" / "population" / "detection" / "partials"
+        root / "results" / "detection" / "partials"
         / DETECTION_PROTOCOL_VERSION / expected_index / family
     )
 
@@ -334,7 +334,7 @@ def _get_h():
 
 def _config_path(root: Path, diameter_um: float, axonnodes: int) -> Path:
     token = diameter_token(diameter_um)
-    return root / "results" / "population" / "mrg-workers" / f"mrg_population_config_{token}um_{axonnodes}nodes.hoc"
+    return root / "results" / "mrg-workers" / f"mrg_population_config_{token}um_{axonnodes}nodes.hoc"
 
 
 def ensure_population_mrg_loaded(config_path: Path) -> None:
@@ -493,7 +493,7 @@ def identify_index_axon(
     if not force and index_csv.is_file() and thresholds_csv.is_file():
         return pd.read_csv(index_csv).iloc[0].to_dict()
 
-    workers = discover_mrg_workers(root / "data" / "space-time-V" / "population")
+    workers = discover_mrg_workers(root / "data" / "space-time-V")
     prepare_mrg_workers(root=root)
     selected = {path.resolve() for path in _population_basis_paths(root, population_manifest)}
     tasks = [
@@ -1088,7 +1088,7 @@ def _compute_regimes(
 
 def _index_regime_job(root: Path, index: dict[str, Any], cv: float, freq: float, rep_index: int) -> list[dict[str, Any]]:
     npz_path = spacetime_path(
-        root / "data" / "space-time-V" / "population", str(index["cutline_id"]),
+        root / "data" / "space-time-V", str(index["cutline_id"]),
         float(index["diameter_um"]), cv, freq, axon_id=str(index["axon_id"]),
     )
     rep = load_population_rep(npz_path, rep_index)
@@ -1150,7 +1150,7 @@ def run_index_regime_condition(
 
     index = identify_index_axon(root=root, n_jobs=n_jobs, force=False)
     index_path = spacetime_path(
-        root / "data" / "space-time-V" / "population", str(index["cutline_id"]),
+        root / "data" / "space-time-V", str(index["cutline_id"]),
         float(index["diameter_um"]), cv, freq, axon_id=str(index["axon_id"]),
     )
     repetition_groups = _repetition_equivalence_groups(index_path)
@@ -1295,7 +1295,7 @@ def _build_cv0_regime_jobs(root: Path, cv0_table: pd.DataFrame) -> pd.DataFrame:
         freq = float(table_row.freq)
         for cv in tuple(round(.1 * i, 1) for i in range(11)):
             index_path = spacetime_path(
-                root / "data" / "space-time-V" / "population", str(index["cutline_id"]),
+                root / "data" / "space-time-V", str(index["cutline_id"]),
                 float(index["diameter_um"]), cv, freq, axon_id=str(index["axon_id"]),
             )
             with np.load(index_path, allow_pickle=False) as data:
@@ -1331,7 +1331,7 @@ def _population_basis_paths(root: Path, population_manifest: Path | None = None)
     column.  This lets a new COMSOL cohort coexist with older basis files while
     keeping explicitly selected cohorts isolated from older files.
     """
-    basis_dir = root / "data" / "space-time-V" / "population"
+    basis_dir = root / "data" / "space-time-V"
     available = {path.name.removesuffix("_1uA_VeBasis.npz"): path for path in basis_dir.glob("*_1uA_VeBasis.npz")}
     if not available:
         raise FileNotFoundError("No population Ve basis files were found")
@@ -1388,7 +1388,7 @@ def _cv0_regimes_for_condition(root: Path, cv: float, freq: float) -> pd.DataFra
     table_row = row.iloc[0].to_dict()
     index = identify_index_axon(root=root, n_jobs=1, force=False)
     index_path = spacetime_path(
-        root / "data" / "space-time-V" / "population", str(index["cutline_id"]),
+        root / "data" / "space-time-V", str(index["cutline_id"]),
         float(index["diameter_um"]), cv, freq, axon_id=str(index["axon_id"]),
     )
     with np.load(index_path, allow_pickle=False) as data:
@@ -1573,7 +1573,7 @@ def _population_response_rows_for_rep(
     cv, freq = float(job["cv"]), float(job["freq"])
     basis = load_population_basis(Path(job["basis_path"]))
     npz_path = spacetime_path(
-        root / "data" / "space-time-V" / "population", basis["cutline_id"], basis["diameter_um"],
+        root / "data" / "space-time-V", basis["cutline_id"], basis["diameter_um"],
         cv, freq, axon_id=str(basis["axon_id"]),
     )
     rep_index = int(regime_rows[0]["rep_index"])
@@ -1671,7 +1671,7 @@ def _run_population_recruitment_condition(
             raise RuntimeError(f"Diameter-screen partial lacks repetition {missing_reps[0]}")
 
     target_npz = spacetime_path(
-        root / "data" / "space-time-V" / "population",
+        root / "data" / "space-time-V",
         str(job["target_cutline_id"]),
         float(job["target_diameter_um"]),
         float(job["cv"]),
@@ -1791,7 +1791,7 @@ def run_population_target_condition(
 ) -> Path:
     """Run a named target condition; used by isolated per-diameter subprocesses."""
     root = root.resolve()
-    basis_path = _basis_path_for_axon(root / "data" / "space-time-V" / "population", target_axon_id)
+    basis_path = _basis_path_for_axon(root / "data" / "space-time-V", target_axon_id)
     basis = load_population_basis(basis_path)
     job = {
         "target_axon_id": basis["axon_id"], "target_cutline_id": basis["cutline_id"],
@@ -1955,7 +1955,7 @@ def _population_response_group(root: Path, worker, regimes: pd.DataFrame, overwr
         basis = load_population_basis(Path(basis_path_str))
         for (cv, freq), condition_rows in regimes.groupby(["cv", "freq"], sort=True):
             npz_path = spacetime_path(
-                root / "data" / "space-time-V" / "population", basis["cutline_id"],
+                root / "data" / "space-time-V", basis["cutline_id"],
                 basis["diameter_um"], float(cv), float(freq), axon_id=str(basis["axon_id"]),
             )
             for regime in condition_rows.itertuples(index=False):
@@ -1994,7 +1994,7 @@ def _simulate_population_from_regimes(root: Path, regimes: pd.DataFrame, *, n_jo
     results_dir = output_csv.parent; results_dir.mkdir(parents=True, exist_ok=True)
     if regimes.empty:
         raise RuntimeError("No index-regime amplitudes are available for population simulation")
-    workers = discover_mrg_workers(root / "data" / "space-time-V" / "population")
+    workers = discover_mrg_workers(root / "data" / "space-time-V")
     prepare_mrg_workers(root=root)
     parts = Parallel(n_jobs=min(max(1, n_jobs), len(workers)), prefer="processes")(
         delayed(_population_response_group)(root, worker, regimes, overwrite, output_stem) for worker in workers
@@ -2493,6 +2493,8 @@ def run_population_detection_behavioral_matching(
     per_point_smooth_lambda: float = 0.001,
     seed: int = 20260828,
     n_starts: int = 4,
+    index_regimes_csv: Path | None = None,
+    recruitment_outcomes_csv: Path | None = None,
 ) -> dict[str, Path]:
     """Fit constrained population detection mixtures and save tidy outputs.
 
@@ -2502,7 +2504,7 @@ def run_population_detection_behavioral_matching(
     fits are explicitly retained as representational upper bounds.
     """
     root = Path(root).resolve()
-    output_dir = Path(output_dir or root / "results" / "population" / "detection" / "behavioral_matching").resolve()
+    output_dir = Path(output_dir or root / "results" / "detection" / "behavioral_matching").resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     target_kinds = tuple(str(kind).strip().lower() for kind in target_kinds)
     unsupported = sorted(set(target_kinds) - {"datapoints", "quadratic"})
@@ -2522,7 +2524,7 @@ def run_population_detection_behavioral_matching(
         .sort_values(["freq", "cv"], ignore_index=True)
     )
 
-    regimes_path = root / "data" / "detection" / "population" / "index_regime_amplitudes.csv"
+    regimes_path = Path(index_regimes_csv) if index_regimes_csv else root / "data" / "detection" / "population" / "index_regime_amplitudes.csv"
     if not regimes_path.is_file():
         raise FileNotFoundError(f"Population index-regime amplitudes not found: {regimes_path}")
     regimes = pd.read_csv(regimes_path)
@@ -2723,7 +2725,7 @@ def run_population_detection_behavioral_matching(
         "and per-point is an oracle rather than a primary model."
     )
 
-    outcomes_path = root / "data" / "detection" / "population" / "population_recruitment_outcomes.csv"
+    outcomes_path = Path(recruitment_outcomes_csv) if recruitment_outcomes_csv else root / "data" / "detection" / "population" / "population_recruitment_outcomes.csv"
     population_states = amplitude_summary.rename(columns={"amp_uA_mean": "index_amp_uA_mean", "amp_uA_sem": "index_amp_uA_sem"})
     if outcomes_path.is_file():
         outcomes = pd.read_csv(outcomes_path)
@@ -2950,6 +2952,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Comma-separated targets: datapoints, quadratic.",
     )
     fit_behavior.add_argument("--n-starts", type=int, default=4)
+    fit_behavior.add_argument("--index-regimes-csv", type=Path, default=None)
+    fit_behavior.add_argument("--recruitment-outcomes-csv", type=Path, default=None)
     fit_behavior.add_argument("--seed", type=int, default=20260828)
     fit_behavior.add_argument("--per-point-smooth-lambda", type=float, default=0.001)
     fit_behavior.add_argument("--no-panel-bias", action="store_true")
@@ -3014,6 +3018,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             per_point_smooth_lambda=args.per_point_smooth_lambda,
             seed=args.seed,
             n_starts=args.n_starts,
+            index_regimes_csv=args.index_regimes_csv,
+            recruitment_outcomes_csv=args.recruitment_outcomes_csv,
         )
         print("\n".join(f"{name}: {path}" for name, path in paths.items()))
     elif args.command == "simulate-population":

@@ -32,7 +32,7 @@ def main():
     parser.add_argument("--figures", nargs="+", type=int, required=True)
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
-    path = root / "notebooks/population/06_FigureGeneration_v2.ipynb"
+    path = root / "notebooks/06_FigureGeneration_v2.ipynb"
     notebook = nbformat.read(path, as_version=4)
     execute_cells(notebook, root, selected_cells(notebook, args.figures))
     nbformat.validate(notebook)

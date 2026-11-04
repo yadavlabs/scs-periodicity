@@ -8,7 +8,7 @@ from .spatial_exploration import grid_panel
 
 
 def sampling_source(v2):
-    basis = pd.read_csv(v2.root / 'data/space-time-V/population/axon_basis_manifest.csv')
+    basis = pd.read_csv(v2.root / 'data/space-time-V/axon_basis_manifest.csv')
     index_ids = v2.index.index_axon_id.dropna().unique()
     if len(index_ids) != 1 or basis.axon_id.duplicated().any():
         raise ValueError('Expected one index axon and unique population identities')

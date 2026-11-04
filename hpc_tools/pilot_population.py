@@ -1,7 +1,7 @@
 """Run a small, isolated NEURON check for a released population axon.
 
 Each invocation loads one axon geometry in a fresh process. Results are saved
-under results/population/pilot and never overwrite production simulation data.
+under results/pilot and never overwrite production simulation data.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def reference_threshold(root: Path, axon_id: str) -> float:
-    path = root / "data/population/reference/index-screen/index_axon_thresholds.csv"
+    path = root / "data/reference/index-screen/index_axon_thresholds.csv"
     with path.open(newline="", encoding="utf-8") as handle:
         rows = [row for row in csv.DictReader(handle) if row["axon_id"] == axon_id]
     if len(rows) != 1:
@@ -48,7 +48,7 @@ def train_trace(root: Path, basis: dict[str, object]) -> tuple[np.ndarray, np.nd
 
 
 def run(root: Path, axon_id: str, mode: str) -> dict[str, object]:
-    basis_path = root / "data/space-time-V/population" / f"{axon_id}_1uA_VeBasis.npz"
+    basis_path = root / "data/space-time-V" / f"{axon_id}_1uA_VeBasis.npz"
     basis = load_population_basis(basis_path)
     prepare_mrg_workers(root=root)
     config = _config_path(root, basis["diameter_um"], basis["n_valid_nodes"])
@@ -93,7 +93,7 @@ def main() -> int:
     args = parser.parse_args()
     root = args.root.resolve()
     result = run(root, args.axon_id, args.mode)
-    output_dir = root / "results/population/pilot"
+    output_dir = root / "results/pilot"
     output_dir.mkdir(parents=True, exist_ok=True)
     output = output_dir / f"{args.axon_id}_{args.mode}.json"
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

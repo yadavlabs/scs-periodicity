@@ -243,7 +243,7 @@ def _run_local_sweep_chunk(
 ) -> dict[float, tuple[np.ndarray, int]]:
     """Run one amplitude chunk in a fresh process with one reusable runner."""
     npz_path = spacetime_path(
-        root / "data" / "space-time-V" / "population",
+        root / "data" / "space-time-V",
         str(index["cutline_id"]), float(index["diameter_um"]), 0.0, frequency,
         axon_id=str(index["axon_id"]),
     )
@@ -282,14 +282,14 @@ def run_pilot_condition(
     if not 0 <= int(condition_index) < len(conditions):
         raise IndexError(f"condition_index must be in [0, {len(conditions) - 1}]")
     frequency, rep_index = conditions[int(condition_index)]
-    partial_dir = Path(partial_dir or root / "results" / "population" / "detection" / "index_operating_state_pilot" / "partials").resolve()
+    partial_dir = Path(partial_dir or root / "results" / "detection" / "index_operating_state_pilot" / "partials").resolve()
     sample_path, threshold_path, summary_path = _partial_paths(partial_dir, frequency, rep_index)
     if all(path.is_file() for path in (sample_path, threshold_path, summary_path)) and not overwrite:
         return {"samples": sample_path, "thresholds": threshold_path, "summary": summary_path}
 
     index = identify_index_axon(root=root, n_jobs=1, force=False)
     npz_path = spacetime_path(
-        root / "data" / "space-time-V" / "population",
+        root / "data" / "space-time-V",
         str(index["cutline_id"]), float(index["diameter_um"]), 0.0, frequency,
         axon_id=str(index["axon_id"]),
     )
@@ -472,8 +472,8 @@ def merge_pilot_outputs(
 ) -> dict[str, Path]:
     """Validate and merge all eight pilot conditions."""
     root = Path(root).resolve()
-    partial_dir = Path(partial_dir or root / "results" / "population" / "detection" / "index_operating_state_pilot" / "partials").resolve()
-    output_dir = Path(output_dir or root / "results" / "population" / "detection" / "index_operating_state_pilot").resolve()
+    partial_dir = Path(partial_dir or root / "results" / "detection" / "index_operating_state_pilot" / "partials").resolve()
+    output_dir = Path(output_dir or root / "results" / "detection" / "index_operating_state_pilot").resolve()
     expected = [
         _partial_paths(partial_dir, frequency, rep_index)
         for frequency, rep_index in pilot_conditions()
@@ -528,7 +528,7 @@ def preflight(root: Path = PROJECT_ROOT) -> dict[str, Any]:
     checks = []
     for condition_index, (frequency, rep_index) in enumerate(pilot_conditions()):
         path = spacetime_path(
-            root / "data" / "space-time-V" / "population",
+            root / "data" / "space-time-V",
             str(index["cutline_id"]), float(index["diameter_um"]), 0.0, frequency,
             axon_id=str(index["axon_id"]),
         )

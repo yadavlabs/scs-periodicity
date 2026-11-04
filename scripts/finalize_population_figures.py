@@ -9,10 +9,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FIGURES = ROOT / "results/population/figures_v3"
+FIGURES = ROOT / "results/figures"
 OLD_ROOT = "C:\\Users\\tvrdy\\Desktop\\simulation-behavioral-prediction\\"
 PATH_REMAP = {
-    "results/population/detection/imax_population_refresh/population_responses.csv":
+    "results/detection/imax_population_refresh/population_responses.csv":
         "data/detection/population/population_responses.csv",
 }
 
@@ -37,7 +37,7 @@ def portable(value: object) -> object:
 
 
 def main() -> None:
-    report = ROOT / "results/population/figure_verification/report.json"
+    report = ROOT / "results/figure_verification/report.json"
     if json.loads(report.read_text(encoding="utf-8")).get("status") != "passed":
         raise ValueError("Figure notebook must pass before finalizing exports")
 

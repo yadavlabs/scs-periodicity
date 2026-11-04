@@ -17,7 +17,7 @@ def accepted_count(starts, refractory_samples=22):
 
 def main():
     root = Path(__file__).resolve().parents[3]
-    out = root / "results/population/figures_v3"
+    out = root / "results/figures"
     out.mkdir(parents=True, exist_ok=True)
     index = pd.read_csv(root / "data/detection/population/index_regime_amplitudes.csv")
     index = index[index.thresh_type.eq("I_all")]
@@ -48,7 +48,7 @@ def main():
     print(data.groupby("short_fraction_bin", observed=True)[["residual_lt", "residual_le"]].agg(["mean", "count"]).to_string())
     print("Sequences affected by equality:", int((data.n_equal > 0).sum()), "/", len(data))
     print("Sequences with nominal/detected onset mismatch:", int((data.n_input_pulses != data.n_detected_onsets).sum()))
-    features = pd.read_csv(root / "data/features/population/population_cv0_based_features.csv")
+    features = pd.read_csv(root / "data/features/population_cv0_based_features.csv")
     example = features[(features.freq == 200) & (features.rep_index == 0)]
     summary = example.groupby("thresh_type")[["active_axon_count", "total_population_spikes", "n_events_10ms"]].agg(["min", "median", "max"])
     summary.to_csv(out / "audit_suppfig5_candidate_regimes.csv")

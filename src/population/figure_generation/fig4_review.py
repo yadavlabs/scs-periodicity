@@ -154,9 +154,9 @@ def main():
                       help='Refresh only selected Fig. 4 and its manifest, preserving S9/statistical outputs')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
-    output = root / 'results/population/figures_v3'
+    output = root / 'results/figures'
     if not args.previews_only:
-        path = root / 'notebooks/population/06_FigureGeneration_v2.ipynb'
+        path = root / 'notebooks/06_FigureGeneration_v2.ipynb'
         notebook = nbformat.read(path, as_version=4)
         install(notebook)
         statistical = []

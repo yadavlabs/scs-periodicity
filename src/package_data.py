@@ -21,24 +21,26 @@ SOURCE_INPUT_DIRS = (
     "data/time-patterns/slack",
     "data/detection/slack",
     "data/discrimination/slack",
-    "data/population/reference/index-screen",
+    "data/reference/index-screen",
 )
 GENERATED_DIRS = (
     "data/detection/population",
-    "data/features/population",
-    "results/population/detection/behavioral_matching",
-    "results/population/discrimination",
-    "results/population/discrimination_v5_scope_hypothesis_full",
-    "results/population/discrimination_locked_mixture_followup",
-    "results/population/discrimination_locked_mixture_inputs",
-    "results/population/figures_v3",
+    "data/detection/behavior_fit_inputs",
+    "data/features",
+    "results/detection/behavioral_matching",
+    "results/discrimination",
+    "results/discrimination_v5_scope_hypothesis_full",
+    "results/discrimination_locked_mixture_followup",
+    "results/discrimination_locked_mixture_inputs",
+    "results/figures",
 )
 NOTICE_FILES = ("LICENSE", "THIRD_PARTY_NOTICES.md", "CITATION.cff")
 EXTRA_FILES = (
-    "results/population/detection/imax_population_refresh/merge_manifest.json",
-    "results/population/detection/imax_population_refresh/true_population_trial_summary.csv",
+    "results/detection/imax_refresh_manifest.json",
+    "results/detection/true_population_trial_summary.csv",
+    "results/detection/true_population_trial_summary_manifest.json",
 )
-EXCLUDED_PARTS = {"partials", "__pycache__", "old", "exploratory"}
+EXCLUDED_PARTS = {"partials", "__pycache__", "old", "exploratory", "submitted_jobs.txt"}
 
 
 def sha256(path: Path) -> str:
@@ -64,7 +66,7 @@ def collect_files(root: Path) -> list[Path]:
                          for part in path.relative_to(root).parts
                      ))
 
-    basis_dir = root / "data/space-time-V/population"
+    basis_dir = root / "data/space-time-V"
     manifest = basis_dir / "axon_basis_manifest.csv"
     if not manifest.is_file():
         raise FileNotFoundError(manifest)
@@ -81,9 +83,9 @@ def collect_files(root: Path) -> list[Path]:
         "data/detection/population/index_regime_amplitudes.csv",
         "data/detection/population/population_responses.csv",
         "data/detection/population/population_cv0_based_responses.csv",
-        "data/features/population/population_cv0_template_evidence.csv",
-        "results/population/discrimination_v5_scope_hypothesis_full/validation.json",
-        "results/population/discrimination_locked_mixture_followup/validation.json",
+        "data/features/population_cv0_template_evidence.csv",
+        "results/discrimination_v5_scope_hypothesis_full/validation.json",
+        "results/discrimination_locked_mixture_followup/validation.json",
     )
     for name in needed:
         if not (root / name).is_file():

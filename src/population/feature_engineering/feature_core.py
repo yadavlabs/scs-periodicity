@@ -38,14 +38,14 @@ from population.protocol import DETECTION_PROTOCOL_VERSION
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 INPUT_CSV = Path("data/detection/population/population_cv0_based_responses.csv")
-FEATURE_CSV = Path("data/features/population/population_cv0_based_features.csv")
-EVIDENCE_CSV = Path("data/features/population/population_cv0_template_evidence.csv")
-TRACE_NPZ = Path("data/features/population/population_cv0_time_representations_v5.npz")
+FEATURE_CSV = Path("data/features/population_cv0_based_features.csv")
+EVIDENCE_CSV = Path("data/features/population_cv0_template_evidence.csv")
+TRACE_NPZ = Path("data/features/population_cv0_time_representations_v5.npz")
 COLLAPSED_REGIME_CSV = Path(
-    "data/features/population/population_collapsed_regime_diagnostic.csv"
+    "data/features/population_collapsed_regime_diagnostic.csv"
 )
 REGIME_EQUIVALENCE_CSV = Path(
-    "data/features/population/population_regime_response_equivalence.csv"
+    "data/features/population_regime_response_equivalence.csv"
 )
 
 T0_MS = 0.0

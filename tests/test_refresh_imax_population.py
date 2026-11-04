@@ -13,7 +13,7 @@ class RefreshTests(unittest.TestCase):
     def fixture(self, root):
         data = root / "data/detection/population"
         data.mkdir(parents=True)
-        basis = root / "data/space-time-V/population"
+        basis = root / "data/space-time-V"
         basis.mkdir(parents=True)
         pd.DataFrame({"axon_id": ["a", "b"]}).to_csv(basis / "axon_basis_manifest.csv", index=False)
         index = pd.DataFrame([
@@ -22,7 +22,7 @@ class RefreshTests(unittest.TestCase):
             dict(freq=20, cv=0, rep_index=0, thresh_type="I_all", amp_uA=300, n_index_spikes=39,
                  detection_protocol_version=DETECTION_PROTOCOL_VERSION)])
         index.to_csv(data / "index_regime_amplitudes.csv", index=False)
-        feats = root / "data/features/population"
+        feats = root / "data/features"
         feats.mkdir(parents=True)
         index.to_csv(feats / "population_cv0_based_features.csv", index=False)
         rows = []

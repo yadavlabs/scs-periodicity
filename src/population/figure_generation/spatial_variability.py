@@ -17,9 +17,9 @@ from .spatial_prototype import summarize_trials
 
 
 def load_trials(root):
-    true = pd.read_csv(root / 'results/population/detection/imax_population_refresh/true_population_trial_summary.csv')
+    true = pd.read_csv(root / 'results/detection/true_population_trial_summary.csv')
     true['population_spikes'] = true.total_population_spikes
-    cv0 = pd.read_csv(root / 'data/features/population/population_cv0_based_features.csv')
+    cv0 = pd.read_csv(root / 'data/features/population_cv0_based_features.csv')
     cv0['population_spikes'] = cv0.source_total_population_spikes
     columns = ['freq', 'cv', 'rep_index', 'thresh_type', 'active_axon_count', 'population_spikes']
     trials = pd.concat([true[columns].assign(mode='true'), cv0[columns].assign(mode='cv0')], ignore_index=True)
@@ -261,10 +261,10 @@ def main():
     args = parser.parse_args()
     plt.switch_backend('Agg')
     root = Path(__file__).resolve().parents[3]
-    out = root / 'results/population/figures_v3/exploratory_s5/repetition_layouts'
+    out = root / 'results/figures/exploratory_s5/repetition_layouts'
     out.mkdir(parents=True, exist_ok=True)
     # Reuse cached aggregates without overwriting the promoted caption/provenance.
-    cache_source = root / 'results/population/figures_v3/suppfig5_population_recruitment_data/_data'
+    cache_source = root / 'results/figures/suppfig5_population_recruitment_data/_data'
     (out / '_data').mkdir(exist_ok=True)
     for name in ['conditional_axon_statistics.csv', 'response_cache_manifest.json', 'trial_validation.csv']:
         if (cache_source / name).exists() and not (out / '_data' / name).exists():

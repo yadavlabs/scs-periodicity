@@ -13,20 +13,20 @@ discrimination analyses.
 
 ## Repository contents
 
-- `notebooks/population/`: ordered notebooks for time patterns, Ve bases,
+- `notebooks/`: ordered notebooks for time patterns, Ve bases,
   detection, features, discrimination, and manuscript figures.
 - `src/population/`: the population simulation, analysis, and figure code.
 - `data/`: source COMSOL cutlines, Slack inputs, generated time patterns, the
   420 Ve bases, and the reference index screen.
-- `hpc_tools/` and `slurm/population/`: Longleaf upload, pilot, and full
+- `hpc_tools/` and `slurm/`: Longleaf upload, pilot, and full
   regeneration workflows.
-- `tests/`: population analysis and figure checks.
 
 The upstream MRG files are downloaded at a pinned ModelDB commit during HPC
 setup. A small generator makes the HOC geometry configurable for the six axon
 diameters and two spatial phases; it preserves the upstream biophysics and does
 not redistribute the upstream HOC. See [MRG_model/README.md](MRG_model/README.md)
 and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The transfer and accepted-fit history are documented in [PROVENANCE.md](PROVENANCE.md).
 
 ## HPC test run
 
@@ -34,16 +34,16 @@ The transferred cohort passes the local preflight: 35 cutlines, 55 time
 patterns, 420 Ve bases, and reference index axon `S01_140um_ph1`. Longleaf
 pilot job `7866889` completed successfully with three passing checks across
 two diameters and both nodal phases. See [hpc_tools/README.md](hpc_tools/README.md)
-for the pilot and full-run commands. The pilot wrote only under
-`results/population/pilot/`.
+for the pilot and dependent full-run commands.
 
 ## Data release
 
 Generated population response tables and fitted observer outputs are too large
 for the Git source tree. `src/package_data.py` selects them and the figure
 exports for the v1.1.0 data ZIP. The source ZIP contains the COMSOL, Slack,
-time-pattern, Ve-basis, and reference inputs; the data ZIP adds only generated
-outputs, so the two archives have no duplicate paths.
+time-pattern, Ve-basis, and reference inputs. The data ZIP contains generated
+outputs and the recovered historical detection-fit inputs, with no duplicate
+paths between the archives.
 Run `python src/package_data.py --dry-run` to inspect the selection, then
 `python src/package_data.py` to build the ZIP, SHA-256 checksum, and file
 manifest. The packager rejects missing production outputs and historical

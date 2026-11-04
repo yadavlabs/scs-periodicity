@@ -20,7 +20,7 @@ from joblib import Parallel, delayed
 from population.protocol import DETECTION_PROTOCOL_VERSION
 
 KEY = ["freq", "cv", "rep_index", "thresh_type"]
-DEFAULT = "results/population/detection/imax_population_refresh"
+DEFAULT = "results/detection/imax_population_refresh"
 
 
 def digest(path):
@@ -48,7 +48,7 @@ def prepare(root, output):
     index = pd.read_csv(index_path).set_index(KEY, verify_integrity=True)
     if set(index.detection_protocol_version) != {DETECTION_PROTOCOL_VERSION}:
         raise ValueError("Promote the validated peak-first index table first")
-    ids = sorted(pd.read_csv(root / "data/space-time-V/population/axon_basis_manifest.csv").axon_id)
+    ids = sorted(pd.read_csv(root / "data/space-time-V/axon_basis_manifest.csv").axon_id)
     id_map = {v: i for i, v in enumerate(ids)}
     seen = np.zeros((len(ids), len(index)), dtype=bool)
     changed = np.zeros(len(index), dtype=bool)
@@ -81,7 +81,7 @@ def prepare(root, output):
                   axons=len(ids), maximum_simulations=int(changed.sum()) * len(ids),
                   discrimination_cv0_20_to_200_unchanged=True)
     # The CV0 assertion is checked numerically against the actual feature input.
-    features = pd.read_csv(root / "data/features/population/population_cv0_based_features.csv",
+    features = pd.read_csv(root / "data/features/population_cv0_based_features.csv",
                            usecols=KEY + ["amp_uA"])
     anchors = index.reset_index().query("cv == 0").groupby(["freq", "thresh_type"]).amp_uA.first()
     f = features[features.freq.isin([20, 50, 100, 200])]
@@ -103,7 +103,7 @@ def run_axon(root, output, axon_index, n_jobs):
         existing = pd.read_csv(part)
         validate_replacements(existing, regimes, axon)
         return str(part)
-    basis = root / "data/space-time-V/population" / f"{axon}_1uA_VeBasis.npz"
+    basis = root / "data/space-time-V" / f"{axon}_1uA_VeBasis.npz"
     jobs = [(dict(basis_path=str(basis), freq=row["freq"], cv=row["cv"]), [row])
             for row in regimes.to_dict("records")]
     values = Parallel(n_jobs=n_jobs)(delayed(_population_response_rows_for_rep)(

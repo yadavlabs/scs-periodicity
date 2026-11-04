@@ -32,7 +32,7 @@ from scipy.optimize import minimize
 from population.discrimination.behavioral_data import load_slack_dir
 
 
-DEFAULT_EVIDENCE_CSV = "data/features/population/population_cv0_template_evidence.csv"
+DEFAULT_EVIDENCE_CSV = "data/features/population_cv0_template_evidence.csv"
 DEFAULT_SLACK_DIR = "data/discrimination/slack"
 DEFAULT_FREQS = (20.0, 50.0, 100.0, 200.0)
 EVIDENCE_COLUMNS = (
@@ -1350,7 +1350,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evidence-csv", default=DEFAULT_EVIDENCE_CSV)
     parser.add_argument("--slack-dir", default=DEFAULT_SLACK_DIR)
-    parser.add_argument("--out-dir", default="results/population/discrimination/smoke")
+    parser.add_argument("--out-dir", default="results/discrimination/smoke")
     parser.add_argument("--frequencies", default="20,50,100,200")
     parser.add_argument(
         "--weight-scope",

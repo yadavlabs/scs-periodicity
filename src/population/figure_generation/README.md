@@ -1,9 +1,9 @@
 # Population manuscript figures
 
-The accepted figure notebook is `notebooks/population/06_FigureGeneration_v2.ipynb`.
+The accepted figure notebook is `notebooks/06_FigureGeneration_v2.ipynb`.
 It reads the population outputs from the release data ZIP and writes figures,
 source tables, statistics, and an export manifest under
-`results/population/figures_v3/`.
+`results/figures/`.
 
 From the repository root, install `requirements.txt`, extract the release data
 ZIP into the repository, and run:
@@ -15,7 +15,7 @@ python scripts/finalize_population_figures.py
 ```
 
 The verifier executes all notebook code cells and saves an executed copy and
-report under `results/population/figure_verification/`. The finalizer checks
+report under `results/figure_verification/`. The finalizer checks
 that every figure-manifest path exists, makes supplementary provenance paths
 repository-relative, and records SHA-256 hashes of the exported figure files.
 The source notebook remains free of machine-specific execution outputs.
@@ -29,6 +29,6 @@ statistics are conditional on the saved observer fits; they do not treat the
 simulated repetitions as independent animals.
 
 The expected production outputs and their validation status are documented in
-`POPULATION_MIGRATION.md`. Figure exports and supporting data are distributed
+`PROVENANCE.md`. Figure exports and supporting data are distributed
 through the Zenodo release data ZIP, while the code and notebook are in the
 source ZIP.

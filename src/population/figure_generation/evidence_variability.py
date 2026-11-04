@@ -31,7 +31,7 @@ def evidence_summary(active):
 def evidence_curves(v2, style='mean', stem=None):
     if style not in {'mean', 'median_iqr', 'mean_sem', 'individual_reps'}:
         raise ValueError(style)
-    source = pd.read_csv(v2.root / 'data/features/population/population_cv0_template_evidence.csv')
+    source = pd.read_csv(v2.root / 'data/features/population_cv0_template_evidence.csv')
     active = source[source.regime_active.astype(str).str.lower().isin(['true', '1', 'yes']) &
                     source.freq.isin(FREQS)].copy()
     summary = evidence_summary(active)

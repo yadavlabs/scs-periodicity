@@ -8,7 +8,7 @@ import pandas as pd
 
 
 def example_spikes(root, freq=100, regime='I_10', rep=0):
-    source = root / 'data/features/population/population_cv0_time_representations_v5.npz'
+    source = root / 'data/features/population_cv0_time_representations_v5.npz'
     with np.load(source, allow_pickle=True) as z:
         indices = np.flatnonzero((z['freq'] == freq)
                                 & (z['thresh_type'].astype(str) == regime)

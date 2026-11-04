@@ -18,7 +18,7 @@ from nbclient import NotebookClient
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = ROOT / "notebooks/population/06_FigureGeneration_v2.ipynb"
+NOTEBOOK = ROOT / "notebooks/06_FigureGeneration_v2.ipynb"
 
 
 def main() -> int:
@@ -31,8 +31,8 @@ def main() -> int:
         parser.error(f"Python interpreter not found: {interpreter}")
 
     notebook = nbformat.read(NOTEBOOK, as_version=4)
-    ipython_dir = ROOT / "results/population/figure_verification/ipython"
-    jupyter_runtime = ROOT / "results/population/figure_verification/jupyter_runtime"
+    ipython_dir = ROOT / "results/figure_verification/ipython"
+    jupyter_runtime = ROOT / "results/figure_verification/jupyter_runtime"
     ipython_dir.mkdir(parents=True, exist_ok=True)
     jupyter_runtime.mkdir(parents=True, exist_ok=True)
     os.environ["IPYTHONDIR"] = str(ipython_dir)
@@ -44,7 +44,7 @@ def main() -> int:
         resources={"metadata": {"path": str(ROOT)}},
         allow_errors=False,
     )
-    output_dir = ROOT / "results/population/figure_verification"
+    output_dir = ROOT / "results/figure_verification"
     output_dir.mkdir(parents=True, exist_ok=True)
     output = output_dir / "06_FigureGeneration_v2.executed.ipynb"
     try:

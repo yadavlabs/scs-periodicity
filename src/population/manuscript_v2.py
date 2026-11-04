@@ -86,8 +86,8 @@ class ManuscriptFigures:
         self.root, self.output = Path(root), Path(output)
         self.output.mkdir(parents=True, exist_ok=True)
         self.records = []
-        focus = self.root / "results/population/discrimination_v5_scope_hypothesis_full"
-        control = self.root / "results/population/discrimination"
+        focus = self.root / "results/discrimination_v5_scope_hypothesis_full"
+        control = self.root / "results/discrimination"
         self.focus = {name: pd.read_csv(focus / f"population_{stem}.csv", low_memory=False)
                       for name, stem in [("curves", "discrimination_curves"), ("weights", "observer_weights"),
                                          ("rmse", "observer_rmse")]}
@@ -98,8 +98,8 @@ class ManuscriptFigures:
         self.weights_mc = pd.read_csv(focus / "merged_weights.csv", low_memory=False)
         self.params = pd.read_csv(focus / "merged_params.csv", low_memory=False)
         self.index = pd.read_csv(self.root / "data/detection/population/index_regime_amplitudes.csv")
-        self.equiv = pd.read_csv(self.root / "data/features/population/population_regime_response_equivalence.csv")
-        det = self.root / "results/population/detection/behavioral_matching"
+        self.equiv = pd.read_csv(self.root / "data/features/population_regime_response_equivalence.csv")
+        det = self.root / "results/detection/behavioral_matching"
         self.det = {name: pd.read_csv(det / f"detection_{name}.csv") for name in ["curves", "weights", "metrics"]}
         from population.detection.detection_core import load_detection_behavior
         from population.discrimination.behavioral_data import load_slack_dir
@@ -190,8 +190,8 @@ class ManuscriptFigures:
         if hasattr(self, "_locked_cue_curves"):
             return self._locked_cue_curves
         from population.discrimination.locked_mixture_followup import STEMS, validate_frames, verify
-        folder = self.root / "results/population/discrimination_locked_mixture_followup"
-        bundle = self.root / "results/population/discrimination_locked_mixture_inputs"
+        folder = self.root / "results/discrimination_locked_mixture_followup"
+        bundle = self.root / "results/discrimination_locked_mixture_inputs"
         validation = json.loads((folder / "validation.json").read_text())
         if validation.get("status") != "ready" or validation.get("conditional_fits") != 1000:
             raise ValueError("Locked-mixture figure requires the validated full run")
@@ -708,7 +708,7 @@ class ManuscriptFigures:
         return metrics
 
     def evidence_heatmaps(self):
-        evidence = pd.read_csv(self.root / "data/features/population/population_cv0_template_evidence.csv")
+        evidence = pd.read_csv(self.root / "data/features/population_cv0_template_evidence.csv")
         names = ["rate_evidence_1ms", "rate_evidence_10ms", "timing_evidence_1ms", "timing_evidence_10ms"]
         fig, axes = plt.subplots(4, 4, figsize=(14, 11), constrained_layout=True)
         for row, name in enumerate(names):
@@ -726,8 +726,8 @@ class ManuscriptFigures:
 
     def population_summary(self, mode="cv0", include_index=True, stem=None):
         if mode == "true":
-            refresh = self.root / "results/population/detection/imax_population_refresh"
-            manifest = refresh / "merge_manifest.json"
+            refresh = self.root / "results/detection"
+            manifest = refresh / "true_population_trial_summary_manifest.json"
             if not manifest.exists():
                 return None  # Never silently publish old-I_max population summaries.
             from population.detection.refresh_imax_population import digest
@@ -737,7 +737,7 @@ class ManuscriptFigures:
                 self.index[["freq", "cv", "rep_index", "thresh_type", "n_index_spikes", "n_input_pulses"]],
                 on=["freq", "cv", "rep_index", "thresh_type"], validate="one_to_one")
         else:
-            frame = pd.read_csv(self.root / "data/features/population/population_cv0_based_features.csv")
+            frame = pd.read_csv(self.root / "data/features/population_cv0_based_features.csv")
         frame["index_fraction"] = frame.n_index_spikes / frame.n_input_pulses
         metrics = ["index_fraction", "active_axon_count", "total_population_spikes"]
         titles = ["Index spikes / input pulses", "Recruited modeled axons (of 420)", "Population spikes"]
@@ -747,11 +747,11 @@ class ManuscriptFigures:
         # entire cohort count, which hides recruitment differences below ~60.
         scale_frames = [frame]
         if mode == "true":
-            scale_frames.append(pd.read_csv(self.root / "data/features/population/population_cv0_based_features.csv",
+            scale_frames.append(pd.read_csv(self.root / "data/features/population_cv0_based_features.csv",
                                            usecols=["active_axon_count", "total_population_spikes"]))
         else:
-            refresh = self.root / "results/population/detection/imax_population_refresh"
-            manifest = refresh / "merge_manifest.json"
+            refresh = self.root / "results/detection"
+            manifest = refresh / "true_population_trial_summary_manifest.json"
             if manifest.exists():
                 from population.detection.refresh_imax_population import digest
                 if json.loads(manifest.read_text())["index_sha256"] == digest(self.root / "data/detection/population/index_regime_amplitudes.csv"):

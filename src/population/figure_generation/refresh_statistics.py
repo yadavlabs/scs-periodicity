@@ -53,7 +53,7 @@ _stats_root = next(p for p in [Path.cwd(), *Path.cwd().parents]
 if str(_stats_root / 'src') not in sys.path:
     sys.path.insert(0, str(_stats_root / 'src'))
 from population.figure_generation.statistics import run_statistics
-statistics_output = _stats_root / 'results/population/figures_v3/statistics'
+statistics_output = _stats_root / 'results/figures/statistics'
 statistics_tables = run_statistics(_stats_root, statistics_output)
 display(statistics_tables['availability'])
 display(Markdown('Reconstruction checks passed for every included train/test fit. '
@@ -128,14 +128,14 @@ def main():
     parser.add_argument('--execute', action='store_true')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
-    path = root / 'notebooks/population/06_FigureGeneration_v2.ipynb'
+    path = root / 'notebooks/06_FigureGeneration_v2.ipynb'
     notebook = nbformat.read(path, as_version=4)
     indices = install(notebook)
     if args.execute:
         execute_cells(notebook, root, indices)
         # A selective refresh does not rerun the full notebook's manifest cell.
         # Update its existing CSV without dropping earlier figure records.
-        manifest = root / 'results/population/figures_v3/figure_manifest_v3.csv'
+        manifest = root / 'results/figures/figure_manifest_v3.csv'
         if manifest.exists():
             records = pd.read_csv(manifest)
             additions = pd.DataFrame([dict(kind='table', stem=f'statistics/{p.stem}')

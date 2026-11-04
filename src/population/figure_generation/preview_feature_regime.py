@@ -14,7 +14,7 @@ def main():
     parser.add_argument("--regime", choices=["I_10", "I_25", "I_50", "I_all"], default="I_50")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[3]
-    source = nbformat.read(root / "notebooks/population/06_FigureGeneration_v2.ipynb", as_version=4)
+    source = nbformat.read(root / "notebooks/06_FigureGeneration_v2.ipynb", as_version=4)
     setup = next(c.source for c in source.cells if c.cell_type == "code")
     stem = f"preview_suppfig6_{args.regime}"
     feature = ("from population.figure_generation.supplementary import feature_example\n"

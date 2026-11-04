@@ -34,14 +34,14 @@ from population.space_time_v.spacetime_core import spacetime_path
 
 
 PILOT_VERSION = "branch_aware_imax_pilot_v1"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "results/population/detection/branch_plateau_pilot"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "results/detection/branch_plateau_pilot"
 CROSS_FREQUENCY_PILOT_VERSION = "branch_aware_imax_cross_frequency_pilot_v2"
 DEFAULT_CROSS_FREQUENCY_OUTPUT_DIR = (
-    PROJECT_ROOT / "results/population/detection/branch_plateau_cross_frequency_pilot"
+    PROJECT_ROOT / "results/detection/branch_plateau_cross_frequency_pilot"
 )
 PEAK_VALIDATION_PILOT_VERSION = "peak_first_imax_frequency_cv_validation_v1"
 DEFAULT_PEAK_VALIDATION_OUTPUT_DIR = (
-    PROJECT_ROOT / "results/population/detection/peak_first_imax_validation_pilot"
+    PROJECT_ROOT / "results/detection/peak_first_imax_validation_pilot"
 )
 DEFAULT_FREQUENCY_HZ = 200.0
 DEFAULT_CVS = (0.8, 0.9, 1.0)
@@ -707,7 +707,7 @@ def prepare(
     missing_inputs = []
     for row in conditions.itertuples(index=False):
         path = spacetime_path(
-            root / "data/space-time-V/population", str(index["cutline_id"]),
+            root / "data/space-time-V", str(index["cutline_id"]),
             float(index["diameter_um"]), float(row.cv), float(row.freq), axon_id=str(index["axon_id"]),
         )
         if not path.is_file():
@@ -766,7 +766,7 @@ def prepare_cross_frequency(
     missing_inputs = []
     for row in conditions.itertuples(index=False):
         path = spacetime_path(
-            root / "data/space-time-V/population", str(index["cutline_id"]),
+            root / "data/space-time-V", str(index["cutline_id"]),
             float(index["diameter_um"]), float(row.cv), float(row.freq),
             axon_id=str(index["axon_id"]),
         )
@@ -838,7 +838,7 @@ def prepare_peak_validation(
     missing_inputs = []
     for row in conditions.itertuples(index=False):
         path = spacetime_path(
-            root / "data/space-time-V/population", str(index["cutline_id"]),
+            root / "data/space-time-V", str(index["cutline_id"]),
             float(index["diameter_um"]), float(row.cv), float(row.freq),
             axon_id=str(index["axon_id"]),
         )
@@ -928,7 +928,7 @@ def run_condition(
     context = {column: row[column] for column in context_columns if column in row.index}
     index = identify_index_axon(root=root, n_jobs=1, force=False)
     input_path = spacetime_path(
-        root / "data/space-time-V/population", str(index["cutline_id"]),
+        root / "data/space-time-V", str(index["cutline_id"]),
         float(index["diameter_um"]), float(row["cv"]), float(row["freq"]), axon_id=str(index["axon_id"]),
     )
     rep = load_population_rep(input_path, int(row["rep_index"]))

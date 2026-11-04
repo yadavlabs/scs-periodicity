@@ -21,25 +21,28 @@ OUTPUT_PATHS = (
     "data/detection/population/population_cv0_based_responses.csv",
 )
 DISCRIMINATION_OUTPUT_PATHS = (
-    "results/population/discrimination/population_observer_rmse.csv",
-    "results/population/discrimination/population_discrimination_curves.csv",
-    "results/population/discrimination/population_observer_weights.csv",
-    "results/population/discrimination/population_observer_readout.csv",
-    "results/population/discrimination/population_effective_rate_share.csv",
-    "results/population/discrimination/validation.json",
+    "results/discrimination/population_observer_rmse.csv",
+    "results/discrimination/population_discrimination_curves.csv",
+    "results/discrimination/population_observer_weights.csv",
+    "results/discrimination/population_observer_readout.csv",
+    "results/discrimination/population_effective_rate_share.csv",
+    "results/discrimination/validation.json",
 )
 PEAK_FIRST_IMAX_OUTPUT_PATHS = (
-    "results/population/detection/peak_first_imax_update/conditions.csv",
-    "results/population/detection/peak_first_imax_update/preflight.json",
-    "results/population/detection/peak_first_imax_update/index_regime_amplitudes.csv",
-    "results/population/detection/peak_first_imax_update/peak_first_imax_updates.csv",
-    "results/population/detection/peak_first_imax_update/peak_first_imax_audit_summary.csv",
-    "results/population/detection/peak_first_imax_update/merge_manifest.json",
+    "results/detection/peak_first_imax_update/conditions.csv",
+    "results/detection/peak_first_imax_update/preflight.json",
+    "results/detection/peak_first_imax_update/index_regime_amplitudes.csv",
+    "results/detection/peak_first_imax_update/peak_first_imax_updates.csv",
+    "results/detection/peak_first_imax_update/peak_first_imax_audit_summary.csv",
+    "results/detection/peak_first_imax_update/merge_manifest.json",
 )
 OUTPUTS_BY_KIND = {
     "detection": OUTPUT_PATHS,
     "discrimination": DISCRIMINATION_OUTPUT_PATHS,
     "peak-first-imax": PEAK_FIRST_IMAX_OUTPUT_PATHS,
+    "release": tuple(line.strip() for line in
+                     (Path(__file__).with_name("release_output_paths.txt")).read_text(encoding="utf-8").splitlines()
+                     if line.strip() and not line.startswith("#")),
 }
 
 
@@ -109,8 +112,9 @@ def main() -> int:
         archive.unlink(missing_ok=True)
     destination = {
         "detection": "data/detection/population/",
-        "discrimination": "results/population/discrimination/",
-        "peak-first-imax": "results/population/detection/peak_first_imax_update/",
+        "discrimination": "results/discrimination/",
+        "peak-first-imax": "results/detection/peak_first_imax_update/",
+        "release": "data/ and results/",
     }[args.kind]
     print(f"Installed {len(paths_to_download)} completed population {args.kind} outputs under {destination}")
     return 0

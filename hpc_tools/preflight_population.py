@@ -52,7 +52,7 @@ def validate_preflight(root: Path, expected_index: str) -> dict[str, object]:
             if not archive.files:
                 raise RuntimeError(f"Time-pattern archive is empty: {path}")
 
-    basis_dir = root / "data" / "space-time-V" / "population"
+    basis_dir = root / "data" / "space-time-V"
     manifest = basis_dir / "axon_basis_manifest.csv"
     if not manifest.is_file():
         raise FileNotFoundError(f"Population basis manifest is missing: {manifest}")
@@ -79,7 +79,7 @@ def validate_preflight(root: Path, expected_index: str) -> dict[str, object]:
             if not required.issubset(archive.files):
                 raise RuntimeError(f"Basis metadata is incomplete: {path}")
 
-    index_path = root / "data" / "population" / "reference" / "index-screen" / "index_axon.csv"
+    index_path = root / "data" / "reference" / "index-screen" / "index_axon.csv"
     if not index_path.is_file():
         raise FileNotFoundError(f"Preflight index screen is missing: {index_path}")
     index_rows = _read_rows(index_path)

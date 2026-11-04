@@ -14,7 +14,7 @@ from population.figure_generation.fig1_sampling import sampling_source, sampling
 class SamplingComponentTests(unittest.TestCase):
     def setUp(self):
         self.root = Path(__file__).resolve().parents[1]
-        self.index = pd.read_csv(self.root / 'data/population/reference/index-screen/index_axon.csv',
+        self.index = pd.read_csv(self.root / 'data/reference/index-screen/index_axon.csv',
                                  usecols=['index_axon_id'])
 
     def tearDown(self):

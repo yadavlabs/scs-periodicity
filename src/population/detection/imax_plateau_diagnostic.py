@@ -302,7 +302,7 @@ def _condition_paths(partial_dir: Path, row: pd.Series) -> dict[str, Path]:
 
 def _make_runner(root: Path, index: dict[str, Any], cv: float, frequency: float, rep_index: int):
     path = spacetime_path(
-        root / "data" / "space-time-V" / "population",
+        root / "data" / "space-time-V",
         str(index["cutline_id"]), float(index["diameter_um"]), float(cv), float(frequency),
         axon_id=str(index["axon_id"]),
     )
@@ -569,7 +569,7 @@ def prepare(
     repetitions_per_branch: int = DEFAULT_REPETITIONS_PER_BRANCH,
 ) -> dict[str, Any]:
     root = Path(root).resolve()
-    output_dir = Path(output_dir or root / "results/population/detection/imax_plateau_diagnostic").resolve()
+    output_dir = Path(output_dir or root / "results/detection/imax_plateau_diagnostic").resolve()
     table_path = root / "data/detection/population" / INDEX_REGIMES_CSV.name
     if not table_path.is_file():
         raise FileNotFoundError(f"Production index-regime table is required: {table_path}")
@@ -584,7 +584,7 @@ def prepare(
     checks = []
     for row in conditions.itertuples(index=False):
         input_path = spacetime_path(
-            root / "data/space-time-V/population", str(index["cutline_id"]),
+            root / "data/space-time-V", str(index["cutline_id"]),
             float(index["diameter_um"]), float(row.cv), float(row.freq),
             axon_id=str(index["axon_id"]),
         )

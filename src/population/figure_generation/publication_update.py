@@ -79,7 +79,7 @@ outputs below/above remain reproducibility diagnostics, not manuscript table ass
 
 def main():
     root = Path(__file__).resolve().parents[3]
-    path = root / 'notebooks/population/06_FigureGeneration_v2.ipynb'
+    path = root / 'notebooks/06_FigureGeneration_v2.ipynb'
     notebook = nbformat.read(path, as_version=4)
     install(notebook)
     indices = [1]
@@ -90,7 +90,7 @@ def main():
     execute_cells(notebook, root, indices)
     nbformat.write(notebook, path)
     # A selective run must not replace the full export manifest with a partial one.
-    output = root / 'results/population/figures_v3'
+    output = root / 'results/figures'
     manifest_path = output / 'figure_manifest_v3.csv'
     manifest = pd.read_csv(manifest_path)
     if 'table1_consolidated' not in set(manifest.stem):

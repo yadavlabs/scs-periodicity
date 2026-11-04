@@ -15,7 +15,7 @@ def count_source(v2, mode):
     if mode == 'true':
         frame = v2.index.copy()
     elif mode == 'cv0':
-        frame = pd.read_csv(v2.root / 'data/features/population/population_cv0_based_features.csv')
+        frame = pd.read_csv(v2.root / 'data/features/population_cv0_based_features.csv')
     else:
         raise ValueError(mode)
     frame['display_count'] = frame.n_index_spikes.astype(float)
@@ -85,7 +85,7 @@ def index_counts(v2, mode='true', *, amplitudes=False, point_interval=None):
 
 def feature_example(v2, freq=200, regime='I_50', rep=0, stem='suppfig6_population_feature_engineering'):
     """Population example with the single-axon figure's axes/line conventions."""
-    folder = v2.root / 'data/features/population'
+    folder = v2.root / 'data/features'
     with np.load(folder / 'population_cv0_time_representations_v5.npz', allow_pickle=True) as z:
         indices = np.flatnonzero((z['freq'] == freq) & (z['thresh_type'].astype(str) == regime) & (z['rep_index'] == rep))
         indices = indices[np.argsort(z['cv'][indices])]

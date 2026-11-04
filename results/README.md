@@ -1,4 +1,6 @@
-# Results Directory
+# Results
 
-Generated manuscript figures are written here. These outputs are intentionally
-not tracked in Git.
+The release data ZIP supplies the validated detection summaries, observer fits,
+locked-mixture inputs and outputs, and manuscript figure exports in this folder.
+These generated files are omitted from Git. A fresh Longleaf run writes its
+submission receipts and final validation report under `results/pipeline/`.

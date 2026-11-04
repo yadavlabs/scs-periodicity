@@ -55,7 +55,7 @@ from population.space_time_v.spacetime_core import spacetime_path
 
 
 UPDATE_VERSION = "peak_first_imax_selective_v3"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "results/population/detection/peak_first_imax_update"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "results/detection/peak_first_imax_update"
 UPDATE_COLUMNS = (
     "update_version", "detection_protocol_version", "index_axon_id",
     "index_cutline_id", "index_diameter_um", "file", "cv", "freq",
@@ -168,7 +168,7 @@ def _run_one(
     rep_index: int, I_first_uA: float, I_50_uA: float, n_input_pulses: int,
 ) -> dict[str, Any]:
     path = spacetime_path(
-        root / "data/space-time-V/population", str(index["cutline_id"]),
+        root / "data/space-time-V", str(index["cutline_id"]),
         float(index["diameter_um"]), cv, freq, axon_id=str(index["axon_id"]),
     )
     rep = load_population_rep(path, rep_index)
@@ -343,7 +343,7 @@ def run_condition(
 
     index = identify_index_axon(root=root, n_jobs=1, force=False)
     path = spacetime_path(
-        root / "data/space-time-V/population", str(index["cutline_id"]),
+        root / "data/space-time-V", str(index["cutline_id"]),
         float(index["diameter_um"]), cv, freq, axon_id=str(index["axon_id"]),
     )
     retained_rows: list[dict[str, Any]] = []

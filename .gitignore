@@ -18,6 +18,7 @@ Thumbs.db
 *.tmp
 logs/
 .legacy-single-axon/
+.local-archive/
 
 # GitHub Release / Zenodo archive products
 scs-periodicity-[0-9]*.zip
@@ -30,10 +31,11 @@ MRG_model/*
 !MRG_model/README.md
 
 # Population simulation outputs are distributed as release data, not Git objects.
-data/space-time-V/population/*SpaceTimeV.npz
+data/space-time-V/*SpaceTimeV.npz
 data/detection/population/
-data/features/population/
-results/population/
+data/detection/behavior_fit_inputs/
+data/features/
+results/
 
 # COMSOL binaries
 *.mph

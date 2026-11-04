@@ -541,7 +541,7 @@ def prepare_population_bases(root: Path = PROJECT_ROOT) -> Path:
     """Generate the complete anatomy-named Ve-basis cohort and its manifest."""
     root = root.resolve()
     comsol_dir = root / "data" / "comsol"
-    out_dir = root / "data" / "space-time-V" / "population"
+    out_dir = root / "data" / "space-time-V"
     generate_population_ve_bases(
         production_comsol_cutline_ids(comsol_dir), POPULATION_DIAMETERS_UM,
         comsol_dir=comsol_dir, out_dir=out_dir,
@@ -558,7 +558,7 @@ def run_population_spacetime_axon_job(
     if not 0 <= job_index < len(jobs):
         raise IndexError(f"job_index must be in [0, {len(jobs) - 1}]")
     job = jobs[job_index]
-    out_dir = root / "data" / "space-time-V" / "population"
+    out_dir = root / "data" / "space-time-V"
     basis_path = _basis_path(
         out_dir, str(job["cutline_id"]), float(job["diameter_um"]), str(job["phase_id"]),
     )
@@ -584,7 +584,7 @@ def run_population_spacetime_axon_job(
 def validate_population_spacetime(root: Path = PROJECT_ROOT) -> Path:
     """Validate every v2 basis/archive and atomically write the final manifest."""
     root = root.resolve()
-    out_dir = root / "data" / "space-time-V" / "population"
+    out_dir = root / "data" / "space-time-V"
     rows: list[dict[str, object]] = []
     for job in population_axon_jobs(root):
         basis_path = _basis_path(
@@ -707,8 +707,8 @@ def write_worker_bundle(worker: MRGWorkerSpec, *, model_dir: Path, out_dir: Path
 def prepare_mrg_workers(*, root: Path = PROJECT_ROOT, out_dir: Path | None = None) -> list[MRGWorkerSpec]:
     """Discover available diameter groups and create independent worker assets."""
     root = root.resolve()
-    workers = discover_mrg_workers(root / "data" / "space-time-V" / "population")
-    bundle_dir = out_dir or root / "results" / "population" / "mrg-workers"
+    workers = discover_mrg_workers(root / "data" / "space-time-V")
+    bundle_dir = out_dir or root / "results" / "mrg-workers"
     for worker in workers:
         write_worker_bundle(worker, model_dir=root / "MRG_model", out_dir=bundle_dir)
     return workers
@@ -761,14 +761,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             production_comsol_cutline_ids(comsol_dir),
             POPULATION_DIAMETERS_UM,
             comsol_dir=comsol_dir,
-            out_dir=root / "data" / "space-time-V" / "population",
+            out_dir=root / "data" / "space-time-V",
         )
         rows = generate_population_spacetime(
             basis_rows,
             POPULATION_CV_VALS,
             POPULATION_FREQ_VALS_HZ,
             time_pattern_dir=root / "data" / "time-patterns" / "population",
-            out_dir=root / "data" / "space-time-V" / "population",
+            out_dir=root / "data" / "space-time-V",
             overwrite=args.overwrite,
         )
         print(f"Population SpaceTimeV manifest contains {len(rows)} files.")

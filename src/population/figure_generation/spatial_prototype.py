@@ -446,7 +446,7 @@ def main():
     if args.lock_count_equivalent and (args.recruitment_onset or args.ring_colors != 'count-equivalent'):
         parser.error('--lock-count-equivalent requires count-equivalent colors and no onset alternative')
     root = Path(__file__).resolve().parents[3]
-    base = root / 'results/population/figures_v3/exploratory_s5'
+    base = root / 'results/figures/exploratory_s5'
     output = base / 'consolidated_prototype'
     if args.lock_count_equivalent:
         output = output / 'locked_count_equivalent'
@@ -455,8 +455,8 @@ def main():
     elif args.recruitment_onset:
         output = output / 'recruitment_onset'
     (output / '_data').mkdir(parents=True, exist_ok=True)
-    true_path = root / 'results/population/detection/imax_population_refresh/true_population_trial_summary.csv'
-    cv0_path = root / 'data/features/population/population_cv0_based_features.csv'
+    true_path = root / 'results/detection/true_population_trial_summary.csv'
+    cv0_path = root / 'data/features/population_cv0_based_features.csv'
     cv0 = pd.read_csv(cv0_path)
     ranking = rank_recruitment_repetitions(cv0, FREQUENCIES, CVS)
     winners = ranking[ranking.selected]
