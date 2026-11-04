@@ -45,7 +45,7 @@ phase/recruitment summaries from the current response tables.
   and index axon `S01_140um_ph1`.
 - Longleaf pilot job `7866889` completed with exit code `0:0` and three passing
   NEURON checks across two diameters and both nodal phases.
-- The 119-test Python suite passed, with two environment-dependent skips.
+- The 114-test Python suite passed after removing notebook-editing helpers.
 - The accepted figure notebook executed all 20 code cells. Its nine regenerated
   statistics CSVs matched the analysis checkout exactly, and 62 export records
   across 140 figure files were validated.

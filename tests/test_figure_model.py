@@ -1,6 +1,4 @@
 import unittest
-from copy import deepcopy
-import nbformat
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -152,26 +150,6 @@ class ManuscriptV2Tests(unittest.TestCase):
                 self.assertIn("I_5", ax.get_xticklabels()[1].get_text())
                 self.assertGreater(ax.get_ylim()[1], .8)
             plt.close(fig)
-
-    def test_figure_role_install_is_selective_and_idempotent(self):
-        from figure_generation.fig4_review import install, FIG4_CODE
-        cells = [nbformat.v4.new_code_cell('user_custom_plot()'),
-                 nbformat.v4.new_markdown_cell('## Figure 4 - old'),
-                 nbformat.v4.new_code_cell('old_locked_plot()'),
-                 nbformat.v4.new_markdown_cell('## Supplementary Figure 9 - old'),
-                 nbformat.v4.new_code_cell('model_comparison(v2)')]
-        notebook = nbformat.v4.new_notebook(cells=cells, metadata={'user_setting': 'keep'})
-        original = deepcopy(notebook)
-        install(notebook)
-        self.assertEqual(notebook.cells[0], original.cells[0])
-        self.assertEqual(notebook.metadata, original.metadata)
-        self.assertEqual(notebook.cells[2].source, FIG4_CODE)
-        self.assertIn('locked_mixtures=False', notebook.cells[2].source)
-        self.assertIn("mixture_style='grouped'", notebook.cells[2].source)
-        self.assertEqual(notebook.cells[4].source, original.cells[4].source)
-        first = deepcopy(notebook)
-        install(notebook)
-        self.assertEqual(notebook, first)
 
     def test_locked_panel_uses_conditional_controls_but_original_hybrid(self):
         figures = PopulationFigures.__new__(PopulationFigures)

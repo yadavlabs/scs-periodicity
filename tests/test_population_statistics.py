@@ -1,9 +1,7 @@
 """Numerics, pairing, correction families, and non-destructive notebook insertion."""
-from copy import deepcopy
 from dataclasses import replace
 import unittest
 
-import nbformat
 import numpy as np
 import pandas as pd
 from scipy.stats import t
@@ -12,7 +10,6 @@ from discrimination import discrimination_core as core
 from figure_generation.statistics import (
     holm, corrected_resampled, resampling_contrast, predict_saved, panel_parameters,
     rmse_tests, check_grid, reliance_tests)
-from figure_generation.refresh_statistics import install, PREFIX
 from test_population_observer_optimization import _spec, _design
 
 
@@ -118,19 +115,6 @@ class PopulationStatisticsTests(unittest.TestCase):
         self.assertTrue(result.query("family == 'frequency_contrasts'").family_size.eq(24).all())
         with self.assertRaises(ValueError):
             reliance_tests(pd.concat([data, data.iloc[:1]]), seed=7, n_perm=10, n_boot=10)
-
-    def test_notebook_install_preserves_other_cells_and_metadata(self):
-        nb = nbformat.v4.new_notebook(cells=[nbformat.v4.new_code_cell('custom = 1'),
-            nbformat.v4.new_markdown_cell('## Supplementary Figure 1 - manual')],
-            metadata={'kernelspec': {'name': 'python3', 'display_name': '.venv (3.12.10)'}})
-        before = deepcopy(nb)
-        install(nb)
-        first = deepcopy(nb)
-        install(nb)
-        self.assertEqual(nb, first)
-        self.assertEqual(nb.metadata, before.metadata)
-        self.assertEqual([c for c in nb.cells if not c.id.startswith(PREFIX)], before.cells)
-
 
 if __name__ == '__main__':
     unittest.main()
