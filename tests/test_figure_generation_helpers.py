@@ -1,9 +1,9 @@
 import unittest
 from pathlib import Path
 import nbformat
-from population.figure_generation.notebook_execution import local_kernel_manager, execute_cells
-from population.figure_generation.refresh_manuscript_v2_supplementary import selected_cells
-from population.figure_generation.audit_supplementary_examples import accepted_count
+from figure_generation.notebook_execution import local_kernel_manager, execute_cells
+from figure_generation.supplementary_selection import selected_cells
+from figure_generation.audit_supplementary_examples import accepted_count
 
 
 class FigureGenerationHelperTests(unittest.TestCase):

@@ -25,7 +25,7 @@ export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 mkdir -p "$PILOT_ROOT/partials" "$PROJECT/logs"
 
-python -m population.detection.index_operating_state_pilot run-condition \
+python -m detection.index_operating_state_pilot run-condition \
   --root "$PROJECT" \
   --condition-index "$SLURM_ARRAY_TASK_ID" \
   --partial-dir "$PILOT_ROOT/partials" \

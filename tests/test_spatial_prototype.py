@@ -6,7 +6,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from population.figure_generation.spatial_prototype import (
+from figure_generation.spatial_prototype import (
     summarize_trials, draw_curve_panel, count_equivalent_regimes, onset_cv_tag, CVS, REGIMES,
 )
 

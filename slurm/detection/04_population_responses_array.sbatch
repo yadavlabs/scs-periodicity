@@ -34,4 +34,4 @@ ARGS=(
 if [[ -n "${POPULATION_MANIFEST:-}" ]]; then
   ARGS+=(--population-manifest "$POPULATION_MANIFEST")
 fi
-python -m population.detection.detection_CLI run-population-trajectory-condition "${ARGS[@]}"
+python -m detection.detection_CLI run-population-trajectory-condition "${ARGS[@]}"

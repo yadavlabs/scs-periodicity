@@ -4,7 +4,7 @@ export PROJECT="${PROJECT:-$PWD}"
 cd "$PROJECT"
 # Keep this experiment isolated from manuscript/control outputs.
 export PARTIAL_ROOT="$PROJECT/results/partials/discrimination_block_cue_followup"
-export OUT_ROOT="$PROJECT/results/discrimination_block_cue_followup"
+export OUT_ROOT="$PROJECT/results/discrimination/pilot/block_cue"
 if [[ -e "$OUT_ROOT/submission.lock" ]] || [[ -d "$PARTIAL_ROOT" && -n "$(find "$PARTIAL_ROOT" -mindepth 1 -print -quit)" ]]; then
     echo "Existing follow-up submission/partials found; inspect jobs and results rather than overwrite or resubmit." >&2
     exit 2
@@ -35,9 +35,9 @@ export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 # Ensure the free-mixture comparison uses the same inputs/core as the audited
 # locked-mixture experiment, rather than merely fingerprinting whatever is here.
-python -m population.discrimination.locked_mixture_followup verify --root "$PROJECT" \
-    --bundle "$PROJECT/results/discrimination_locked_mixture_inputs"
-python -m population.discrimination.block_cue_followup --root "$PROJECT" --out-root "$OUT_ROOT"
+python -m discrimination.locked_mixture_followup verify --root "$PROJECT" \
+    --bundle "$PROJECT/results/discrimination/locked/inputs"
+python -m discrimination.block_cue_followup --root "$PROJECT" --out-root "$OUT_ROOT"
 export FOLLOWUP_MANIFEST="$OUT_ROOT/followup_inputs.json"
 if [[ "${DRY_RUN:-0}" == "1" ]]; then
     bash slurm/discrimination/run_population_discrimination_pipeline.sh

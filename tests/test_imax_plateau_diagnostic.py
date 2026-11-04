@@ -3,8 +3,8 @@ import pandas as pd
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-import population.detection.imax_plateau_diagnostic as diagnostic
-from population.detection.imax_plateau_diagnostic import (
+import detection.imax_plateau_diagnostic as diagnostic
+from detection.imax_plateau_diagnostic import (
     fine_transition_steps,
     first_stable_plateau,
     plateau_segments,

@@ -18,6 +18,6 @@ export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
 INPUTS="$PROJECT/data/detection/behavior_fit_inputs"
 python -u hpc_tools/verify_behavior_fit_inputs.py
-python -u -m population.detection.detection_CLI fit-behavior --root "$PROJECT" \
+python -u -m detection.detection_CLI fit-behavior --root "$PROJECT" \
   --index-regimes-csv "$INPUTS/index_regime_amplitudes_pre_imax.csv" \
   --recruitment-outcomes-csv "$INPUTS/population_recruitment_outcomes_pre_imax.csv"

@@ -26,10 +26,10 @@ if [[ -n "${PEAK_FIRST_IMAX_SOURCE_CSV:-}" ]]; then
   export PEAK_FIRST_IMAX_SOURCE_CSV
 fi
 
-python -m population.detection.stable_imax_update prepare \
+python -m detection.stable_imax_update prepare \
   --root "$PROJECT" --output-dir "$PEAK_FIRST_IMAX_OUTPUT_DIR" \
   "${SOURCE_ARGS[@]}"
-N_CONDITIONS=$(python -m population.detection.stable_imax_update count | tail -n 1)
+N_CONDITIONS=$(python -m detection.stable_imax_update count | tail -n 1)
 ARRAY_SPEC="${PEAK_FIRST_IMAX_ARRAY_SPEC:-0-$((N_CONDITIONS - 1))}"
 
 UPSTREAM_ARGS=()

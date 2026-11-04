@@ -15,7 +15,7 @@ PROJECT="${PROJECT:-${SLURM_SUBMIT_DIR:-$PWD}}"
 PROTOCOL="${DETECTION_PROTOCOL_VERSION:-canonical-cv0_tol0p01_peakfirst-imax_v3}"
 INDEX_ID="${EXPECTED_INDEX_AXON_ID:-S01_140um_ph1}"
 PARTIAL_DIR="$PROJECT/results/detection/partials/$PROTOCOL/$INDEX_ID/population-responses"
-OUT="$PROJECT/data/detection/population/population_responses.csv"
+OUT="$PROJECT/data/detection/population_responses.csv"
 cd "$PROJECT"
 module purge
 module load python/3.12.4
@@ -26,4 +26,4 @@ ARGS=(--root "$PROJECT" --mode true --partial-dir "$PARTIAL_DIR" --output "$OUT"
 if [[ -n "${POPULATION_MANIFEST:-}" ]]; then
   ARGS+=(--population-manifest "$POPULATION_MANIFEST")
 fi
-python -m population.detection.detection_CLI merge-population-recruitment "${ARGS[@]}"
+python -m detection.detection_CLI merge-population-recruitment "${ARGS[@]}"

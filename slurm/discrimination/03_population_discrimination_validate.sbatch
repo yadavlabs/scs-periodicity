@@ -20,11 +20,11 @@ source venv/bin/activate
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
-OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination}"
+OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination/control}"
 MC_TOTAL="${MC_TOTAL:-200}"
 EXPECTED_CONFIGURATIONS="${EXPECTED_CONFIGURATIONS:-8}"
 
-python -u src/population/discrimination/discrimination_CLI.py validate \
+python -u src/discrimination/discrimination_CLI.py validate \
   --out-root "$OUT_ROOT" \
   --expected-mc "$MC_TOTAL" \
   --expected-configurations "$EXPECTED_CONFIGURATIONS"

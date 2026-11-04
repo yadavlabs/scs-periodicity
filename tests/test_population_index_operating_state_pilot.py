@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from population.detection.index_operating_state_pilot import (
+from detection.index_operating_state_pilot import (
     PILOT_VERSION,
     analyze_local_samples,
     build_cv0_threshold_proposal,
@@ -11,7 +11,7 @@ from population.detection.index_operating_state_pilot import (
     target_definition_collisions,
     target_spike_counts,
 )
-from population.feature_engineering.feature_core import (
+from feature_engineering.feature_core import (
     _bounded_signed_distance_evidence,
     _rate_evidence,
 )

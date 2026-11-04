@@ -24,7 +24,7 @@ export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 
 IFS=',' read -r -a FREQUENCIES <<< "$FREQUENCY_TEXT"
-python -m population.detection.imax_plateau_diagnostic prepare \
+python -m detection.imax_plateau_diagnostic prepare \
   --root "$PROJECT" \
   --output-dir "$DIAGNOSTIC_ROOT" \
   --frequencies "${FREQUENCIES[@]}" \
@@ -33,7 +33,7 @@ python -m population.detection.imax_plateau_diagnostic prepare \
   --repetitions-per-branch "$REPETITIONS_PER_BRANCH"
 
 CONDITIONS="$DIAGNOSTIC_ROOT/diagnostic_conditions.csv"
-N_CONDITIONS=$(python -m population.detection.imax_plateau_diagnostic count --manifest "$CONDITIONS")
+N_CONDITIONS=$(python -m detection.imax_plateau_diagnostic count --manifest "$CONDITIONS")
 if [[ "$N_CONDITIONS" -lt 1 ]]; then
   echo "No diagnostic conditions were selected" >&2
   exit 2

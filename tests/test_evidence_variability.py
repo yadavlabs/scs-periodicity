@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import pandas as pd
-from population.figure_generation.evidence_variability import evidence_summary, SPECS
+from figure_generation.evidence_variability import evidence_summary, SPECS
 
 
 class EvidenceVariabilityTests(unittest.TestCase):

@@ -13,7 +13,7 @@ FIGURES = ROOT / "results/figures"
 OLD_ROOT = "C:\\Users\\tvrdy\\Desktop\\simulation-behavioral-prediction\\"
 PATH_REMAP = {
     "results/detection/imax_population_refresh/population_responses.csv":
-        "data/detection/population/population_responses.csv",
+        "data/detection/population_responses.csv",
 }
 
 

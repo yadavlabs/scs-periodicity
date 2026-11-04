@@ -16,6 +16,6 @@ source venv/bin/activate
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
-python -u -m population.discrimination.locked_mixture_followup merge \
+python -u -m discrimination.locked_mixture_followup merge \
   --root "$PROJECT" --bundle "$LOCKED_BUNDLE" --partials "$PARTIAL_ROOT" \
   --out "$OUT_ROOT" --expected-mc 200

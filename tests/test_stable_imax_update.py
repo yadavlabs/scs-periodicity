@@ -5,14 +5,14 @@ from unittest.mock import patch
 
 import pandas as pd
 
-from population.detection.detection_core import REGIME_COLUMNS
-from population.detection.stable_imax_update import (
+from detection.detection_core import REGIME_COLUMNS
+from detection.stable_imax_update import (
     UPDATE_COLUMNS,
     UPDATE_VERSION,
     _partial_path,
     merge,
 )
-from population.protocol import DETECTION_PROTOCOL_VERSION
+from protocol import DETECTION_PROTOCOL_VERSION
 
 
 class StableImaxUpdateTests(unittest.TestCase):
@@ -66,7 +66,7 @@ class StableImaxUpdateTests(unittest.TestCase):
             )
             output_dir = root / "output"
             with patch(
-                "population.detection.stable_imax_update.index_regime_conditions",
+                "detection.stable_imax_update.index_regime_conditions",
                 return_value=[(0.0, 20.0)],
             ):
                 outputs = merge(

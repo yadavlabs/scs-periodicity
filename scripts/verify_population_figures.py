@@ -18,7 +18,7 @@ from nbclient import NotebookClient
 
 
 ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = ROOT / "notebooks/06_FigureGeneration_v2.ipynb"
+NOTEBOOK = ROOT / "notebooks/06_FigureGeneration.ipynb"
 
 
 def main() -> int:
@@ -46,7 +46,7 @@ def main() -> int:
     )
     output_dir = ROOT / "results/figure_verification"
     output_dir.mkdir(parents=True, exist_ok=True)
-    output = output_dir / "06_FigureGeneration_v2.executed.ipynb"
+    output = output_dir / "06_FigureGeneration.executed.ipynb"
     try:
         client.execute()
     finally:

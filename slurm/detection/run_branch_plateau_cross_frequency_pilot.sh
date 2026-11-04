@@ -24,14 +24,14 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
 read -r -a FREQUENCY_ARGS <<< "$CROSS_BRANCH_FREQUENCIES"
-python -m population.detection.branch_plateau_pilot prepare-cross-frequency \
+python -m detection.branch_plateau_pilot prepare-cross-frequency \
   --root "$PROJECT" \
   --output-dir "$BRANCH_IMAX_OUTPUT_DIR" \
   --frequencies "${FREQUENCY_ARGS[@]}" \
   --high-branch-cutoff-uA "$CROSS_BRANCH_HIGH_CUTOFF_UA" \
   --max-high-per-frequency "$CROSS_BRANCH_MAX_HIGH_PER_FREQUENCY" \
   --controls-per-frequency "$CROSS_BRANCH_CONTROLS_PER_FREQUENCY"
-N_CONDITIONS=$(python -m population.detection.branch_plateau_pilot count \
+N_CONDITIONS=$(python -m detection.branch_plateau_pilot count \
   --manifest "$BRANCH_IMAX_MANIFEST" | tail -n 1)
 
 UPSTREAM_ARGS=()

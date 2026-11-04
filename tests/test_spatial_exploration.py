@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from population.figure_generation.spatial_exploration import recruitment_onset, grid_panel, rank_recruitment_repetitions
+from figure_generation.spatial_exploration import recruitment_onset, grid_panel, rank_recruitment_repetitions
 
 
 class SpatialExplorationTests(unittest.TestCase):

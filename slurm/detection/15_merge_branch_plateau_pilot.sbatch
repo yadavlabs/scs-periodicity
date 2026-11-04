@@ -21,7 +21,7 @@ module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
-python -m population.detection.branch_plateau_pilot merge \
+python -m detection.branch_plateau_pilot merge \
   --manifest "$MANIFEST" \
   --partial-dir "$PARTIAL_DIR" \
   --output-dir "$OUTPUT_DIR"

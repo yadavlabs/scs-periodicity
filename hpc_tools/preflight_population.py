@@ -9,8 +9,8 @@ from pathlib import Path
 
 import numpy as np
 
-from population.detection.detection_core import population_trajectory_condition_jobs
-from population.space_time_v.spacetime_core import (
+from detection.detection_core import population_trajectory_condition_jobs
+from space_time_v.spacetime_core import (
     POPULATION_CUTLINE_IDS,
     POPULATION_CV_VALS,
     POPULATION_DIAMETERS_UM,
@@ -79,7 +79,7 @@ def validate_preflight(root: Path, expected_index: str) -> dict[str, object]:
             if not required.issubset(archive.files):
                 raise RuntimeError(f"Basis metadata is incomplete: {path}")
 
-    index_path = root / "data" / "reference" / "index-screen" / "index_axon.csv"
+    index_path = root / "data" / "detection" / "reference" / "index_axon.csv"
     if not index_path.is_file():
         raise FileNotFoundError(f"Preflight index screen is missing: {index_path}")
     index_rows = _read_rows(index_path)

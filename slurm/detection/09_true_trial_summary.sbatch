@@ -15,4 +15,4 @@ module purge
 module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
-python -u -m population.detection.true_trial_summary --root "$PROJECT"
+python -u -m detection.true_trial_summary --root "$PROJECT"

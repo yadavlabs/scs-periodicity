@@ -25,7 +25,7 @@ module purge
 module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
-DETECTION_PROTOCOL_VERSION=$(python -c "from population.protocol import DETECTION_PROTOCOL_VERSION; print(DETECTION_PROTOCOL_VERSION)" | tail -n 1)
+DETECTION_PROTOCOL_VERSION=$(python -c "from protocol import DETECTION_PROTOCOL_VERSION; print(DETECTION_PROTOCOL_VERSION)" | tail -n 1)
 export DETECTION_PROTOCOL_VERSION
 
 # Regime and response caches contain amplitudes defined by a particular index
@@ -36,11 +36,11 @@ python hpc_tools/prepare_population_index_cache.py \
 python hpc_tools/prepare_population_index_cache.py \
   --root "$PROJECT" --expected-index-axon-id "$EXPECTED_INDEX_AXON_ID" \
   --expected-protocol-version "$DETECTION_PROTOCOL_VERSION" --apply
-N_REGIME_CONDITIONS=$(python -c "from population.detection.detection_core import index_regime_conditions; print(len(index_regime_conditions()))" | tail -n 1)
+N_REGIME_CONDITIONS=$(python -c "from detection.detection_core import index_regime_conditions; print(len(index_regime_conditions()))" | tail -n 1)
 if [[ -n "${RECRUITMENT_TASK_COUNT:-}" ]]; then
   N_RECRUITMENT_TASKS="$RECRUITMENT_TASK_COUNT"
 else
-  N_RECRUITMENT_TASKS=$(python -c "import os; from population.detection.detection_core import population_trajectory_condition_jobs; print(len(population_trajectory_condition_jobs(population_manifest=os.environ.get('POPULATION_MANIFEST'))))" | tail -n 1)
+  N_RECRUITMENT_TASKS=$(python -c "import os; from detection.detection_core import population_trajectory_condition_jobs; print(len(population_trajectory_condition_jobs(population_manifest=os.environ.get('POPULATION_MANIFEST'))))" | tail -n 1)
 fi
 
 REGIME_ARRAY="0-$((N_REGIME_CONDITIONS - 1))%${MAX_PARALLEL_REGIMES}"

@@ -22,12 +22,12 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
 read -r -a CV_ARGS <<< "$BRANCH_IMAX_CVS"
-python -m population.detection.branch_plateau_pilot prepare \
+python -m detection.branch_plateau_pilot prepare \
   --root "$PROJECT" \
   --output-dir "$BRANCH_IMAX_OUTPUT_DIR" \
   --cvs "${CV_ARGS[@]}" \
   --repetitions-per-cv "$BRANCH_IMAX_REPETITIONS_PER_CV"
-N_CONDITIONS=$(python -m population.detection.branch_plateau_pilot count \
+N_CONDITIONS=$(python -m detection.branch_plateau_pilot count \
   --manifest "$BRANCH_IMAX_MANIFEST" | tail -n 1)
 
 UPSTREAM_ARGS=()

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from population.detection.branch_plateau_pilot import (
+from detection.branch_plateau_pilot import (
     classify_branch,
     coarse_grid,
     early_recruitment_peak,

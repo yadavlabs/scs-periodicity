@@ -29,7 +29,7 @@ if [[ -n "${PEAK_FIRST_IMAX_BASE_UPDATES_CSV:-}" ]]; then
   BASE_ARGS=(--base-updates-csv "$PEAK_FIRST_IMAX_BASE_UPDATES_CSV")
 fi
 
-python -m population.detection.stable_imax_update merge \
+python -m detection.stable_imax_update merge \
   --root "$PROJECT" \
   --partial-dir "$PARTIAL_DIR" \
   --output-dir "$OUTPUT_DIR" \

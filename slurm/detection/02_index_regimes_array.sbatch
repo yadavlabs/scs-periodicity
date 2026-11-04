@@ -24,7 +24,7 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 mkdir -p "$PARTIAL_DIR"
 
 # Task 0..54 maps stably to CV=(0.0..1.0), then frequency=(10,20,50,100,200).
-python -m population.detection.detection_CLI run-index-regime-condition \
+python -m detection.detection_CLI run-index-regime-condition \
   --root "$PROJECT" \
   --condition-index "$SLURM_ARRAY_TASK_ID" \
   --n-jobs "$SLURM_CPUS_PER_TASK" \

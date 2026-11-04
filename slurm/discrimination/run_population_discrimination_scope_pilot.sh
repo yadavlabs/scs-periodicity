@@ -27,6 +27,6 @@ export WEIGHT_MAX_CAP_LAMBDA="${WEIGHT_MAX_CAP_LAMBDA:-0.01}"
 PROJECT="${PROJECT:-${SLURM_SUBMIT_DIR:-$PWD}}"
 export PROJECT
 export PARTIAL_ROOT="${PARTIAL_ROOT:-$PROJECT/results/partials/discrimination_v5_scope_hypothesis_pilot}"
-export OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination_v5_scope_hypothesis_pilot}"
+export OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination/pilot/scope}"
 
 bash slurm/discrimination/run_population_discrimination_pipeline.sh

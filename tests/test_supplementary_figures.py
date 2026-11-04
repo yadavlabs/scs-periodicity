@@ -7,9 +7,9 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.collections import PolyCollection
-from population.manuscript_v2 import REGIMES, SCOPES
-from population.figure_generation.supplementary import count_source, index_counts, model_comparison, central_point_mask
-from population.figure_generation.layout import observer_grid, panel_label, observer_headers, reliance_background
+from figure_generation.figure_model import REGIMES, SCOPES
+from figure_generation.supplementary import count_source, index_counts, model_comparison, central_point_mask
+from figure_generation.layout import observer_grid, panel_label, observer_headers, reliance_background
 
 
 class SupplementaryFigureTests(unittest.TestCase):

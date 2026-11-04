@@ -18,5 +18,5 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
 # One task creates/validates all 55 CV/frequency files for one axon.
-python -m population.space_time_v.spacetime_core run-axon \
+python -m space_time_v.spacetime_core run-axon \
   --root "$PROJECT" --job-index "$SLURM_ARRAY_TASK_ID"

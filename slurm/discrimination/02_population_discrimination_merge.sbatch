@@ -21,10 +21,10 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
 PARTIAL_ROOT="${PARTIAL_ROOT:-$PROJECT/results/partials/discrimination_v4_manuscript_regularized}"
-OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination}"
+OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination/control}"
 mkdir -p "$OUT_ROOT"
 
-python -u src/population/discrimination/discrimination_CLI.py merge \
+python -u src/discrimination/discrimination_CLI.py merge \
   --partial-root "$PARTIAL_ROOT" \
   --out-root "$OUT_ROOT"
 

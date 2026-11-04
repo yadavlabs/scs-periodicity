@@ -24,7 +24,7 @@ export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 mkdir -p "$PARTIAL_DIR" "$PROJECT/logs"
 
-python -m population.detection.imax_plateau_diagnostic run-condition \
+python -m detection.imax_plateau_diagnostic run-condition \
   --root "$PROJECT" \
   --condition-index "$SLURM_ARRAY_TASK_ID" \
   --manifest "$CONDITIONS" \

@@ -134,12 +134,12 @@ small mixture-only pilot, use a separate output root:
 MC_TOTAL=4 MC_SHARDS=4 STATE_SPECS_CSV=per_frequency:mixture \
   MIXTURE_SEMANTICS_CSV=latent_trial,evidence_average \
   PARTIAL_ROOT="$PWD/results/partials/discrimination_semantics_pilot" \
-  OUT_ROOT="$PWD/results/discrimination_semantics_pilot" \
+  OUT_ROOT="$PWD/results/discrimination/pilot/semantics" \
   bash slurm/discrimination/run_population_discrimination_pipeline.sh
 ```
 
 The dependent merge job writes MC summaries and stable notebook-facing files
-under `results/discrimination/`, including:
+under `results/discrimination/control/`, including:
 
 - `population_observer_rmse.csv`
 - `population_discrimination_curves.csv`

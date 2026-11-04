@@ -17,4 +17,4 @@ module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
-python -m population.space_time_v.spacetime_core validate --root "$PROJECT"
+python -m space_time_v.spacetime_core validate --root "$PROJECT"

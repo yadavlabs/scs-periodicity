@@ -3,8 +3,8 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from population.discrimination import discrimination_core as core
-from population.discrimination.locked_mixture_followup import (
+from discrimination import discrimination_core as core
+from discrimination.locked_mixture_followup import (
     LockedMixtureModel, readout_start, audit_source, FAMILIES, GAINS)
 from test_population_observer_optimization import _spec, _design
 

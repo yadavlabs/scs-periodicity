@@ -6,7 +6,7 @@ from unittest.mock import patch
 import numpy as np
 import pandas as pd
 
-from population.detection.detection_core import (
+from detection.detection_core import (
     DETECTION_PROTOCOL_VERSION,
     POPULATION_THRESHOLD_TOL_UA,
     POPULATION_RESPONSE_COLUMNS,
@@ -371,10 +371,10 @@ class PopulationDetectionOptimizationTests(unittest.TestCase):
                 pd.DataFrame([row], columns=POPULATION_RESPONSE_COLUMNS).to_csv(path, index=False)
             output = root / "merged.csv"
             with patch(
-                "population.detection.detection_core.population_recruitment_jobs",
+                "detection.detection_core.population_recruitment_jobs",
                 return_value=jobs,
             ), patch(
-                "population.detection.detection_core.identify_index_axon",
+                "detection.detection_core.identify_index_axon",
                 return_value={"axon_id": "index"},
             ):
                 merge_population_recruitment_partials(

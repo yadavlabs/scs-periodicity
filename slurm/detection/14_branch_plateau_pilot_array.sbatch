@@ -23,7 +23,7 @@ export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 mkdir -p "$PARTIAL_DIR"
 
-python -m population.detection.branch_plateau_pilot run-condition \
+python -m detection.branch_plateau_pilot run-condition \
   --root "$PROJECT" \
   --condition-index "$SLURM_ARRAY_TASK_ID" \
   --manifest "$MANIFEST" \

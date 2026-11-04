@@ -18,7 +18,7 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 
-python -m population.detection.index_operating_state_pilot preflight --root "$PROJECT"
+python -m detection.index_operating_state_pilot preflight --root "$PROJECT"
 
 UPSTREAM=()
 if [[ -n "${PILOT_DEPENDENCY:-}" ]]; then

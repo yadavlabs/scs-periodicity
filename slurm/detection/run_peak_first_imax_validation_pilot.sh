@@ -25,7 +25,7 @@ export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 
 read -r -a FREQUENCY_ARGS <<< "$VALIDATION_FREQUENCIES"
 read -r -a CV_ARGS <<< "$VALIDATION_CVS"
-python -m population.detection.branch_plateau_pilot prepare-peak-validation \
+python -m detection.branch_plateau_pilot prepare-peak-validation \
   --root "$PROJECT" \
   --output-dir "$BRANCH_IMAX_OUTPUT_DIR" \
   --frequencies "${FREQUENCY_ARGS[@]}" \
@@ -33,7 +33,7 @@ python -m population.detection.branch_plateau_pilot prepare-peak-validation \
   --repetitions-cv0 "$VALIDATION_REPETITIONS_CV0" \
   --repetitions-nonzero "$VALIDATION_REPETITIONS_NONZERO" \
   --high-branch-cutoff-uA "$VALIDATION_HIGH_BRANCH_CUTOFF_UA"
-N_CONDITIONS=$(python -m population.detection.branch_plateau_pilot count \
+N_CONDITIONS=$(python -m detection.branch_plateau_pilot count \
   --manifest "$BRANCH_IMAX_MANIFEST" | tail -n 1)
 
 UPSTREAM_ARGS=()

@@ -13,21 +13,21 @@ from pathlib import Path
 
 import numpy as np
 
-from population.detection.detection_core import (
+from detection.detection_core import (
     PopulationMRGRunner,
     _config_path,
     _reference_trace,
     load_population_basis,
     prepend_zeros_ms,
 )
-from population.space_time_v.spacetime_core import prepare_mrg_workers
+from space_time_v.spacetime_core import prepare_mrg_workers
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def reference_threshold(root: Path, axon_id: str) -> float:
-    path = root / "data/reference/index-screen/index_axon_thresholds.csv"
+    path = root / "data/detection/reference/index_axon_thresholds.csv"
     with path.open(newline="", encoding="utf-8") as handle:
         rows = [row for row in csv.DictReader(handle) if row["axon_id"] == axon_id]
     if len(rows) != 1:

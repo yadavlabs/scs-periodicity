@@ -15,4 +15,4 @@ module purge
 module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
-python -u src/population/discrimination/discrimination_core.py --preflight
+python -u src/discrimination/discrimination_core.py --preflight

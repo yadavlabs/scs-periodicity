@@ -21,7 +21,7 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 
-python -m population.detection.imax_plateau_diagnostic merge \
+python -m detection.imax_plateau_diagnostic merge \
   --root "$PROJECT" \
   --manifest "$DIAGNOSTIC_ROOT/diagnostic_conditions.csv" \
   --partial-dir "$DIAGNOSTIC_ROOT/partials" \

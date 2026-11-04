@@ -2,9 +2,9 @@
 set -euo pipefail
 export PROJECT="${PROJECT:-$PWD}"
 cd "$PROJECT"
-export LOCKED_BUNDLE="$PROJECT/results/discrimination_locked_mixture_inputs"
+export LOCKED_BUNDLE="$PROJECT/results/discrimination/locked/inputs"
 export PARTIAL_ROOT="$PROJECT/results/partials/discrimination_locked_mixture_followup"
-export OUT_ROOT="$PROJECT/results/discrimination_locked_mixture_followup"
+export OUT_ROOT="$PROJECT/results/discrimination/locked/followup"
 MAX_PARALLEL="${MAX_PARALLEL:-100}"
 if [[ ! "$MAX_PARALLEL" =~ ^[0-9]+$ ]] || (( MAX_PARALLEL < 1 || MAX_PARALLEL > 200 )); then
   echo "MAX_PARALLEL must be 1..200" >&2
@@ -21,7 +21,7 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
 if [[ -z "${PIPELINE_DEPENDENCY:-}" ]]; then
-  python -m population.discrimination.locked_mixture_followup verify --root "$PROJECT" --bundle "$LOCKED_BUNDLE"
+  python -m discrimination.locked_mixture_followup verify --root "$PROJECT" --bundle "$LOCKED_BUNDLE"
 fi
 echo "Locked primary mixtures: RT, TR, RR, TT + hybrid readout refit"
 echo "200 matched splits; 1000 fits; six starts per fit; array 0-199%$MAX_PARALLEL"

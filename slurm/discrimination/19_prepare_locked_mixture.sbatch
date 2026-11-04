@@ -15,5 +15,5 @@ module purge
 module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
-python -u -m population.discrimination.locked_mixture_followup prepare \
+python -u -m discrimination.locked_mixture_followup prepare \
   --root "$PROJECT" --bundle "$LOCKED_BUNDLE"

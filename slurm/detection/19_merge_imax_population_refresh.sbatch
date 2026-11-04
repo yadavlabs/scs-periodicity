@@ -16,4 +16,4 @@ module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 # Stage only: audit before explicit production promotion.
-python -m population.detection.refresh_imax_population merge --root "$PROJECT"
+python -m detection.refresh_imax_population merge --root "$PROJECT"

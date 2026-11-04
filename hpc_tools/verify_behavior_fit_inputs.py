@@ -42,7 +42,7 @@ def main() -> None:
             or not np.array_equal(joined.loc[imax, "n_index_spikes"],
                                   joined.loc[imax, "old_n_index_spikes"])):
         raise ValueError("Pre-Imax table does not match the retained update audit")
-    current_path = ROOT / "data/detection/population/index_regime_amplitudes.csv"
+    current_path = ROOT / "data/detection/index_regime_amplitudes.csv"
     if current_path.is_file():
         current = pd.read_csv(current_path, usecols=KEY + ["amp_uA", "n_index_spikes"])
         if len(current) != 49_500:

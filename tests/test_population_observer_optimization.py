@@ -11,8 +11,8 @@ from dataclasses import replace
 import numpy as np
 import pandas as pd
 
-from population.discrimination.discrimination_CLI import validate_outputs
-from population.discrimination.discrimination_core import (
+from discrimination.discrimination_CLI import validate_outputs
+from discrimination.discrimination_core import (
     Design,
     ModelSpec,
     PopulationObserverModel,
@@ -147,7 +147,7 @@ class PopulationObserverOptimizationTests(unittest.TestCase):
             x=np.ones(model.n_params), fun=0.401, success=True,
         )
         with patch(
-            "population.discrimination.discrimination_core.minimize",
+            "discrimination.discrimination_core.minimize",
             side_effect=[first, second],
         ) as mocked:
             theta, loss, success = _optimize_continuous(

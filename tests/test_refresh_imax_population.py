@@ -5,13 +5,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from population.protocol import DETECTION_PROTOCOL_VERSION
-from population.detection.refresh_imax_population import prepare, merge, validate_replacements
+from protocol import DETECTION_PROTOCOL_VERSION
+from detection.refresh_imax_population import prepare, merge, validate_replacements
 
 
 class RefreshTests(unittest.TestCase):
     def fixture(self, root):
-        data = root / "data/detection/population"
+        data = root / "data/detection"
         data.mkdir(parents=True)
         basis = root / "data/space-time-V"
         basis.mkdir(parents=True)

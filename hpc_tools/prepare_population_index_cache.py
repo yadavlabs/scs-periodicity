@@ -57,7 +57,7 @@ def incompatible_cache_files(
         partial_root = root / "results" / "detection" / "partials"
         for family in PARTIAL_FAMILIES:
             candidates.extend(sorted((partial_root / family).glob("*.csv")))
-    data_root = root / "data" / "detection" / "population"
+    data_root = root / "data" / "detection"
     candidates.extend(data_root / name for name in DERIVED_OUTPUTS if (data_root / name).is_file())
     incompatible: list[tuple[Path, str, str | None]] = []
     for path in candidates:

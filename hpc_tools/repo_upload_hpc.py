@@ -35,7 +35,7 @@ UPSTREAM_INPUT_PATHS = (
     "data/comsol",
     "data/time-patterns/slack",
     "data/time-patterns/population",
-    "data/reference/index-screen",
+    "data/detection/reference",
     "data/detection/behavior_fit_inputs",
 )
 DETECTION_INPUT_PATHS = (

@@ -31,7 +31,7 @@ if [[ -n "${PEAK_FIRST_IMAX_BASE_UPDATES_CSV:-}" ]]; then
   BASE_ARGS=(--base-updates-csv "$PEAK_FIRST_IMAX_BASE_UPDATES_CSV")
 fi
 
-python -m population.detection.stable_imax_update run-condition \
+python -m detection.stable_imax_update run-condition \
   --root "$PROJECT" \
   --condition-index "$SLURM_ARRAY_TASK_ID" \
   --n-jobs "$SLURM_CPUS_PER_TASK" \

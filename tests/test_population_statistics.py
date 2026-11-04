@@ -8,11 +8,11 @@ import numpy as np
 import pandas as pd
 from scipy.stats import t
 
-from population.discrimination import discrimination_core as core
-from population.figure_generation.statistics import (
+from discrimination import discrimination_core as core
+from figure_generation.statistics import (
     holm, corrected_resampled, resampling_contrast, predict_saved, panel_parameters,
     rmse_tests, check_grid, reliance_tests)
-from population.figure_generation.refresh_statistics import install, PREFIX
+from figure_generation.refresh_statistics import install, PREFIX
 from test_population_observer_optimization import _spec, _design
 
 

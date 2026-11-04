@@ -25,7 +25,7 @@ if [[ -n "${STABLE_IMAX_SOURCE_CSV:-}" ]]; then
   SOURCE_ARGS=(--source-csv "$STABLE_IMAX_SOURCE_CSV")
 fi
 
-python -m population.detection.stable_imax_update merge \
+python -m detection.stable_imax_update merge \
   --root "$PROJECT" \
   --partial-dir "$PARTIAL_DIR" \
   --output-dir "$OUTPUT_DIR" \

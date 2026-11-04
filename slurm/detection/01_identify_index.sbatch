@@ -24,8 +24,8 @@ ARGS=(--root "$PROJECT" --n-jobs "$SLURM_CPUS_PER_TASK" --force)
 if [[ -n "${POPULATION_MANIFEST:-}" ]]; then
   ARGS+=(--population-manifest "$POPULATION_MANIFEST")
 fi
-python -m population.detection.detection_CLI identify-index "${ARGS[@]}"
+python -m detection.detection_CLI identify-index "${ARGS[@]}"
 
 # Reusing old regime/response partials is valid only while the index is stable.
-python -m population.detection.detection_CLI verify-index \
+python -m detection.detection_CLI verify-index \
   --root "$PROJECT" --expected-axon-id "${EXPECTED_INDEX_AXON_ID:-S01_140um_ph1}"

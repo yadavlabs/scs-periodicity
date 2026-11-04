@@ -17,7 +17,7 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export PROJECT EXPECTED_INDEX_AXON_ID POPULATION_MANIFEST
 
-N_AXON_JOBS=$(python -m population.space_time_v.spacetime_core job-count --root "$PROJECT" | tail -n 1)
+N_AXON_JOBS=$(python -m space_time_v.spacetime_core job-count --root "$PROJECT" | tail -n 1)
 N_PHASE_GROUPS=$((N_AXON_JOBS / 6))
 N_CUTLINES=$((N_PHASE_GROUPS / 2))
 RECRUITMENT_TASK_COUNT=$((N_PHASE_GROUPS * 55))

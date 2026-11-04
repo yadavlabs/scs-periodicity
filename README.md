@@ -15,7 +15,8 @@ discrimination analyses.
 
 - `notebooks/`: ordered notebooks for time patterns, Ve bases,
   detection, features, discrimination, and manuscript figures.
-- `src/population/`: the population simulation, analysis, and figure code.
+- `src/`: population simulation, detection, discrimination, feature, and figure
+  code. There is no single-axon package in this release.
 - `data/`: source COMSOL cutlines, Slack inputs, generated time patterns, the
   420 Ve bases, and the reference index screen.
 - `hpc_tools/` and `slurm/`: Longleaf upload, pilot, and full

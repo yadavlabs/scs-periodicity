@@ -32,7 +32,7 @@ MRG_model/*
 
 # Population simulation outputs are distributed as release data, not Git objects.
 data/space-time-V/*SpaceTimeV.npz
-data/detection/population/
+data/detection/*.csv
 data/detection/behavior_fit_inputs/
 data/features/
 results/

@@ -17,6 +17,6 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
 # One matched MC split; all four controls plus hybrid refit, six starts each.
-python -u -m population.discrimination.locked_mixture_followup fit \
+python -u -m discrimination.locked_mixture_followup fit \
   --root "$PROJECT" --bundle "$LOCKED_BUNDLE" --mc "$SLURM_ARRAY_TASK_ID" \
   --out "$PARTIAL_ROOT/mc_$SLURM_ARRAY_TASK_ID"

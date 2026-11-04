@@ -21,7 +21,7 @@ source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 
-python -m population.detection.index_operating_state_pilot merge \
+python -m detection.index_operating_state_pilot merge \
   --root "$PROJECT" \
   --partial-dir "$PILOT_ROOT/partials" \
   --output-dir "$PILOT_ROOT"

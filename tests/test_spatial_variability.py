@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import ConnectionPatch
 from matplotlib.ticker import LogFormatterMathtext
 
-from population.manuscript_v2 import REGIMES
-from population.figure_generation.spatial_variability import (
+from figure_generation.figure_model import REGIMES
+from figure_generation.spatial_variability import (
     choose_cvs, repetition_panel, fill_spatial_column, upper_count_tick, draw_median_segments, manuscript_figure)
 
 
@@ -32,10 +32,10 @@ class SpatialVariabilityTests(unittest.TestCase):
             scores = pd.DataFrame({'cv': [1]})
             records = []
             v2 = SimpleNamespace(root=root, output=root, figure=lambda fig, stem: records.append((fig,stem)))
-            with patch('population.figure_generation.spatial_variability.prepare_data', return_value=(stats,None)), \
-                 patch('population.figure_generation.spatial_variability.load_trials', return_value=trials), \
-                 patch('population.figure_generation.spatial_variability.choose_cvs', return_value=({20:1.},scores)), \
-                 patch('population.figure_generation.spatial_variability.prototype', return_value='figure') as draw:
+            with patch('figure_generation.spatial_variability.prepare_data', return_value=(stats,None)), \
+                 patch('figure_generation.spatial_variability.load_trials', return_value=trials), \
+                 patch('figure_generation.spatial_variability.choose_cvs', return_value=({20:1.},scores)), \
+                 patch('figure_generation.spatial_variability.prototype', return_value='figure') as draw:
                 manuscript_figure(v2)
                 self.assertTrue(draw.call_args.kwargs['compact'])
             self.assertEqual(records, [('figure','suppfig5_population_recruitment')])

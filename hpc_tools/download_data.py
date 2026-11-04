@@ -13,20 +13,20 @@ from pathlib import Path, PurePosixPath
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PATHS = (
-    "data/detection/population/index_axon_thresholds.csv",
-    "data/detection/population/index_axon.csv",
-    "data/detection/population/index_regime_amplitudes.csv",
-    "data/detection/population/index_cv0_threshold_max.csv",
-    "data/detection/population/population_responses.csv",
-    "data/detection/population/population_cv0_based_responses.csv",
+    "data/detection/index_axon_thresholds.csv",
+    "data/detection/index_axon.csv",
+    "data/detection/index_regime_amplitudes.csv",
+    "data/detection/index_cv0_threshold_max.csv",
+    "data/detection/population_responses.csv",
+    "data/detection/population_cv0_based_responses.csv",
 )
 DISCRIMINATION_OUTPUT_PATHS = (
-    "results/discrimination/population_observer_rmse.csv",
-    "results/discrimination/population_discrimination_curves.csv",
-    "results/discrimination/population_observer_weights.csv",
-    "results/discrimination/population_observer_readout.csv",
-    "results/discrimination/population_effective_rate_share.csv",
-    "results/discrimination/validation.json",
+    "results/discrimination/control/population_observer_rmse.csv",
+    "results/discrimination/control/population_discrimination_curves.csv",
+    "results/discrimination/control/population_observer_weights.csv",
+    "results/discrimination/control/population_observer_readout.csv",
+    "results/discrimination/control/population_effective_rate_share.csv",
+    "results/discrimination/control/validation.json",
 )
 PEAK_FIRST_IMAX_OUTPUT_PATHS = (
     "results/detection/peak_first_imax_update/conditions.csv",
@@ -111,8 +111,8 @@ def main() -> int:
     else:
         archive.unlink(missing_ok=True)
     destination = {
-        "detection": "data/detection/population/",
-        "discrimination": "results/discrimination/",
+        "detection": "data/detection/",
+        "discrimination": "results/discrimination/control/",
         "peak-first-imax": "results/detection/peak_first_imax_update/",
         "release": "data/ and results/",
     }[args.kind]

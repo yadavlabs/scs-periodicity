@@ -26,7 +26,7 @@ export MKL_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1
 if [[ -n "${FOLLOWUP_MANIFEST:-}" ]]; then
-  python -m population.discrimination.block_cue_followup --root "$PROJECT" \
+  python -m discrimination.block_cue_followup --root "$PROJECT" \
     --out-root "$(dirname "$FOLLOWUP_MANIFEST")" --verify-only
 fi
 
@@ -126,7 +126,7 @@ mkdir -p "$OUT_DIR"
 
 echo "[slurm] task=$TASK/$((TOTAL-1)) weights=$WEIGHT_SCOPE readout=$READOUT_SCOPE state=$STATE_MODE model=$MODEL_FAMILY gate=$RATE_GATE_MODE semantics=$SEMANTICS mc_start=$MC_START mc_count=$MC_PER_SHARD"
 
-python -u src/population/discrimination/discrimination_core.py \
+python -u src/discrimination/discrimination_core.py \
   --evidence-csv "$EVIDENCE_CSV" \
   --slack-dir "$SLACK_DIR" \
   --out-dir "$OUT_DIR" \

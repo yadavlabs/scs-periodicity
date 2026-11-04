@@ -9,8 +9,8 @@ import numpy as np
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from population.detection.detection_core import population_trajectory_condition_jobs
-from population.space_time_v.spacetime_core import (
+from detection.detection_core import population_trajectory_condition_jobs
+from space_time_v.spacetime_core import (
     POPULATION_DIAMETERS_UM,
     discover_mrg_workers,
     make_axon_id,

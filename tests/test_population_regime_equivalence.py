@@ -3,8 +3,8 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from population.discrimination.discrimination_core import ModelSpec, PopulationObserverModel
-from population.feature_engineering.feature_core import (
+from discrimination.discrimination_core import ModelSpec, PopulationObserverModel
+from feature_engineering.feature_core import (
     RESPONSE_EQUIVALENCE_COLUMNS,
     _regime_response_equivalence,
 )

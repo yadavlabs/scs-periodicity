@@ -1,6 +1,7 @@
 # Results
 
-The release data ZIP supplies the validated detection summaries, observer fits,
-locked-mixture inputs and outputs, and manuscript figure exports in this folder.
-These generated files are omitted from Git. A fresh Longleaf run writes its
-submission receipts and final validation report under `results/pipeline/`.
+The release data ZIP supplies detection summaries in `detection/`, observer fits
+in `discrimination/control/` and `discrimination/scope/`, the locked-mixture
+bundle and follow-up in `discrimination/locked/`, and figure exports in
+`figures/`. These generated files are omitted from Git. A fresh Longleaf run
+writes its receipts and final validation report under `pipeline/`.

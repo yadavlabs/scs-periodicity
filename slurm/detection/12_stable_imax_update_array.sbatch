@@ -27,7 +27,7 @@ if [[ -n "${STABLE_IMAX_SOURCE_CSV:-}" ]]; then
   SOURCE_ARGS=(--source-csv "$STABLE_IMAX_SOURCE_CSV")
 fi
 
-python -m population.detection.stable_imax_update run-condition \
+python -m detection.stable_imax_update run-condition \
   --root "$PROJECT" \
   --condition-index "$SLURM_ARRAY_TASK_ID" \
   --n-jobs "$SLURM_CPUS_PER_TASK" \

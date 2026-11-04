@@ -54,7 +54,7 @@ class PopulationIndexCacheTests(unittest.TestCase):
     def test_archives_same_index_when_protocol_is_stale_or_missing(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            data = root / "data/detection/population"
+            data = root / "data/detection"
             current = data / "index_regime_amplitudes.csv"
             stale = data / "index_cv0_threshold_max.csv"
             legacy = data / "population_responses.csv"

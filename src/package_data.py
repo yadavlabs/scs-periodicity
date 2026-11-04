@@ -21,17 +21,16 @@ SOURCE_INPUT_DIRS = (
     "data/time-patterns/slack",
     "data/detection/slack",
     "data/discrimination/slack",
-    "data/reference/index-screen",
+    "data/detection/reference",
 )
 GENERATED_DIRS = (
-    "data/detection/population",
     "data/detection/behavior_fit_inputs",
     "data/features",
     "results/detection/behavioral_matching",
-    "results/discrimination",
-    "results/discrimination_v5_scope_hypothesis_full",
-    "results/discrimination_locked_mixture_followup",
-    "results/discrimination_locked_mixture_inputs",
+    "results/discrimination/control",
+    "results/discrimination/scope",
+    "results/discrimination/locked/followup",
+    "results/discrimination/locked/inputs",
     "results/figures",
 )
 NOTICE_FILES = ("LICENSE", "THIRD_PARTY_NOTICES.md", "CITATION.cff")
@@ -52,13 +51,15 @@ def sha256(path: Path) -> str:
 
 
 def collect_files(root: Path) -> list[Path]:
-    missing = [name for name in (*SOURCE_INPUT_DIRS, *GENERATED_DIRS, *NOTICE_FILES, *EXTRA_FILES)
+    missing = [name for name in (*SOURCE_INPUT_DIRS, *GENERATED_DIRS, *NOTICE_FILES,
+                                 *EXTRA_FILES, "data/detection")
                if not (root / name).exists()]
     if missing:
         raise FileNotFoundError("Missing release inputs:\n" + "\n".join(missing))
     # Source inputs, Ve bases, and notices already live in the source ZIP.
     # Repeating them here would overwrite Git-normalized copies on extraction.
     files = [root / name for name in EXTRA_FILES]
+    files.extend((root / "data/detection").glob("*.csv"))
     for directory in GENERATED_DIRS:
         files.extend(path for path in (root / directory).rglob("*")
                      if path.is_file() and not any(
@@ -80,12 +81,12 @@ def collect_files(root: Path) -> list[Path]:
             raise FileNotFoundError(basis)
 
     needed = (
-        "data/detection/population/index_regime_amplitudes.csv",
-        "data/detection/population/population_responses.csv",
-        "data/detection/population/population_cv0_based_responses.csv",
+        "data/detection/index_regime_amplitudes.csv",
+        "data/detection/population_responses.csv",
+        "data/detection/population_cv0_based_responses.csv",
         "data/features/population_cv0_template_evidence.csv",
-        "results/discrimination_v5_scope_hypothesis_full/validation.json",
-        "results/discrimination_locked_mixture_followup/validation.json",
+        "results/discrimination/scope/validation.json",
+        "results/discrimination/locked/followup/validation.json",
     )
     for name in needed:
         if not (root / name).is_file():

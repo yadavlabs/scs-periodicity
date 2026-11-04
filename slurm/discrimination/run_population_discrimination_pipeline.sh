@@ -7,7 +7,7 @@ cd "$PROJECT"
 mkdir -p logs
 
 PARTIAL_ROOT="${PARTIAL_ROOT:-$PROJECT/results/partials/discrimination_v4_manuscript_regularized}"
-OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination}"
+OUT_ROOT="${OUT_ROOT:-$PROJECT/results/discrimination/control}"
 MAX_PARALLEL="${MAX_PARALLEL:-960}"
 MC_TOTAL="${MC_TOTAL:-200}"
 MC_SHARDS="${MC_SHARDS:-20}"
@@ -97,7 +97,7 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 if [[ "$DRY_RUN" == "1" ]]; then
   if [[ -z "${PIPELINE_DEPENDENCY:-}" ]]; then
-    python -u src/population/discrimination/discrimination_core.py --preflight
+    python -u src/discrimination/discrimination_core.py --preflight
   else
     echo "[dry-run] preflight will follow job $PIPELINE_DEPENDENCY"
   fi
@@ -112,7 +112,7 @@ if [[ -n "${PIPELINE_DEPENDENCY:-}" ]]; then
   UPSTREAM_DEPENDENCY=(--dependency="afterok:$PREFLIGHT_JOB")
   echo "Submitted population discrimination preflight: $PREFLIGHT_JOB"
 else
-  python -u src/population/discrimination/discrimination_core.py --preflight
+  python -u src/discrimination/discrimination_core.py --preflight
 fi
 
 ARRAY_JOB=$(sbatch --parsable \

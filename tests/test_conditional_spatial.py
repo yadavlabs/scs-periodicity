@@ -6,15 +6,15 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from population.figure_generation.conditional_spatial import conditional_statistics, conditional_faces, manuscript_figure, MANUSCRIPT_STEM
-from population.figure_generation.spatial_exploration import grid_panel
+from figure_generation.conditional_spatial import conditional_statistics, conditional_faces, manuscript_figure, MANUSCRIPT_STEM
+from figure_generation.spatial_exploration import grid_panel
 
 
 class ConditionalSpatialTests(unittest.TestCase):
     def test_notebook_entry_exports_one_named_figure(self):
         v2 = Mock(root=Path('repo'), output=Path('exports'))
-        with patch('population.figure_generation.conditional_spatial.prepare_data', return_value=('stats', 'summaries')) as prepare, \
-             patch('population.figure_generation.conditional_spatial.draw_figure', return_value='figure') as draw:
+        with patch('figure_generation.conditional_spatial.prepare_data', return_value=('stats', 'summaries')) as prepare, \
+             patch('figure_generation.conditional_spatial.draw_figure', return_value='figure') as draw:
             result = manuscript_figure(v2)
         prepare.assert_called_once_with(v2.root, v2.output / f'{MANUSCRIPT_STEM}_data')
         draw.assert_called_once_with('stats', 'summaries')
