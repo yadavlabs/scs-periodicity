@@ -24,14 +24,14 @@ model. Users should cite both ModelDB and McIntyre et al. when using the model.
 
 ## BioRender Content in Figures 1 and 2
 
-Figures 1 and 2 include content created with BioRender.com under the UNC School
-of Medicine institutional plan. They are included so the manuscript-facing
-notebook displays the complete manuscript figures, but they are excluded from
-the repository's CC-BY-4.0 data grant and remain subject to applicable
-BioRender terms.
+The accepted Figure 1 and Figure 2 composites in
+`notebooks/cache/static-figures/` include content created with BioRender.com
+under the UNC School of Medicine institutional plan. Their PNG and PDF exports
+are included so the manuscript-facing notebook displays the complete figures.
+They are excluded from the repository's CC-BY-4.0 data grant and remain subject
+to applicable BioRender terms.
 
 Created with BioRender.com.
 
-The final manuscript submission should use the BioRender publication-license
-workflow and citation details corresponding to the submitted publisher and
-manuscript record.
+Publication and attribution for these composites follow the applicable
+BioRender and publisher terms.

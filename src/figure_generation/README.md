@@ -5,6 +5,13 @@ It reads the population outputs from the release data ZIP and writes figures,
 source tables, statistics, and an export manifest under
 `results/figures/`.
 
+Figure 1, Figure 2, and Supplementary Figure 1 are accepted, manually assembled
+composites. Their PNG/PDF exports are tracked under
+`notebooks/cache/static-figures/`, copied to `results/figures/`, and displayed by
+the notebook. The PNGs match the accepted manuscript images byte for byte.
+Python regenerates the remaining figures and the component assets for Figures
+1 and 2, but does not rebuild the manually assembled composites.
+
 From the repository root, install `requirements.txt`, extract the release data
 ZIP into the repository, and run:
 

@@ -14,7 +14,9 @@ discrimination analyses.
 ## Repository contents
 
 - `notebooks/`: ordered notebooks for time patterns, Ve bases,
-  detection, features, discrimination, and manuscript figures.
+  detection, features, discrimination, and manuscript figures. Accepted static
+  artwork exports for Figures 1 and 2 and Supplementary Figure 1 are under
+  `notebooks/cache/static-figures/`.
 - `src/`: population simulation, detection, discrimination, feature, and figure
   code. There is no single-axon package in this release.
 - `data/`: source COMSOL cutlines, Slack inputs, generated time patterns, the

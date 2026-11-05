@@ -46,9 +46,11 @@ phase/recruitment summaries from the current response tables.
 - Longleaf pilot job `7866889` completed with exit code `0:0` and three passing
   NEURON checks across two diameters and both nodal phases.
 - The 114-test Python suite passed after removing notebook-editing helpers.
-- The accepted figure notebook executed all 20 code cells. Its nine regenerated
-  statistics CSVs matched the analysis checkout exactly, and 62 export records
-  across 140 figure files were validated.
+- The accepted figure notebook executed all 23 code cells. Its nine regenerated
+  statistics CSVs matched the analysis checkout exactly, and 68 export records
+  across 146 export files were validated. The added Figure 1, Figure 2, and
+  Supplementary Figure 1 PNGs match the accepted manuscript images byte for
+  byte; their matching PDFs are tracked in the source archive.
 - The independent true-CV summary stage reproduced all 49,500 saved trial
   totals exactly at the dataframe level from 20,790,000 population response
   rows.
