@@ -19,6 +19,8 @@ Thumbs.db
 logs/
 .legacy-single-axon/
 .local-archive/
+/hpc-run-*/
+/accepted-reference-*/
 
 # GitHub Release / Zenodo archive products
 scs-periodicity-[0-9]*.zip
