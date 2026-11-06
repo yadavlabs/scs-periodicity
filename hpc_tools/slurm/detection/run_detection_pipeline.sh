@@ -66,11 +66,11 @@ submit_recruitment_batches() {
     fi
     jid=$(sbatch --parsable \
       --dependency=afterok:"$previous" \
-      --array="${start}-${end}%${parallel}" \
-      --export=ALL \
+      --array="0-$((end - start))%${parallel}" \
+      --export="ALL,RECRUITMENT_TASK_OFFSET=${start}" \
       "$script")
     jid="${jid%%;*}"
-    echo "Submitted $script array ${start}-${end}%${parallel}: $jid (after $previous)" >&2
+    echo "Submitted $script task IDs ${start}-${end} as array 0-$((end - start))%${parallel}: $jid (after $previous)" >&2
     previous="$jid"
     start=$((end + 1))
   done

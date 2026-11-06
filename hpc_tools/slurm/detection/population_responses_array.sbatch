@@ -26,7 +26,8 @@ mkdir -p "$PARTIAL_DIR"
 # One task = one cutline x one CV/frequency condition. Diameters run largest
 # first in isolated child processes, allowing audited smaller-diameter pruning.
 ARGS=(
-  --root "$PROJECT" --mode true --trajectory-job-index "$SLURM_ARRAY_TASK_ID"
+  --root "$PROJECT" --mode true
+  --trajectory-job-index "$((SLURM_ARRAY_TASK_ID + ${RECRUITMENT_TASK_OFFSET:-0}))"
   --n-jobs "$SLURM_CPUS_PER_TASK" --partial-dir "$PARTIAL_DIR"
   --max-pruning-audit-rate "${MAX_PRUNING_AUDIT_RATE:-0.01}"
   --diameter-pruning-audit-rate "${DIAMETER_PRUNING_AUDIT_RATE:-0.01}"

@@ -24,7 +24,8 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 mkdir -p "$PARTIAL_DIR"
 
 ARGS=(
-  --root "$PROJECT" --mode cv0 --trajectory-job-index "$SLURM_ARRAY_TASK_ID"
+  --root "$PROJECT" --mode cv0
+  --trajectory-job-index "$((SLURM_ARRAY_TASK_ID + ${RECRUITMENT_TASK_OFFSET:-0}))"
   --n-jobs "$SLURM_CPUS_PER_TASK" --partial-dir "$PARTIAL_DIR"
   --max-pruning-audit-rate "${MAX_PRUNING_AUDIT_RATE:-0.01}"
   --diameter-pruning-audit-rate "${DIAMETER_PRUNING_AUDIT_RATE:-0.01}"
