@@ -28,17 +28,17 @@ echo "  cutlines=$N_CUTLINES phase-groups=$N_PHASE_GROUPS axons=$N_AXON_JOBS Spa
 echo "  SpaceTimeV concurrency=$MAX_PARALLEL_SPACETIME"
 echo "  expected index=$EXPECTED_INDEX_AXON_ID"
 
-JID_PATTERNS=$(sbatch --parsable --export=ALL hpc_tools/slurm/pipeline/00_generate_time_patterns.sbatch)
+JID_PATTERNS=$(sbatch --parsable --export=ALL hpc_tools/slurm/pipeline/generate_time_patterns.sbatch)
 JID_PATTERNS="${JID_PATTERNS%%;*}"
 JID_BASES=$(sbatch --parsable --dependency=afterok:"$JID_PATTERNS" \
-  --export=ALL hpc_tools/slurm/space_time_v/00_prepare_bases.sbatch)
+  --export=ALL hpc_tools/slurm/space_time_v/prepare_bases.sbatch)
 JID_BASES="${JID_BASES%%;*}"
 JID_STV=$(sbatch --parsable --dependency=afterok:"$JID_BASES" \
   --array="0-$((N_AXON_JOBS - 1))%${MAX_PARALLEL_SPACETIME}" --export=ALL \
-  hpc_tools/slurm/space_time_v/01_generate_spacetime_array.sbatch)
+  hpc_tools/slurm/space_time_v/generate_spacetime_array.sbatch)
 JID_STV="${JID_STV%%;*}"
 JID_VALIDATE=$(sbatch --parsable --dependency=afterok:"$JID_STV" --export=ALL \
-  hpc_tools/slurm/space_time_v/02_validate_spacetime.sbatch)
+  hpc_tools/slurm/space_time_v/validate_spacetime.sbatch)
 JID_VALIDATE="${JID_VALIDATE%%;*}"
 echo "Submitted upstream: patterns=$JID_PATTERNS bases=$JID_BASES spacetime=$JID_STV validate=$JID_VALIDATE"
 PIPELINE_DEPENDENCY="$JID_VALIDATE" bash hpc_tools/slurm/detection/run_detection_pipeline.sh
@@ -48,16 +48,16 @@ source "$PROJECT/logs/pipeline/detection_jobs.env"
 # the behavioral fit. The trial summary retains the independent I_max audit.
 JID_DETECTION_NOTEBOOK=$(sbatch --parsable \
   --dependency="afterok:$JID_MERGE_TRUE:$JID_MERGE_CV0" --export=ALL \
-  hpc_tools/slurm/detection/08_finalize_detection.sbatch)
+  hpc_tools/slurm/detection/finalize_detection.sbatch)
 JID_DETECTION_NOTEBOOK="${JID_DETECTION_NOTEBOOK%%;*}"
 JID_ACCEPTED_FIT=$(sbatch --parsable --dependency="afterok:$JID_DETECTION_NOTEBOOK" \
-  --export=ALL hpc_tools/slurm/detection/10_fit_accepted_behavior.sbatch)
+  --export=ALL hpc_tools/slurm/detection/fit_accepted_behavior.sbatch)
 JID_ACCEPTED_FIT="${JID_ACCEPTED_FIT%%;*}"
 JID_TRUE_SUMMARY=$(sbatch --parsable --dependency="afterok:$JID_MERGE_TRUE" \
-  --export=ALL hpc_tools/slurm/detection/09_true_trial_summary.sbatch)
+  --export=ALL hpc_tools/slurm/detection/true_trial_summary.sbatch)
 JID_TRUE_SUMMARY="${JID_TRUE_SUMMARY%%;*}"
 JID_FEATURES=$(sbatch --parsable --dependency="afterok:$JID_MERGE_CV0" \
-  --export=ALL hpc_tools/slurm/feature/01_build_features.sbatch)
+  --export=ALL hpc_tools/slurm/feature/build_features.sbatch)
 JID_FEATURES="${JID_FEATURES%%;*}"
 
 PIPELINE_DEPENDENCY="$JID_FEATURES" \
@@ -77,7 +77,7 @@ JID_LOCKED=$(cat "$PROJECT/logs/pipeline/discrimination_locked.id")
 
 JID_RELEASE=$(sbatch --parsable \
   --dependency="afterok:$JID_ACCEPTED_FIT:$JID_TRUE_SUMMARY:$JID_CONTROL:$JID_SCOPE:$JID_LOCKED" \
-  --export=ALL hpc_tools/slurm/pipeline/99_validate_release.sbatch)
+  --export=ALL hpc_tools/slurm/pipeline/validate_release.sbatch)
 JID_RELEASE="${JID_RELEASE%%;*}"
 printf 'release_validation=%s\n' "$JID_RELEASE" > "$PROJECT/logs/pipeline/final_job.txt"
 echo "Submitted downstream: detection notebook=$JID_DETECTION_NOTEBOOK accepted fit=$JID_ACCEPTED_FIT true summary=$JID_TRUE_SUMMARY features=$JID_FEATURES"

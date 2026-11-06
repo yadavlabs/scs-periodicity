@@ -4,8 +4,8 @@
 optional upstream dependency. The jobs compile the MRG mechanism, identify the
 index axon, calculate peak-first Imax and other index regimes, run both
 population-response branches, and merge the outputs. The root coordinator
-then runs `08_finalize_detection.sbatch`, `09_true_trial_summary.sbatch`, and
-`10_fit_accepted_behavior.sbatch` after their required inputs complete.
+then runs `finalize_detection.sbatch`, `true_trial_summary.sbatch`, and
+`fit_accepted_behavior.sbatch` after their required inputs complete.
 
 Run the complete release workflow with
 `bash hpc_tools/slurm/run_population_pipeline.sh`. The detection launcher can

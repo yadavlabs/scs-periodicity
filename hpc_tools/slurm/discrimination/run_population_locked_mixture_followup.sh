@@ -37,19 +37,19 @@ mkdir "$OUT_ROOT/submission.lock"
 UPSTREAM_DEPENDENCY=()
 if [[ -n "${PIPELINE_DEPENDENCY:-}" ]]; then
   PREPARE_JOB=$(sbatch --parsable --dependency="afterok:$PIPELINE_DEPENDENCY" --export=ALL \
-    hpc_tools/slurm/discrimination/19_prepare_locked_mixture.sbatch)
+    hpc_tools/slurm/discrimination/prepare_locked_mixture.sbatch)
   PREPARE_JOB="${PREPARE_JOB%%;*}"
   printf 'prepare=%s\n' "$PREPARE_JOB" >> "$OUT_ROOT/submitted_jobs.txt"
   echo "Submitted locked-mixture preparation: $PREPARE_JOB"
   UPSTREAM_DEPENDENCY=(--dependency="afterok:$PREPARE_JOB")
 fi
 ARRAY_JOB=$(sbatch --parsable "${UPSTREAM_DEPENDENCY[@]}" --array="0-199%$MAX_PARALLEL" --export=ALL \
-  hpc_tools/slurm/discrimination/20_locked_mixture_array.sbatch)
+  hpc_tools/slurm/discrimination/locked_mixture_array.sbatch)
 ARRAY_JOB="${ARRAY_JOB%%;*}"
 printf 'array=%s\n' "$ARRAY_JOB" >> "$OUT_ROOT/submitted_jobs.txt"
 echo "Submitted array: $ARRAY_JOB"
 MERGE_JOB=$(sbatch --parsable --dependency="afterok:$ARRAY_JOB" --export=ALL \
-  hpc_tools/slurm/discrimination/21_locked_mixture_merge.sbatch)
+  hpc_tools/slurm/discrimination/locked_mixture_merge.sbatch)
 MERGE_JOB="${MERGE_JOB%%;*}"
 printf 'merge_validate=%s\n' "$MERGE_JOB" >> "$OUT_ROOT/submitted_jobs.txt"
 echo "Submitted dependent merge/validation: $MERGE_JOB"

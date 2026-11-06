@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
 
-from protocol import DETECTION_PROTOCOL_VERSION
+from detection.protocol import DETECTION_PROTOCOL_VERSION
 
 KEY = ["freq", "cv", "rep_index", "thresh_type"]
 DEFAULT = "data/detection/imax_population_refresh"

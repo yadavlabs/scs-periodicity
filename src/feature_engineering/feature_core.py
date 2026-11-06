@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
 
-from protocol import DETECTION_PROTOCOL_VERSION
+from detection.protocol import DETECTION_PROTOCOL_VERSION
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]

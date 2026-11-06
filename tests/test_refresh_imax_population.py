@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from protocol import DETECTION_PROTOCOL_VERSION
+from detection.protocol import DETECTION_PROTOCOL_VERSION
 from detection.refresh_imax_population import prepare, merge, validate_replacements
 
 

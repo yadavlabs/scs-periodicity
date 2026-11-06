@@ -12,7 +12,7 @@ from detection.stable_imax_update import (
     _partial_path,
     merge,
 )
-from protocol import DETECTION_PROTOCOL_VERSION
+from detection.protocol import DETECTION_PROTOCOL_VERSION
 
 
 class StableImaxUpdateTests(unittest.TestCase):

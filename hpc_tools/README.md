@@ -6,6 +6,24 @@ at a pinned commit, generates the configurable population HOC locally, and
 compiles `AXNODE.mod` on the compute node. The upstream HOC and mechanism source
 are not included in this repository or its upload archive.
 
+## What is included
+
+The public source ZIP includes the tools needed to repeat the run and check its
+outputs. The Longleaf uploader transfers the production helpers and
+`slurm/`, but excludes `release_checks/`, which runs locally after download.
+
+| Files | Purpose |
+| --- | --- |
+| `repo_upload_hpc.py`, `download_data.py`, `query_hpc.py`, `release_output_paths.txt` | Transfer and inspect a Longleaf run. |
+| `install_mrg_model.py`, `build_population_mrg.py`, `MRG_model/` | Install and configure the pinned MRG model on Longleaf. |
+| `preflight_population.py`, `pilot_population.py` | Check the cohort and run the small NEURON smoke test. |
+| `prepare_population_index_cache.py`, `run_notebook_code.py`, `verify_behavior_fit_inputs.py`, `validate_release_pipeline.py`, `hpc_requirements.txt` | Helpers called by production Slurm jobs. |
+| `release_checks/` | Local figure, reference-table, and archive verification. |
+
+Only the named Slurm jobs under `slurm/` are in the production workflow; their
+filename numbers were removed because the dependency graph branches and reuses
+the discrimination jobs for two fits. See `slurm/README.md`.
+
 ## Pilot before a full run
 
 From the repository root, install `requirements.txt` in a local
@@ -34,7 +52,7 @@ python hpc_tools/repo_upload_hpc.py `
 
 Remove `--dry-run` to upload and submit the pilot. This creates an isolated
 Longleaf project, installs the Python environment and pinned MRG model, then
-submits `hpc_tools/slurm/pilot/00_smoke.sbatch`. The pilot compiles the NEURON
+submits `hpc_tools/slurm/pilot/smoke.sbatch`. The pilot compiles the NEURON
 mechanism on a compute node and runs three checks: an impulse and 20 Hz train
 for the 14 µm index axon, and an impulse for a 5.7 µm axon with the other nodal
 phase. It writes JSON results under `logs/pilot/` and SLURM output
@@ -120,9 +138,9 @@ separate accepted-data extraction:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe hpc_tools/verify_population_figures.py --python .\.venv\Scripts\python.exe
-.\.venv\Scripts\python.exe hpc_tools/finalize_population_figures.py
-.\.venv\Scripts\python.exe hpc_tools/compare_release_reference.py --reference $reference
+.\.venv\Scripts\python.exe hpc_tools/release_checks/verify_population_figures.py --python .\.venv\Scripts\python.exe
+.\.venv\Scripts\python.exe hpc_tools/release_checks/finalize_population_figures.py
+.\.venv\Scripts\python.exe hpc_tools/release_checks/compare_release_reference.py --reference $reference
 ```
 
 The comparison checks 26 detection-fit, observer, and figure-statistics tables.

@@ -37,7 +37,7 @@ from detection.detection_core import (
     prepend_zeros_ms,
     trim_tail_window_ms,
 )
-from protocol import (
+from detection.protocol import (
     DETECTION_PROTOCOL_VERSION,
     I_MAX_BRANCH_SEARCH_WIDTH_UA,
     I_MAX_COARSE_STEP_UA,

@@ -25,7 +25,7 @@ module purge
 module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
-DETECTION_PROTOCOL_VERSION=$(python -c "from protocol import DETECTION_PROTOCOL_VERSION; print(DETECTION_PROTOCOL_VERSION)" | tail -n 1)
+DETECTION_PROTOCOL_VERSION=$(python -c "from detection.protocol import DETECTION_PROTOCOL_VERSION; print(DETECTION_PROTOCOL_VERSION)" | tail -n 1)
 export DETECTION_PROTOCOL_VERSION
 
 # Regime and response caches contain amplitudes defined by a particular index
@@ -91,19 +91,19 @@ UPSTREAM_DEPENDENCY=()
 if [[ -n "${PIPELINE_DEPENDENCY:-}" ]]; then
   UPSTREAM_DEPENDENCY=(--dependency=afterok:"$PIPELINE_DEPENDENCY")
 fi
-JID_MOD=$(sbatch --parsable "${UPSTREAM_DEPENDENCY[@]}" --export=ALL hpc_tools/slurm/detection/00_compile_mechanisms.sbatch)
+JID_MOD=$(sbatch --parsable "${UPSTREAM_DEPENDENCY[@]}" --export=ALL hpc_tools/slurm/detection/compile_mechanisms.sbatch)
 JID_MOD="${JID_MOD%%;*}"
-JID_INDEX=$(sbatch --parsable --dependency=afterok:"$JID_MOD" --export=ALL hpc_tools/slurm/detection/01_identify_index.sbatch)
+JID_INDEX=$(sbatch --parsable --dependency=afterok:"$JID_MOD" --export=ALL hpc_tools/slurm/detection/identify_index.sbatch)
 JID_INDEX="${JID_INDEX%%;*}"
-JID_REGIMES=$(sbatch --parsable --dependency=afterok:"$JID_INDEX" --array="$REGIME_ARRAY" --export=ALL hpc_tools/slurm/detection/02_index_regimes_array.sbatch)
+JID_REGIMES=$(sbatch --parsable --dependency=afterok:"$JID_INDEX" --array="$REGIME_ARRAY" --export=ALL hpc_tools/slurm/detection/index_regimes_array.sbatch)
 JID_REGIMES="${JID_REGIMES%%;*}"
-JID_MERGE_REGIMES=$(sbatch --parsable --dependency=afterok:"$JID_REGIMES" --export=ALL hpc_tools/slurm/detection/03_merge_index_regimes_cv0.sbatch)
+JID_MERGE_REGIMES=$(sbatch --parsable --dependency=afterok:"$JID_REGIMES" --export=ALL hpc_tools/slurm/detection/merge_index_regimes_cv0.sbatch)
 JID_MERGE_REGIMES="${JID_MERGE_REGIMES%%;*}"
-JID_TRUE=$(submit_recruitment_batches "$JID_MERGE_REGIMES" hpc_tools/slurm/detection/04_population_responses_array.sbatch "$TRUE_PARALLEL")
-JID_MERGE_TRUE=$(sbatch --parsable --dependency=afterok:"$JID_TRUE" --export=ALL hpc_tools/slurm/detection/05_merge_population_responses.sbatch)
+JID_TRUE=$(submit_recruitment_batches "$JID_MERGE_REGIMES" hpc_tools/slurm/detection/population_responses_array.sbatch "$TRUE_PARALLEL")
+JID_MERGE_TRUE=$(sbatch --parsable --dependency=afterok:"$JID_TRUE" --export=ALL hpc_tools/slurm/detection/merge_population_responses.sbatch)
 JID_MERGE_TRUE="${JID_MERGE_TRUE%%;*}"
-JID_CV0=$(submit_recruitment_batches "$JID_MERGE_REGIMES" hpc_tools/slurm/detection/06_population_cv0_responses_array.sbatch "$CV0_PARALLEL")
-JID_MERGE_CV0=$(sbatch --parsable --dependency=afterok:"$JID_CV0" --export=ALL hpc_tools/slurm/detection/07_merge_population_cv0_responses.sbatch)
+JID_CV0=$(submit_recruitment_batches "$JID_MERGE_REGIMES" hpc_tools/slurm/detection/population_cv0_responses_array.sbatch "$CV0_PARALLEL")
+JID_MERGE_CV0=$(sbatch --parsable --dependency=afterok:"$JID_CV0" --export=ALL hpc_tools/slurm/detection/merge_population_cv0_responses.sbatch)
 JID_MERGE_CV0="${JID_MERGE_CV0%%;*}"
 
 echo "Submitted: mechanisms=$JID_MOD index=$JID_INDEX regimes=$JID_REGIMES merge-regimes=$JID_MERGE_REGIMES"

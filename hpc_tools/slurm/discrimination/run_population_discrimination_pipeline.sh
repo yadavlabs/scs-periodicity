@@ -107,7 +107,7 @@ fi
 UPSTREAM_DEPENDENCY=()
 if [[ -n "${PIPELINE_DEPENDENCY:-}" ]]; then
   PREFLIGHT_JOB=$(sbatch --parsable --dependency="afterok:$PIPELINE_DEPENDENCY" \
-    --export=ALL hpc_tools/slurm/discrimination/00_preflight.sbatch)
+    --export=ALL hpc_tools/slurm/discrimination/preflight.sbatch)
   PREFLIGHT_JOB="${PREFLIGHT_JOB%%;*}"
   UPSTREAM_DEPENDENCY=(--dependency="afterok:$PREFLIGHT_JOB")
   echo "Submitted population discrimination preflight: $PREFLIGHT_JOB"
@@ -119,21 +119,21 @@ ARRAY_JOB=$(sbatch --parsable \
   "${UPSTREAM_DEPENDENCY[@]}" \
   --array="$ARRAY" \
   --export=ALL \
-  hpc_tools/slurm/discrimination/01_population_discrimination_array.sbatch)
+  hpc_tools/slurm/discrimination/population_discrimination_array.sbatch)
 ARRAY_JOB="${ARRAY_JOB%%;*}"
 echo "Submitted population discrimination array: $ARRAY_JOB"
 
 MERGE_JOB=$(sbatch --parsable \
   --dependency="afterok:$ARRAY_JOB" \
   --export=ALL \
-  hpc_tools/slurm/discrimination/02_population_discrimination_merge.sbatch)
+  hpc_tools/slurm/discrimination/population_discrimination_merge.sbatch)
 MERGE_JOB="${MERGE_JOB%%;*}"
 echo "Submitted population discrimination merge: $MERGE_JOB"
 
 VALIDATE_JOB=$(sbatch --parsable \
   --dependency="afterok:$MERGE_JOB" \
   --export=ALL \
-  hpc_tools/slurm/discrimination/03_population_discrimination_validate.sbatch)
+  hpc_tools/slurm/discrimination/population_discrimination_validate.sbatch)
 VALIDATE_JOB="${VALIDATE_JOB%%;*}"
 echo "Submitted population discrimination validation: $VALIDATE_JOB"
 echo "Monitor with: squeue -j $ARRAY_JOB,$MERGE_JOB,$VALIDATE_JOB"

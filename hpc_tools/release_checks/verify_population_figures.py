@@ -17,7 +17,7 @@ from jupyter_client import KernelManager
 from nbclient import NotebookClient
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 NOTEBOOK = ROOT / "notebooks/06_FigureGeneration.ipynb"
 
 

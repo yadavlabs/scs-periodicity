@@ -17,8 +17,8 @@ ZIP into the repository, and run:
 
 ```powershell
 $env:PYTHONPATH = "$PWD/src"
-python hpc_tools/verify_population_figures.py
-python hpc_tools/finalize_population_figures.py
+python hpc_tools/release_checks/verify_population_figures.py
+python hpc_tools/release_checks/finalize_population_figures.py
 ```
 
 The verifier executes all notebook code cells and saves an executed copy and

@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 import zipfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 from package_data import ARCHIVE_NAME, collect_files, sha256 as file_sha256  # noqa: E402
 

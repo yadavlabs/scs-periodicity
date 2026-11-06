@@ -41,7 +41,7 @@ from scipy.optimize import minimize
 from scipy.signal import find_peaks
 from tqdm import tqdm
 
-from protocol import (
+from detection.protocol import (
     DEFAULT_EXPECTED_INDEX_AXON_ID,
     DETECTION_PROTOCOL_VERSION,
     I_MAX_BRANCH_SEARCH_WIDTH_UA,

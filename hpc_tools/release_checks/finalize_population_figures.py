@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FIGURES = ROOT / "results/figures"
 OLD_ROOT = "C:\\Users\\tvrdy\\Desktop\\simulation-behavioral-prediction\\"
 PATH_REMAP = {

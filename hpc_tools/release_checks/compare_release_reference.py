@@ -70,7 +70,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", type=Path, required=True,
                         help="Source and accepted-data ZIP extraction directory")
-    parser.add_argument("--candidate", type=Path, default=Path(__file__).resolve().parents[1],
+    parser.add_argument("--candidate", type=Path, default=Path(__file__).resolve().parents[2],
                         help="Clean source extraction with downloaded results and rerun figures")
     args = parser.parse_args()
     reference = args.reference.resolve()

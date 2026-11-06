@@ -18,7 +18,8 @@ discrimination analyses.
   artwork exports for Figures 1 and 2 and Supplementary Figure 1 are under
   `notebooks/cache/static-figures/`.
 - `src/`: population simulation, detection, discrimination, feature, and figure
-  code. There is no single-axon package in this release.
+  code. `src/detection/protocol.py` pins the accepted detection settings. There
+  is no single-axon package in this release.
 - `data/`: source COMSOL cutlines, Slack inputs, generated time patterns, the
   420 Ve bases, and the reference index screen.
 - `hpc_tools/`: Longleaf upload, model installation, Slurm jobs, pilot, and

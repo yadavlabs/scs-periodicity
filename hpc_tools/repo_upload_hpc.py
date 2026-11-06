@@ -49,6 +49,7 @@ EXCLUDE_PATTERNS = (
     "__pycache__", "*/__pycache__", "*/__pycache__/*", "*.pyc",
     "logs", "logs/*", "results", "results/*", "*.tar", "*.tar.gz",
     "notebooks/cache/cache_*.csv",
+    "hpc_tools/release_checks/*",
 )
 LF_SUFFIXES = (".sh", ".sbatch")
 
@@ -196,7 +197,7 @@ def remote_command(
     if submit_pilot:
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
-            "sbatch --parsable hpc_tools/slurm/pilot/00_smoke.sbatch",
+            "sbatch --parsable hpc_tools/slurm/pilot/smoke.sbatch",
         ])
     elif submit:
         submit_script = (
