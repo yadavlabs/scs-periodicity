@@ -54,7 +54,7 @@ def extract_statistics(root, output, trials):
     """Read all 100 reps at Imax, audit against independent trial totals, cache only aggregates."""
     paths = response_paths(root)
     index_path = root / 'data/detection/index_regime_amplitudes.csv'
-    refresh = root / 'results/detection'
+    refresh = root / 'data/detection'
     if json.loads((refresh / 'true_population_trial_summary_manifest.json').read_text())['index_sha256'] != digest(index_path):
         raise ValueError('True-CV responses do not match current index amplitudes')
     fingerprints = dict(version=1, index_sha256=digest(index_path), cvs=MAP_CVS,
@@ -189,7 +189,7 @@ def draw_figure(stats, summaries):
 def prepare_data(root, output):
     """Validate current sources and export plot data and interpretation notes."""
     (output / '_data').mkdir(parents=True, exist_ok=True)
-    true_path = root / 'results/detection/true_population_trial_summary.csv'
+    true_path = root / 'data/detection/true_population_trial_summary.csv'
     cv0_path = root / 'data/features/population_cv0_based_features.csv'
     true = pd.read_csv(true_path).rename(columns={'total_population_spikes': 'population_spikes'})
     cv0 = pd.read_csv(cv0_path)

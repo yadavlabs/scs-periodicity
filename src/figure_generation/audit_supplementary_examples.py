@@ -23,7 +23,7 @@ def main():
     index = index[index.thresh_type.eq("I_all")]
     records = []
     for (freq, cv), panel in index.groupby(["freq", "cv"]):
-        path = root / f"data/time-patterns/population/cv{cv:.1f}_f{int(freq)}_waveforms.npz"
+        path = root / f"data/time-patterns/generated/cv{cv:.1f}_f{int(freq)}_waveforms.npz"
         with np.load(path) as bundle:
             for row in panel.itertuples():
                 waveform = np.asarray(bundle[row.rep_label])

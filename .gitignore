@@ -27,14 +27,20 @@ scs-periodicity-population-release-data*.sha256
 scs-periodicity-population-release-data*-manifest.csv
 
 # The population model is generated locally from the pinned ModelDB download.
-MRG_model/*
-!MRG_model/README.md
+hpc_tools/MRG_model/*
+!hpc_tools/MRG_model/README.md
 
 # Population simulation outputs are distributed as release data, not Git objects.
 data/space-time-V/*SpaceTimeV.npz
 data/detection/*.csv
 data/detection/behavior_fit_inputs/
+data/detection/behavioral_matching/
+data/detection/*_manifest.json
 data/features/
+data/discrimination/control/
+data/discrimination/scope/
+data/discrimination/locked/
+notebooks/cache/cache_*.csv
 results/
 
 # COMSOL binaries

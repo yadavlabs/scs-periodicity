@@ -12,7 +12,7 @@ per trajectory. The 420 Ve bases are listed in
 `data/space-time-V/axon_basis_manifest.csv`. The configurable HOC is generated
 locally from ModelDB 3810 at commit
 `b15daeda6ea368df0198d257f339cf5e840cf31c`; the upstream HOC and
-mechanism source are not redistributed. See `MRG_model/README.md` and
+mechanism source are not redistributed. See `hpc_tools/MRG_model/README.md` and
 `THIRD_PARTY_NOTICES.md`.
 
 ## Accepted detection fit and Imax update

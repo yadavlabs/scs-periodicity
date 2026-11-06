@@ -86,7 +86,7 @@ from detection.threshold_search import (
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = (PROJECT_ROOT / "data" / "space-time-V").resolve()
 RESULTS_DIR = (PROJECT_ROOT / "data" / "detection").resolve()
-MRG_MODEL_DIR = (PROJECT_ROOT / "MRG_model").resolve()
+MRG_MODEL_DIR = (PROJECT_ROOT / "hpc_tools/MRG_model").resolve()
 
 INDEX_THRESHOLDS_CSV = RESULTS_DIR / "index_axon_thresholds.csv"
 INDEX_AXON_CSV = RESULTS_DIR / "index_axon.csv"
@@ -96,7 +96,7 @@ POPULATION_RESPONSES_CSV = RESULTS_DIR / "population_responses.csv"
 POPULATION_CV0_RESPONSES_CSV = RESULTS_DIR / "population_cv0_based_responses.csv"
 POPULATION_PARTIAL_DIR = RESULTS_DIR / "partials"
 DETECTION_BEHAVIOR_XLSX = PROJECT_ROOT / "data" / "detection" / "slack" / "DetectionThresholds.xlsx"
-DETECTION_BEHAVIORAL_MATCHING_DIR = PROJECT_ROOT / "results" / "detection" / "behavioral_matching"
+DETECTION_BEHAVIORAL_MATCHING_DIR = PROJECT_ROOT / "data" / "detection" / "behavioral_matching"
 
 # This is deliberately the same condition grid produced by the time-pattern
 # stage.  Keeping it explicit makes SLURM array indices stable and auditable.
@@ -141,7 +141,7 @@ def _detection_partial_dir(root: Path, family: str) -> Path:
         "EXPECTED_INDEX_AXON_ID", DEFAULT_EXPECTED_INDEX_AXON_ID,
     )
     return (
-        root / "results" / "detection" / "partials"
+        root / "data" / "detection" / "partials"
         / DETECTION_PROTOCOL_VERSION / expected_index / family
     )
 
@@ -334,7 +334,7 @@ def _get_h():
 
 def _config_path(root: Path, diameter_um: float, axonnodes: int) -> Path:
     token = diameter_token(diameter_um)
-    return root / "results" / "mrg-workers" / f"mrg_population_config_{token}um_{axonnodes}nodes.hoc"
+    return root / "logs" / "mrg-workers" / f"mrg_population_config_{token}um_{axonnodes}nodes.hoc"
 
 
 def ensure_population_mrg_loaded(config_path: Path) -> None:
@@ -2504,7 +2504,7 @@ def run_population_detection_behavioral_matching(
     fits are explicitly retained as representational upper bounds.
     """
     root = Path(root).resolve()
-    output_dir = Path(output_dir or root / "results" / "detection" / "behavioral_matching").resolve()
+    output_dir = Path(output_dir or root / "data" / "detection" / "behavioral_matching").resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     target_kinds = tuple(str(kind).strip().lower() for kind in target_kinds)
     unsupported = sorted(set(target_kinds) - {"datapoints", "quadratic"})

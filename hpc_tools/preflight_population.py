@@ -39,7 +39,7 @@ def validate_preflight(root: Path, expected_index: str) -> dict[str, object]:
         extra = sorted(set(observed_cutlines) - set(POPULATION_CUTLINE_IDS))
         raise RuntimeError(f"COMSOL cohort mismatch; missing={missing}, extra={extra}")
 
-    time_dir = root / "data" / "time-patterns" / "population"
+    time_dir = root / "data" / "time-patterns" / "generated"
     time_paths = [
         time_dir / f"cv{cv:.1f}_f{int(freq)}_waveforms.npz"
         for cv in POPULATION_CV_VALS for freq in POPULATION_FREQ_VALS_HZ

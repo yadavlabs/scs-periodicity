@@ -20,7 +20,7 @@ FAMILIES = ("rate_timing", "timing_rate", "rate", "timing", "hybrid")
 REFERENCE = "primary_hybrid_reference"
 FREQS = (20., 50., 100., 200.)
 GAINS = ("gain_rate_1ms", "gain_rate_10ms", "gain_timing_1ms", "gain_timing_10ms")
-SOURCE = "results/discrimination/scope"
+SOURCE = "data/discrimination/scope"
 EVIDENCE = "data/features/population_cv0_template_evidence.csv"
 STEMS = ("diagnostics", "results", "curves", "params", "weights", "splits", "baseline_audit")
 
@@ -356,9 +356,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["prepare", "verify", "fit", "merge"])
     parser.add_argument("--root", default=".")
-    parser.add_argument("--bundle", default="results/discrimination/locked/inputs")
+    parser.add_argument("--bundle", default="data/discrimination/locked/inputs")
     parser.add_argument("--out")
-    parser.add_argument("--partials", default="results/partials/discrimination_locked_mixture_followup")
+    parser.add_argument("--partials", default="logs/partials/discrimination_locked_mixture_followup")
     parser.add_argument("--mc", type=int)
     parser.add_argument("--expected-mc", type=int, default=200)
     args = parser.parse_args()

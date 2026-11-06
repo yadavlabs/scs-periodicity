@@ -63,7 +63,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Install pinned MRG sources and build the population model locally.")
     parser.add_argument(
         "--target",
-        default=str(REPO_ROOT / "MRG_model"),
+        default=str(REPO_ROOT / "hpc_tools/MRG_model"),
         help="Directory receiving the ModelDB model files.",
     )
     parser.add_argument("--force", action="store_true", help="Replace any existing model files.")

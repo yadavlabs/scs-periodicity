@@ -1,0 +1,17 @@
+{
+  "cv": 0.3,
+  "freq_hz": 50.0,
+  "fs": 20000.0,
+  "stim_dur_s": 2.0,
+  "post_silence_s": 1.0,
+  "amp_uA": 1.0,
+  "neg_samples": 4,
+  "interphase_samples": 1,
+  "pos_samples": 4,
+  "pulse_samples": 9,
+  "min_ipi_s": 0.00045,
+  "generated_first_pulse_sample": 1,
+  "generated_exact_pulse_count": true,
+  "n_waveforms": 100,
+  "npz_path": "data/time-patterns/generated/cv0.3_f50_waveforms.npz"
+}

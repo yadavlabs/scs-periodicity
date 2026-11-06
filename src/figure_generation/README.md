@@ -17,12 +17,12 @@ ZIP into the repository, and run:
 
 ```powershell
 $env:PYTHONPATH = "$PWD/src"
-python scripts/verify_population_figures.py
-python scripts/finalize_population_figures.py
+python hpc_tools/verify_population_figures.py
+python hpc_tools/finalize_population_figures.py
 ```
 
 The verifier executes all notebook code cells and saves an executed copy and
-report under `results/figure_verification/`. The finalizer checks
+report under `.local-archive/figure_verification/`. The finalizer checks
 that every figure-manifest path exists, makes supplementary provenance paths
 repository-relative, and records SHA-256 hashes of the exported figure files.
 The source notebook remains free of machine-specific execution outputs.

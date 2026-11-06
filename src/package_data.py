@@ -17,7 +17,7 @@ from pathlib import Path
 ARCHIVE_NAME = "scs-periodicity-population-release-data.zip"
 SOURCE_INPUT_DIRS = (
     "data/comsol",
-    "data/time-patterns/population",
+    "data/time-patterns/generated",
     "data/time-patterns/slack",
     "data/detection/slack",
     "data/discrimination/slack",
@@ -26,18 +26,19 @@ SOURCE_INPUT_DIRS = (
 GENERATED_DIRS = (
     "data/detection/behavior_fit_inputs",
     "data/features",
-    "results/detection/behavioral_matching",
-    "results/discrimination/control",
-    "results/discrimination/scope",
-    "results/discrimination/locked/followup",
-    "results/discrimination/locked/inputs",
+    "data/detection/behavioral_matching",
+    "data/discrimination/control",
+    "data/discrimination/scope",
+    "data/discrimination/locked/followup",
+    "data/discrimination/locked/inputs",
     "results/figures",
 )
 NOTICE_FILES = ("LICENSE", "THIRD_PARTY_NOTICES.md", "CITATION.cff")
 EXTRA_FILES = (
-    "results/detection/imax_refresh_manifest.json",
-    "results/detection/true_population_trial_summary.csv",
-    "results/detection/true_population_trial_summary_manifest.json",
+    "data/detection/imax_refresh_manifest.json",
+    "data/detection/true_population_trial_summary.csv",
+    "data/detection/true_population_trial_summary_manifest.json",
+    "notebooks/cache/cache_index_sub_refractory_intervals_lt1p10ms.csv",
 )
 EXCLUDED_PARTS = {"partials", "__pycache__", "old", "exploratory", "submitted_jobs.txt"}
 
@@ -85,8 +86,8 @@ def collect_files(root: Path) -> list[Path]:
         "data/detection/population_responses.csv",
         "data/detection/population_cv0_based_responses.csv",
         "data/features/population_cv0_template_evidence.csv",
-        "results/discrimination/scope/validation.json",
-        "results/discrimination/locked/followup/validation.json",
+        "data/discrimination/scope/validation.json",
+        "data/discrimination/locked/followup/validation.json",
     )
     for name in needed:
         if not (root / name).is_file():

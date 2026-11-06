@@ -34,10 +34,10 @@ python hpc_tools/repo_upload_hpc.py `
 
 Remove `--dry-run` to upload and submit the pilot. This creates an isolated
 Longleaf project, installs the Python environment and pinned MRG model, then
-submits `slurm/pilot/00_smoke.sbatch`. The pilot compiles the NEURON
+submits `hpc_tools/slurm/pilot/00_smoke.sbatch`. The pilot compiles the NEURON
 mechanism on a compute node and runs three checks: an impulse and 20 Hz train
 for the 14 µm index axon, and an impulse for a 5.7 µm axon with the other nodal
-phase. It writes JSON results under `results/pilot/` and SLURM output
+phase. It writes JSON results under `logs/pilot/` and SLURM output
 under `logs/`. It does not alter production thresholds or population responses.
 
 Check the job with `squeue -u YOUR_ONYEN`, then inspect the three JSON files and
@@ -84,7 +84,7 @@ python hpc_tools/repo_upload_hpc.py `
   --setup-env --submit
 ```
 
-The coordinator at `slurm/run_population_pipeline.sh` submits
+The coordinator at `hpc_tools/slurm/run_population_pipeline.sh` submits
 the following dependent stages using Slurm `afterok`, as the v1.0.2 release
 coordinator did:
 
@@ -101,7 +101,7 @@ coordinator did:
 6. Prepare the locked primary mixtures from the validated scope fits, run the
    conditional follow-up, and validate all release outputs.
 
-The final job ID is recorded remotely in `results/pipeline/final_job.txt`. After
+The final job ID is recorded remotely in `logs/pipeline/final_job.txt`. After
 it completes with Slurm state `COMPLETED` and exit code `0:0`, download the 76
 files listed in `hpc_tools/release_output_paths.txt` into the clean local source
 directory:
@@ -120,8 +120,8 @@ separate accepted-data extraction:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe scripts/verify_population_figures.py --python .\.venv\Scripts\python.exe
-.\.venv\Scripts\python.exe scripts/finalize_population_figures.py
+.\.venv\Scripts\python.exe hpc_tools/verify_population_figures.py --python .\.venv\Scripts\python.exe
+.\.venv\Scripts\python.exe hpc_tools/finalize_population_figures.py
 .\.venv\Scripts\python.exe hpc_tools/compare_release_reference.py --reference $reference
 ```
 

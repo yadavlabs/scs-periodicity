@@ -26,7 +26,7 @@ class PopulationIndexCacheTests(unittest.TestCase):
     def test_archives_only_incompatible_cache(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            partial = root / "results/detection/partials/index-regimes"
+            partial = root / "data/detection/partials/index-regimes"
             stale = partial / "stale.csv"
             current = partial / "current.csv"
             _write(stale, "S01_140um")

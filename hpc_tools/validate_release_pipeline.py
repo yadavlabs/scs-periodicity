@@ -18,12 +18,12 @@ REQUIRED = (
     "data/detection/behavior_fit_inputs/provenance.json",
     "data/features/population_cv0_based_features.csv",
     "data/features/population_cv0_template_evidence.csv",
-    "results/detection/behavioral_matching/run_manifest.json",
-    "results/detection/true_population_trial_summary.csv",
-    "results/discrimination/control/validation.json",
-    "results/discrimination/scope/validation.json",
-    "results/discrimination/locked/inputs/manifest.json",
-    "results/discrimination/locked/followup/validation.json",
+    "data/detection/behavioral_matching/run_manifest.json",
+    "data/detection/true_population_trial_summary.csv",
+    "data/discrimination/control/validation.json",
+    "data/discrimination/scope/validation.json",
+    "data/discrimination/locked/inputs/manifest.json",
+    "data/discrimination/locked/followup/validation.json",
 )
 
 
@@ -40,23 +40,23 @@ def main() -> None:
     if missing:
         raise FileNotFoundError("Incomplete release pipeline:\n" + "\n".join(missing))
     for name in (
-        "results/discrimination/control/validation.json",
-        "results/discrimination/scope/validation.json",
-        "results/discrimination/locked/followup/validation.json",
+        "data/discrimination/control/validation.json",
+        "data/discrimination/scope/validation.json",
+        "data/discrimination/locked/followup/validation.json",
     ):
         status = json.loads((ROOT / name).read_text(encoding="utf-8"))
         if status.get("status") != "ready" or status.get("errors"):
             raise ValueError(f"Analysis validation failed: {name}")
-    summary = json.loads((ROOT / "results/detection/true_population_trial_summary_manifest.json").read_text(encoding="utf-8"))
+    summary = json.loads((ROOT / "data/detection/true_population_trial_summary_manifest.json").read_text(encoding="utf-8"))
     if (summary.get("status") != "complete" or summary.get("source_rows") != 20_790_000
             or summary.get("trials") != 49_500):
         raise ValueError("Incomplete true-CV summary")
-    if digest(ROOT / "results/detection/true_population_trial_summary.csv") != summary["summary_sha256"]:
+    if digest(ROOT / "data/detection/true_population_trial_summary.csv") != summary["summary_sha256"]:
         raise ValueError("True-CV summary fingerprint mismatch")
     from discrimination.locked_mixture_followup import verify
-    verify(ROOT, ROOT / "results/discrimination/locked/inputs")
+    verify(ROOT, ROOT / "data/discrimination/locked/inputs")
     report = {"status": "ready", "required_files": len(REQUIRED), "trials": 49_500}
-    output = ROOT / "results/pipeline/validation.json"
+    output = ROOT / "logs/pipeline/validation.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))

@@ -34,28 +34,35 @@ FIGURE_STATISTICS = (
     "rmse_tests.csv",
 )
 TABLES = (
-    *(f"results/detection/behavioral_matching/{name}" for name in DETECTION_FIT),
-    "results/detection/true_population_trial_summary.csv",
-    "results/discrimination/control/population_observer_rmse.csv",
-    "results/discrimination/scope/population_observer_rmse.csv",
-    "results/discrimination/locked/followup/performance_summary.csv",
+    *(f"data/detection/behavioral_matching/{name}" for name in DETECTION_FIT),
+    "data/detection/true_population_trial_summary.csv",
+    "data/discrimination/control/population_observer_rmse.csv",
+    "data/discrimination/scope/population_observer_rmse.csv",
+    "data/discrimination/locked/followup/performance_summary.csv",
     *(f"results/figures/statistics/{name}" for name in FIGURE_STATISTICS),
     "results/figures/table1_consolidated.csv",
 )
-LEGACY_ROOTS = {
-    "results/discrimination/control/": "results/discrimination/",
-    "results/discrimination/scope/": "results/discrimination_v5_scope_hypothesis_full/",
-    "results/discrimination/locked/followup/": "results/discrimination_locked_mixture_followup/",
-}
+LEGACY_ROOTS = (
+    ("data/detection/behavioral_matching/", "results/detection/behavioral_matching/"),
+    ("data/detection/true_population_trial_summary.csv", "results/detection/true_population_trial_summary.csv"),
+    ("data/discrimination/control/", "results/discrimination/control/"),
+    ("data/discrimination/scope/", "results/discrimination/scope/"),
+    ("data/discrimination/locked/followup/", "results/discrimination/locked/followup/"),
+    ("data/discrimination/control/", "data/discrimination/"),
+    ("data/discrimination/scope/", "data/discrimination_v5_scope_hypothesis_full/"),
+    ("data/discrimination/locked/followup/", "data/discrimination_locked_mixture_followup/"),
+)
 
 
 def reference_path(root: Path, relative: str) -> Path:
     current = root / relative
     if current.is_file():
         return current
-    for new, old in LEGACY_ROOTS.items():
+    for new, old in LEGACY_ROOTS:
         if relative.startswith(new):
-            return root / (old + relative[len(new):])
+            previous = root / (old + relative[len(new):])
+            if previous.is_file():
+                return previous
     return current
 
 

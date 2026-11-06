@@ -65,7 +65,7 @@ def extract(root, output, frequencies=None, cvs=None, repetitions=None):
     if set(repetitions) != set(frequencies):
         raise ValueError('Provide exactly one repetition for each requested frequency')
     output.mkdir(parents=True, exist_ok=True)
-    refresh = root / 'results/detection'
+    refresh = root / 'data/detection'
     index_path = root / 'data/detection/index_regime_amplitudes.csv'
     manifest = json.loads((refresh / 'true_population_trial_summary_manifest.json').read_text())
     if manifest['index_sha256'] != digest(index_path):

@@ -29,12 +29,11 @@ CODE_PATHS = (
     "hpc_tools",
     "src",
     "notebooks",
-    "slurm",
 )
 UPSTREAM_INPUT_PATHS = (
     "data/comsol",
     "data/time-patterns/slack",
-    "data/time-patterns/population",
+    "data/time-patterns/generated",
     "data/detection/reference",
     "data/detection/behavior_fit_inputs",
 )
@@ -49,8 +48,7 @@ EXCLUDE_PATTERNS = (
     ".git", ".git/*", ".venv", ".venv/*", "venv", "venv/*",
     "__pycache__", "*/__pycache__", "*/__pycache__/*", "*.pyc",
     "logs", "logs/*", "results", "results/*", "*.tar", "*.tar.gz",
-    "MRG_model/*.o", "MRG_model/*.c", "MRG_model/*.cpp", "MRG_model/*.dll",
-    "MRG_model/x86_64", "MRG_model/x86_64/*",
+    "notebooks/cache/cache_*.csv",
 )
 LF_SUFFIXES = (".sh", ".sbatch")
 
@@ -65,6 +63,8 @@ def _relative(path: Path) -> str:
 
 def _excluded(relative: str) -> bool:
     normalized = relative.replace("\\", "/")
+    if normalized.startswith("hpc_tools/MRG_model/"):
+        return normalized != "hpc_tools/MRG_model/README.md"
     return any(fnmatch.fnmatch(normalized, pattern) for pattern in EXCLUDE_PATTERNS)
 
 
@@ -196,12 +196,12 @@ def remote_command(
     if submit_pilot:
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
-            "sbatch --parsable slurm/pilot/00_smoke.sbatch",
+            "sbatch --parsable hpc_tools/slurm/pilot/00_smoke.sbatch",
         ])
     elif submit:
         submit_script = (
-            "slurm/detection/run_detection_pipeline.sh"
-            if detection_only else "slurm/run_population_pipeline.sh"
+            "hpc_tools/slurm/detection/run_detection_pipeline.sh"
+            if detection_only else "hpc_tools/slurm/run_population_pipeline.sh"
         )
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
@@ -210,7 +210,7 @@ def remote_command(
     elif submit_discrimination:
         commands.extend([
             f"export PROJECT={_quote(project_dir)}",
-            "bash slurm/discrimination/run_population_discrimination_pipeline.sh",
+            "bash hpc_tools/slurm/discrimination/run_population_discrimination_pipeline.sh",
         ])
     return "; ".join(commands)
 
@@ -348,9 +348,9 @@ def main() -> int:
     print(f"Longleaf project: {args.host}:{project_dir}")
     if not args.submit and not args.submit_discrimination and not args.submit_pilot:
         if args.skip_upstream_inputs and args.skip_detection_inputs and not args.skip_observer_inputs:
-            submit_script = "slurm/discrimination/run_population_discrimination_pipeline.sh"
+            submit_script = "hpc_tools/slurm/discrimination/run_population_discrimination_pipeline.sh"
         else:
-            submit_script = "slurm/run_population_pipeline.sh"
+            submit_script = "hpc_tools/slurm/run_population_pipeline.sh"
         print(
             f"Submit later: ssh {args.host} "
             f"'cd {project_dir} && PROJECT={project_dir} bash {submit_script}'"

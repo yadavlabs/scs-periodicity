@@ -1350,7 +1350,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--evidence-csv", default=DEFAULT_EVIDENCE_CSV)
     parser.add_argument("--slack-dir", default=DEFAULT_SLACK_DIR)
-    parser.add_argument("--out-dir", default="results/discrimination/control/smoke")
+    parser.add_argument("--out-dir", default="data/discrimination/control/smoke")
     parser.add_argument("--frequencies", default="20,50,100,200")
     parser.add_argument(
         "--weight-scope",

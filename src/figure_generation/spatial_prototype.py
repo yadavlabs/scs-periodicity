@@ -455,7 +455,7 @@ def main():
     elif args.recruitment_onset:
         output = output / 'recruitment_onset'
     (output / '_data').mkdir(parents=True, exist_ok=True)
-    true_path = root / 'results/detection/true_population_trial_summary.csv'
+    true_path = root / 'data/detection/true_population_trial_summary.csv'
     cv0_path = root / 'data/features/population_cv0_based_features.csv'
     cv0 = pd.read_csv(cv0_path)
     ranking = rank_recruitment_repetitions(cv0, FREQUENCIES, CVS)

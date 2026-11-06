@@ -54,7 +54,7 @@ def incompatible_cache_files(
     # expected index axon. Their path is the cache key, so a restart need not
     # open tens of thousands of matching CSVs merely to rediscover metadata.
     if expected_protocol_version is None:
-        partial_root = root / "results" / "detection" / "partials"
+        partial_root = root / "data" / "detection" / "partials"
         for family in PARTIAL_FAMILIES:
             candidates.extend(sorted((partial_root / family).glob("*.csv")))
     data_root = root / "data" / "detection"
@@ -83,7 +83,7 @@ def prepare_cache(
     )
     tag = archive_tag or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     archive_root = (
-        root / "results" / "detection" / "index-cache-archive" /
+        root / "logs" / "index-cache-archive" /
         f"for-{expected_index_axon_id}" / tag
     )
     moved: list[dict[str, str]] = []

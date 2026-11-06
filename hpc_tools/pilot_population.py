@@ -1,7 +1,7 @@
 """Run a small, isolated NEURON check for a released population axon.
 
 Each invocation loads one axon geometry in a fresh process. Results are saved
-under results/pilot and never overwrite production simulation data.
+under logs/pilot and never overwrite production simulation data.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def reference_threshold(root: Path, axon_id: str) -> float:
 
 
 def train_trace(root: Path, basis: dict[str, object]) -> tuple[np.ndarray, np.ndarray]:
-    path = root / "data/time-patterns/population/cv0.0_f20_waveforms.npz"
+    path = root / "data/time-patterns/generated/cv0.0_f20_waveforms.npz"
     with np.load(path, allow_pickle=False) as waveforms:
         label = next((name for name in waveforms.files if "regular" in name.lower()), waveforms.files[0])
         current = np.asarray(waveforms[label], dtype=np.float32)
@@ -93,7 +93,7 @@ def main() -> int:
     args = parser.parse_args()
     root = args.root.resolve()
     result = run(root, args.axon_id, args.mode)
-    output_dir = root / "results/pilot"
+    output_dir = root / "logs/pilot"
     output_dir.mkdir(parents=True, exist_ok=True)
     output = output_dir / f"{args.axon_id}_{args.mode}.json"
     output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

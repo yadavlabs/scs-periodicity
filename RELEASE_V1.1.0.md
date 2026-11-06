@@ -17,7 +17,7 @@ Build and verify the data files:
 
 ```powershell
 python src/package_data.py
-python scripts/verify_population_archive.py
+python hpc_tools/verify_population_archive.py
 ```
 
 The resulting Zenodo upload has four files:

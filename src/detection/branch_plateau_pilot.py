@@ -34,14 +34,14 @@ from space_time_v.spacetime_core import spacetime_path
 
 
 PILOT_VERSION = "branch_aware_imax_pilot_v1"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "results/detection/branch_plateau_pilot"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data/detection/branch_plateau_pilot"
 CROSS_FREQUENCY_PILOT_VERSION = "branch_aware_imax_cross_frequency_pilot_v2"
 DEFAULT_CROSS_FREQUENCY_OUTPUT_DIR = (
-    PROJECT_ROOT / "results/detection/branch_plateau_cross_frequency_pilot"
+    PROJECT_ROOT / "data/detection/branch_plateau_cross_frequency_pilot"
 )
 PEAK_VALIDATION_PILOT_VERSION = "peak_first_imax_frequency_cv_validation_v1"
 DEFAULT_PEAK_VALIDATION_OUTPUT_DIR = (
-    PROJECT_ROOT / "results/detection/peak_first_imax_validation_pilot"
+    PROJECT_ROOT / "data/detection/peak_first_imax_validation_pilot"
 )
 DEFAULT_FREQUENCY_HZ = 200.0
 DEFAULT_CVS = (0.8, 0.9, 1.0)

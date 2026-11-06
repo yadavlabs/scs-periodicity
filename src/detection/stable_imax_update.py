@@ -55,7 +55,7 @@ from space_time_v.spacetime_core import spacetime_path
 
 
 UPDATE_VERSION = "peak_first_imax_selective_v3"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "results/detection/peak_first_imax_update"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data/detection/peak_first_imax_update"
 UPDATE_COLUMNS = (
     "update_version", "detection_protocol_version", "index_axon_id",
     "index_cutline_id", "index_diameter_um", "file", "cv", "freq",

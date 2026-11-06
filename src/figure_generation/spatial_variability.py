@@ -17,7 +17,7 @@ from .spatial_prototype import summarize_trials
 
 
 def load_trials(root):
-    true = pd.read_csv(root / 'results/detection/true_population_trial_summary.csv')
+    true = pd.read_csv(root / 'data/detection/true_population_trial_summary.csv')
     true['population_spikes'] = true.total_population_spikes
     cv0 = pd.read_csv(root / 'data/features/population_cv0_based_features.csv')
     cv0['population_spikes'] = cv0.source_total_population_spikes

@@ -21,13 +21,13 @@ discrimination analyses.
   code. There is no single-axon package in this release.
 - `data/`: source COMSOL cutlines, Slack inputs, generated time patterns, the
   420 Ve bases, and the reference index screen.
-- `hpc_tools/` and `slurm/`: Longleaf upload, pilot, and full
-  regeneration workflows.
+- `hpc_tools/`: Longleaf upload, model installation, Slurm jobs, pilot, and
+  full regeneration workflows.
 
 The upstream MRG files are downloaded at a pinned ModelDB commit during HPC
 setup. A small generator makes the HOC geometry configurable for the six axon
 diameters and two spatial phases; it preserves the upstream biophysics and does
-not redistribute the upstream HOC. See [MRG_model/README.md](MRG_model/README.md)
+not redistribute the upstream HOC. See [hpc_tools/MRG_model/README.md](hpc_tools/MRG_model/README.md)
 and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 The transfer and accepted-fit history are documented in [PROVENANCE.md](PROVENANCE.md).
 

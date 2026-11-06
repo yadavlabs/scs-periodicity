@@ -26,9 +26,9 @@ from figure_generation.figure_model import select
 
 FREQS = (20., 50., 100., 200.)
 GAINS = ('gain_rate_1ms', 'gain_rate_10ms', 'gain_timing_1ms', 'gain_timing_10ms')
-FOCUS = 'results/discrimination/scope'
-LOCKED = 'results/discrimination/locked/followup'
-CONTROL = 'results/discrimination/control'
+FOCUS = 'data/discrimination/scope'
+LOCKED = 'data/discrimination/locked/followup'
+CONTROL = 'data/discrimination/control'
 EVIDENCE = 'data/features/population_cv0_template_evidence.csv'
 SCOPES = {'primary_hybrid': 'primary', 'crossed_hybrid': 'crossed', 'per_panel_hybrid': 'per_panel'}
 

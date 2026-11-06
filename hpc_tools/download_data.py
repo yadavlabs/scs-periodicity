@@ -21,20 +21,20 @@ OUTPUT_PATHS = (
     "data/detection/population_cv0_based_responses.csv",
 )
 DISCRIMINATION_OUTPUT_PATHS = (
-    "results/discrimination/control/population_observer_rmse.csv",
-    "results/discrimination/control/population_discrimination_curves.csv",
-    "results/discrimination/control/population_observer_weights.csv",
-    "results/discrimination/control/population_observer_readout.csv",
-    "results/discrimination/control/population_effective_rate_share.csv",
-    "results/discrimination/control/validation.json",
+    "data/discrimination/control/population_observer_rmse.csv",
+    "data/discrimination/control/population_discrimination_curves.csv",
+    "data/discrimination/control/population_observer_weights.csv",
+    "data/discrimination/control/population_observer_readout.csv",
+    "data/discrimination/control/population_effective_rate_share.csv",
+    "data/discrimination/control/validation.json",
 )
 PEAK_FIRST_IMAX_OUTPUT_PATHS = (
-    "results/detection/peak_first_imax_update/conditions.csv",
-    "results/detection/peak_first_imax_update/preflight.json",
-    "results/detection/peak_first_imax_update/index_regime_amplitudes.csv",
-    "results/detection/peak_first_imax_update/peak_first_imax_updates.csv",
-    "results/detection/peak_first_imax_update/peak_first_imax_audit_summary.csv",
-    "results/detection/peak_first_imax_update/merge_manifest.json",
+    "data/detection/peak_first_imax_update/conditions.csv",
+    "data/detection/peak_first_imax_update/preflight.json",
+    "data/detection/peak_first_imax_update/index_regime_amplitudes.csv",
+    "data/detection/peak_first_imax_update/peak_first_imax_updates.csv",
+    "data/detection/peak_first_imax_update/peak_first_imax_audit_summary.csv",
+    "data/detection/peak_first_imax_update/merge_manifest.json",
 )
 OUTPUTS_BY_KIND = {
     "detection": OUTPUT_PATHS,
@@ -112,8 +112,8 @@ def main() -> int:
         archive.unlink(missing_ok=True)
     destination = {
         "detection": "data/detection/",
-        "discrimination": "results/discrimination/control/",
-        "peak-first-imax": "results/detection/peak_first_imax_update/",
+        "discrimination": "data/discrimination/control/",
+        "peak-first-imax": "data/detection/peak_first_imax_update/",
         "release": "data/ and results/",
     }[args.kind]
     print(f"Installed {len(paths_to_download)} completed population {args.kind} outputs under {destination}")

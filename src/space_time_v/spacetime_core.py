@@ -574,7 +574,7 @@ def run_population_spacetime_axon_job(
             if overwrite or not _spacetime_matches_job(path, job):
                 path = generate_spacetime_from_basis(
                     basis_path, cv=cv, freq_hz=freq_hz,
-                    time_pattern_dir=root / "data" / "time-patterns" / "population",
+                    time_pattern_dir=root / "data" / "time-patterns" / "generated",
                     out_dir=out_dir,
                 )
             outputs.append(path)
@@ -708,9 +708,9 @@ def prepare_mrg_workers(*, root: Path = PROJECT_ROOT, out_dir: Path | None = Non
     """Discover available diameter groups and create independent worker assets."""
     root = root.resolve()
     workers = discover_mrg_workers(root / "data" / "space-time-V")
-    bundle_dir = out_dir or root / "results" / "mrg-workers"
+    bundle_dir = out_dir or root / "logs" / "mrg-workers"
     for worker in workers:
-        write_worker_bundle(worker, model_dir=root / "MRG_model", out_dir=bundle_dir)
+        write_worker_bundle(worker, model_dir=root / "hpc_tools/MRG_model", out_dir=bundle_dir)
     return workers
 
 
@@ -767,7 +767,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             basis_rows,
             POPULATION_CV_VALS,
             POPULATION_FREQ_VALS_HZ,
-            time_pattern_dir=root / "data" / "time-patterns" / "population",
+            time_pattern_dir=root / "data" / "time-patterns" / "generated",
             out_dir=root / "data" / "space-time-V",
             overwrite=args.overwrite,
         )

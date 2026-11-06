@@ -12,7 +12,7 @@ import pandas as pd
 
 KEY = ["freq", "cv", "rep_index", "thresh_type"]
 SOURCE = Path("data/detection/population_responses.csv")
-OUTPUT = Path("results/detection/true_population_trial_summary.csv")
+OUTPUT = Path("data/detection/true_population_trial_summary.csv")
 
 
 def digest(path: Path) -> str:

@@ -64,8 +64,8 @@ def build(source: Path, output: Path) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=ROOT / "MRG_model/MRGaxon.hoc")
-    parser.add_argument("--output", type=Path, default=ROOT / "MRG_model/MRGaxon_population_template.hoc")
+    parser.add_argument("--source", type=Path, default=ROOT / "hpc_tools/MRG_model/MRGaxon.hoc")
+    parser.add_argument("--output", type=Path, default=ROOT / "hpc_tools/MRG_model/MRGaxon_population_template.hoc")
     args = parser.parse_args()
     print(build(args.source, args.output))
     return 0

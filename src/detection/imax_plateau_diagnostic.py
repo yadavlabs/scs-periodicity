@@ -569,7 +569,7 @@ def prepare(
     repetitions_per_branch: int = DEFAULT_REPETITIONS_PER_BRANCH,
 ) -> dict[str, Any]:
     root = Path(root).resolve()
-    output_dir = Path(output_dir or root / "results/detection/imax_plateau_diagnostic").resolve()
+    output_dir = Path(output_dir or root / "data/detection/imax_plateau_diagnostic").resolve()
     table_path = root / "data/detection" / INDEX_REGIMES_CSV.name
     if not table_path.is_file():
         raise FileNotFoundError(f"Production index-regime table is required: {table_path}")

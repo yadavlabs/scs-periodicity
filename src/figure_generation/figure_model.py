@@ -86,8 +86,8 @@ class PopulationFigures:
         self.root, self.output = Path(root), Path(output)
         self.output.mkdir(parents=True, exist_ok=True)
         self.records = []
-        focus = self.root / "results/discrimination/scope"
-        control = self.root / "results/discrimination/control"
+        focus = self.root / "data/discrimination/scope"
+        control = self.root / "data/discrimination/control"
         self.focus = {name: pd.read_csv(focus / f"population_{stem}.csv", low_memory=False)
                       for name, stem in [("curves", "discrimination_curves"), ("weights", "observer_weights"),
                                          ("rmse", "observer_rmse")]}
@@ -99,7 +99,7 @@ class PopulationFigures:
         self.params = pd.read_csv(focus / "merged_params.csv", low_memory=False)
         self.index = pd.read_csv(self.root / "data/detection/index_regime_amplitudes.csv")
         self.equiv = pd.read_csv(self.root / "data/features/population_regime_response_equivalence.csv")
-        det = self.root / "results/detection/behavioral_matching"
+        det = self.root / "data/detection/behavioral_matching"
         self.det = {name: pd.read_csv(det / f"detection_{name}.csv") for name in ["curves", "weights", "metrics"]}
         from detection.detection_core import load_detection_behavior
         from discrimination.behavioral_data import load_slack_dir
@@ -190,8 +190,8 @@ class PopulationFigures:
         if hasattr(self, "_locked_cue_curves"):
             return self._locked_cue_curves
         from discrimination.locked_mixture_followup import STEMS, validate_frames, verify
-        folder = self.root / "results/discrimination/locked/followup"
-        bundle = self.root / "results/discrimination/locked/inputs"
+        folder = self.root / "data/discrimination/locked/followup"
+        bundle = self.root / "data/discrimination/locked/inputs"
         validation = json.loads((folder / "validation.json").read_text())
         if validation.get("status") != "ready" or validation.get("conditional_fits") != 1000:
             raise ValueError("Locked-mixture figure requires the validated full run")
@@ -534,7 +534,7 @@ class PopulationFigures:
         figures.append(self.figure(fig, "fig1d_detection_behavior"))
         fig, ax = plt.subplots(figsize=(10, 5.6))
         subset = self.index[(self.index.freq == freq) & (self.index.cv == 0) & (self.index.rep_index == rep)].set_index("thresh_type")
-        patterns = self.root / "data/time-patterns/population"
+        patterns = self.root / "data/time-patterns/generated"
         meta = json.loads((patterns / f"cv0.0_f{freq}_meta.json").read_text())
         with np.load(patterns / f"cv0.0_f{freq}_waveforms.npz") as bundle:
             key = str(subset.iloc[0].rep_label)
@@ -726,7 +726,7 @@ class PopulationFigures:
 
     def population_summary(self, mode="cv0", include_index=True, stem=None):
         if mode == "true":
-            refresh = self.root / "results/detection"
+            refresh = self.root / "data/detection"
             manifest = refresh / "true_population_trial_summary_manifest.json"
             if not manifest.exists():
                 return None  # Never silently publish old-I_max population summaries.
@@ -750,7 +750,7 @@ class PopulationFigures:
             scale_frames.append(pd.read_csv(self.root / "data/features/population_cv0_based_features.csv",
                                            usecols=["active_axon_count", "total_population_spikes"]))
         else:
-            refresh = self.root / "results/detection"
+            refresh = self.root / "data/detection"
             manifest = refresh / "true_population_trial_summary_manifest.json"
             if manifest.exists():
                 from detection.refresh_imax_population import digest
