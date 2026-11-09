@@ -511,7 +511,7 @@ def extract_population_features(
         features["sd_spikes_per_active_axon"] = np.sqrt(np.maximum(active_variance, 0.0))
         features["max_spikes_per_axon"] = max_spikes
 
-        for column, values in items():
+        for column, values in population.items():
             features[column] = values
         features["spikes_per_event_1ms"] = _safe_divide(
             total_spikes, features["n_events_1ms"].to_numpy()
