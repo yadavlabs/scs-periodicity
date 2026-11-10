@@ -78,3 +78,16 @@ observer mean RMSE difference was 0.00051. The new control summary adds three
 parameter-count columns. The accepted data archive remains the reference for
 the submitted figures and reported statistics; the fresh-run outputs are kept
 separate for audit until the protocol difference is resolved.
+
+The original v1 CV0 source is preserved in the analysis checkout at commit
+`e3f6b570d220153a2dddf3f43bb4df0b8e151e4f`. The recovered pre-Imax input
+reconstructs the accepted five-row CV0 index table exactly, including its file
+hash after accounting for newline convention. The only amplitude difference
+between accepted v1 CV0 and fresh v3 CV0 is `I_all` at 10 Hz:
+256.14013671875 versus 256.13778084516525 uA. This affects 1,100 trial-level
+amplitudes and four population spike counts in the current feature tables.
+`src/detection/accepted_cv0.py` and the corresponding Slurm stages independently
+resimulate those affected responses before rebuilding the CV0 features.
+An independent local NEURON 9.0.2 pilot of the accepted 10 Hz `I_all` index
+response (CV 0.1, repetition 15) reproduced all 14 archived spike times
+exactly. The full population recovery and release comparison remain pending.

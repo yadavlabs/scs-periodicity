@@ -156,6 +156,7 @@ def _iter_axon_blocks(
     input_csv: Path,
     *,
     read_chunksize: int,
+    expected_protocol_version: str = DETECTION_PROTOCOL_VERSION,
 ) -> Iterator[pd.DataFrame]:
     """Yield contiguous target-axon blocks without assuming a block row count."""
     header = pd.read_csv(input_csv, nrows=0)
@@ -168,10 +169,10 @@ def _iter_axon_blocks(
     reader = pd.read_csv(input_csv, usecols=INPUT_COLUMNS, chunksize=int(read_chunksize))
     for chunk in reader:
         versions = chunk["detection_protocol_version"].dropna().astype(str).unique().tolist()
-        if versions != [DETECTION_PROTOCOL_VERSION]:
+        if versions != [expected_protocol_version]:
             raise RuntimeError(
                 "Population response CSV has incompatible detection protocol(s): "
-                f"{versions}; expected {DETECTION_PROTOCOL_VERSION!r}"
+                f"{versions}; expected {expected_protocol_version!r}"
             )
         ids = chunk["target_axon_id"].astype(str).to_numpy()
         if ids.size == 0:
@@ -330,6 +331,7 @@ def extract_population_features(
     trace_npz: Path | str | None = TRACE_NPZ,
     read_chunksize: int = 100_000,
     overwrite: bool = False,
+    expected_protocol_version: str = DETECTION_PROTOCOL_VERSION,
 ) -> Path:
     """Stream the CV0 response table and write one fixed-feature row per trial."""
     root = Path(root).resolve()
@@ -341,7 +343,10 @@ def extract_population_features(
     if not input_path.is_file():
         raise FileNotFoundError(input_path)
 
-    blocks = _iter_axon_blocks(input_path, read_chunksize=read_chunksize)
+    blocks = _iter_axon_blocks(
+        input_path, read_chunksize=read_chunksize,
+        expected_protocol_version=expected_protocol_version,
+    )
     try:
         first = next(blocks)
     except StopIteration as exc:
@@ -525,7 +530,7 @@ def extract_population_features(
                 np.savez_compressed(
                     archive,
                     feature_version=np.asarray(FEATURE_VERSION),
-                    detection_protocol_version=np.asarray(DETECTION_PROTOCOL_VERSION),
+                    detection_protocol_version=np.asarray(expected_protocol_version),
                     analysis_t0_ms=np.asarray(T0_MS),
                     analysis_t1_ms=np.asarray(T1_MS),
                     analysis_response_padding_ms=np.asarray(RESPONSE_PADDING_MS),
@@ -1016,6 +1021,7 @@ def run_population_feature_pipeline(
     read_chunksize: int = 100_000,
     jnd_k: float = JND_K,
     overwrite: bool = False,
+    expected_protocol_version: str = DETECTION_PROTOCOL_VERSION,
 ) -> tuple[Path, Path]:
     features = extract_population_features(
         root=root,
@@ -1024,6 +1030,7 @@ def run_population_feature_pipeline(
         trace_npz=trace_npz,
         read_chunksize=read_chunksize,
         overwrite=overwrite,
+        expected_protocol_version=expected_protocol_version,
     )
     evidence = build_population_template_evidence(
         root=root,
@@ -1043,6 +1050,7 @@ def _parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--root", type=Path, default=PROJECT_ROOT)
     common.add_argument("--overwrite", action="store_true")
+    common.add_argument("--expected-protocol", default=DETECTION_PROTOCOL_VERSION)
 
     extract = sub.add_parser("extract", parents=[common])
     extract.add_argument("--input", type=Path, default=INPUT_CSV)
@@ -1079,6 +1087,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             trace_npz=args.traces,
             read_chunksize=args.read_chunksize,
             overwrite=args.overwrite,
+            expected_protocol_version=args.expected_protocol,
         ))
     elif args.command == "evidence":
         print(build_population_template_evidence(
@@ -1102,6 +1111,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             read_chunksize=args.read_chunksize,
             jnd_k=args.jnd_k,
             overwrite=args.overwrite,
+            expected_protocol_version=args.expected_protocol,
         )
         print(features)
         print(evidence)

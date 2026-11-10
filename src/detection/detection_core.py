@@ -1607,7 +1607,7 @@ def _population_response_rows_for_rep(
             # trial-specific values into the integrated population table.
             n_index = int(n_spikes)
         rows.append({
-            "detection_protocol_version": DETECTION_PROTOCOL_VERSION,
+            "detection_protocol_version": regime["detection_protocol_version"],
             "index_axon_id": regime["index_axon_id"], "index_cutline_id": regime["index_cutline_id"],
             "index_diameter_um": regime["index_diameter_um"], "target_axon_id": basis["axon_id"],
             "target_cutline_id": basis["cutline_id"], "target_diameter_um": basis["diameter_um"],
@@ -1650,12 +1650,17 @@ def _run_population_recruitment_condition(
     partial_dir: Path, overwrite: bool, prune_on_max_failure: bool,
     max_pruning_audit_rate: float, diameter_screen_path: Path | None,
     diameter_pruning_audit_rate: float,
+    regimes_override: pd.DataFrame | None = None,
 ) -> Path:
     """Run one target/condition with exact caching and audited monotonic pruning."""
     output = _population_partial_path(partial_dir, mode, job)
     if output.is_file() and not overwrite:
         return output
-    regimes = _regimes_for_population_condition(root, mode, float(job["cv"]), float(job["freq"]))
+    regimes = (regimes_override if regimes_override is not None else
+               _regimes_for_population_condition(root, mode, float(job["cv"]), float(job["freq"])))
+    protocols = regimes["detection_protocol_version"].dropna().astype(str).unique().tolist()
+    if len(protocols) != 1:
+        raise ValueError(f"Expected one detection protocol for {job}, found {protocols}")
     groups: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for record in regimes.to_dict(orient="records"):
         groups[int(record["rep_index"])].append(record)
@@ -1719,7 +1724,7 @@ def _run_population_recruitment_condition(
     rows.sort(key=lambda row: (int(row["rep_index"]), THRESH_TYPES.index(str(row["thresh_type"]))))
     _atomic_dataframe_csv(pd.DataFrame(rows, columns=POPULATION_RESPONSE_COLUMNS), output)
     _atomic_json({
-        "detection_protocol_version": DETECTION_PROTOCOL_VERSION,
+        "detection_protocol_version": protocols[0],
         "mode": mode,
         "target_axon_id": job["target_axon_id"],
         "cv": float(job["cv"]),
