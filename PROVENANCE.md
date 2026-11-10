@@ -56,4 +56,25 @@ phase/recruitment summaries from the current response tables.
   rows.
 
 The complete Longleaf dependency chain and release download are described in
-`hpc_tools/README.md`. Its full regeneration has not yet been run on Longleaf.
+`hpc_tools/README.md`.
+
+## Full Longleaf rerun audit
+
+The full v1.1.0 pipeline completed on Longleaf in November 2026 after a feature
+column-assignment bug was fixed and the downstream jobs were resubmitted. The
+final pipeline validation reported `ready` for 49,500 trials. The local
+download installed all 76 selected outputs; notebook 06 executed all 23 code
+cells, and its export check validated 68 figure records. The existing accepted
+data ZIP passed its SHA-256 and 228-entry archive check.
+
+The fresh run is not an exact reproduction of the accepted archive. A strict
+comparison matched 8 of 26 manuscript-facing tables; 18 differed. The
+accepted CV0 response table was produced under detection protocol
+`canonical-cv0_tol0p01_v1`, while the current pipeline regenerates that branch
+under `canonical-cv0_tol0p01_peakfirst-imax_v3`. This changes a small number of
+feature values before the observer fits. Numerical fit results also differ:
+the largest detection weight difference was 0.00086, and the largest control
+observer mean RMSE difference was 0.00051. The new control summary adds three
+parameter-count columns. The accepted data archive remains the reference for
+the submitted figures and reported statistics; the fresh-run outputs are kept
+separate for audit until the protocol difference is resolved.

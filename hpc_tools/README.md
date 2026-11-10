@@ -131,6 +131,19 @@ python hpc_tools/download_data.py `
   --remote-project /work/users/t/v/tvrdy9/scs-periodicity-population-v110-full
 ```
 
+The downloader installs directly from its saved tar archive, one file at a
+time, and retains 2 GiB of free disk space by default. If installation stops
+after the SSH transfer, keep the archive and resume without another transfer:
+
+```powershell
+python hpc_tools/download_data.py --kind release --from-archive
+```
+
+Use `--archive PATH` if the saved tar archive was moved to another drive.
+The release archive from the full Longleaf run expands to about 9.47 GiB;
+check local free space before resuming. The accepted-data extraction is kept
+separate from the fresh run.
+
 Install `requirements.txt` in the clean local run directory, execute notebook
 06, finalize its exports, and compare the manuscript-facing tables with the
 separate accepted-data extraction:
