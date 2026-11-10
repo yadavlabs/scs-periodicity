@@ -4,6 +4,16 @@ This version replaces the single-axon public workflow with the accepted
 420-axon population analysis. The v1.0.2 Git tag and Zenodo record remain the
 historical single-axon version.
 
+## Release gate
+
+The full Longleaf rerun passed its pipeline validation and figure notebook, but
+its strict comparison with the accepted manuscript data matched only 8 of 26
+tables. The accepted CV0 response data use the earlier v1 detection protocol;
+the current pipeline regenerates that branch under the peak-first v3 protocol.
+Keep the existing accepted data ZIP as the manuscript reference. Reconcile this
+two-protocol history and the remaining numerical fit differences before
+publishing a v1.1.0 record or Git tag. See `PROVENANCE.md` for the audit.
+
 ## Local release files
 
 Build the source ZIP from the reviewed commit:
