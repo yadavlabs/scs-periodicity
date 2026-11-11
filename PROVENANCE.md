@@ -90,4 +90,11 @@ amplitudes and four population spike counts in the current feature tables.
 resimulate those affected responses before rebuilding the CV0 features.
 An independent local NEURON 9.0.2 pilot of the accepted 10 Hz `I_all` index
 response (CV 0.1, repetition 15) reproduced all 14 archived spike times
-exactly. The full population recovery and release comparison remain pending.
+exactly. The Longleaf pilot (job 8792808), all 770 recovery array tasks
+(8792953), merge (8792954), and feature extraction (8792955) completed with
+zero exit codes. The downloaded recovery matched all four accepted CV0
+feature/evidence tables and every array in the accepted 1 ms population trace
+archive. These are value-level comparisons; the recovered 20,790,000-row raw
+response table remains on Longleaf in the isolated recovery directory. The
+accepted data ZIP remains unchanged while the full pipeline and downstream
+observer differences are resolved.

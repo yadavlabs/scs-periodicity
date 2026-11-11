@@ -45,7 +45,8 @@ bash hpc_tools/slurm/detection/run_accepted_cv0_recovery.sh
 ```
 
 The array uses at most 41 tasks with 24 CPUs each (984 CPUs). The final job
-writes four small feature/evidence tables for local comparison using
-`hpc_tools/release_checks/verify_accepted_cv0_recovery.py`. Promotion into
-the release archive remains gated on that comparison and the manuscript-facing
-table checks.
+writes four feature/evidence tables and a population trace archive. All 770
+array tasks and both downstream jobs completed on Longleaf; the downloaded
+outputs matched the accepted archive using
+`hpc_tools/release_checks/verify_accepted_cv0_recovery.py`. Incorporation into
+the full release pipeline and the manuscript-facing table checks remain pending.

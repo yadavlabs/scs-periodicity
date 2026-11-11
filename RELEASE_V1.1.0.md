@@ -9,10 +9,13 @@ historical single-axon version.
 The full Longleaf rerun passed its pipeline validation and figure notebook, but
 its strict comparison with the accepted manuscript data matched only 8 of 26
 tables. The accepted CV0 response data use the earlier v1 detection protocol;
-the current pipeline regenerates that branch under the peak-first v3 protocol.
-Keep the existing accepted data ZIP as the manuscript reference. Reconcile this
-two-protocol history and the remaining numerical fit differences before
-publishing a v1.1.0 record or Git tag. See `PROVENANCE.md` for the audit.
+the current full pipeline regenerates that branch under the peak-first v3
+protocol. An isolated Longleaf recovery of the accepted v1 CV0 branch matched
+all four accepted feature/evidence tables and the full population trace archive.
+Keep the existing accepted data ZIP as the manuscript reference. Incorporate
+the recovered branch into the full pipeline and resolve the remaining numerical
+fit differences before publishing a v1.1.0 record or Git tag. See
+`PROVENANCE.md` for the audit.
 
 ## Local release files
 
