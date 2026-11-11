@@ -1,6 +1,7 @@
 """Versioned constants shared across population pipeline stages."""
 
 DETECTION_PROTOCOL_VERSION = "canonical-cv0_tol0p01_peakfirst-imax_v3"
+CV0_PROTOCOL_VERSION = "canonical-cv0_tol0p01_v1"
 POPULATION_THRESHOLD_TOL_UA = 0.01
 DEFAULT_EXPECTED_INDEX_AXON_ID = "S01_140um_ph1"
 

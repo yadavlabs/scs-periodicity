@@ -29,6 +29,7 @@ DERIVED_OUTPUTS = (
     "population_responses.csv",
     "population_cv0_based_responses.csv",
 )
+CV0_OUTPUTS = {"index_cv0_threshold_max.csv", "population_cv0_based_responses.csv"}
 
 
 def _cache_metadata(path: Path) -> tuple[str, str | None]:
@@ -47,6 +48,7 @@ def incompatible_cache_files(
     root: Path,
     expected_index_axon_id: str,
     expected_protocol_version: str | None = None,
+    expected_cv0_protocol_version: str | None = None,
 ) -> list[tuple[Path, str, str | None]]:
     root = root.resolve()
     candidates: list[Path] = []
@@ -62,11 +64,16 @@ def incompatible_cache_files(
     incompatible: list[tuple[Path, str, str | None]] = []
     for path in candidates:
         observed_index, observed_protocol = _cache_metadata(path)
+        expected_protocol = (
+            expected_cv0_protocol_version
+            if path.name in CV0_OUTPUTS and expected_cv0_protocol_version is not None
+            else expected_protocol_version
+        )
         if (
             observed_index != expected_index_axon_id
             or (
-                expected_protocol_version is not None
-                and observed_protocol != expected_protocol_version
+                expected_protocol is not None
+                and observed_protocol != expected_protocol
             )
         ):
             incompatible.append((path, observed_index, observed_protocol))
@@ -76,10 +83,12 @@ def incompatible_cache_files(
 def prepare_cache(
     *, root: Path, expected_index_axon_id: str, apply: bool,
     archive_tag: str | None = None, expected_protocol_version: str | None = None,
+    expected_cv0_protocol_version: str | None = None,
 ) -> dict[str, object]:
     root = root.resolve()
     incompatible = incompatible_cache_files(
         root, expected_index_axon_id, expected_protocol_version,
+        expected_cv0_protocol_version,
     )
     tag = archive_tag or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     archive_root = (
@@ -108,6 +117,7 @@ def prepare_cache(
         "applied": apply,
         "expected_index_axon_id": expected_index_axon_id,
         "expected_protocol_version": expected_protocol_version,
+        "expected_cv0_protocol_version": expected_cv0_protocol_version,
         "incompatible_csv_count": len(incompatible),
         "files_moved_or_planned": len(moved),
         "archive_root": str(archive_root),
@@ -120,6 +130,7 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=REPO_ROOT)
     parser.add_argument("--expected-index-axon-id", required=True)
     parser.add_argument("--expected-protocol-version")
+    parser.add_argument("--expected-cv0-protocol-version")
     parser.add_argument("--archive-tag")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
@@ -127,6 +138,7 @@ def main() -> int:
         root=args.root, expected_index_axon_id=args.expected_index_axon_id,
         apply=bool(args.apply), archive_tag=args.archive_tag,
         expected_protocol_version=args.expected_protocol_version,
+        expected_cv0_protocol_version=args.expected_cv0_protocol_version,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     if not args.apply:

@@ -25,4 +25,5 @@ export LD_LIBRARY_PATH="$PROJECT/venv/lib:${LD_LIBRARY_PATH:-}"
 
 python -m detection.detection_CLI merge-index-regimes \
   --root "$PROJECT" --partial-dir "$PARTIAL_DIR" --output "$OUT_REGIMES"
-python -m detection.detection_CLI compute-index-cv0 --root "$PROJECT" --force
+python -m detection.accepted_cv0 prepare --root "$PROJECT" \
+  --output "$PROJECT/data/detection/index_cv0_threshold_max.csv"

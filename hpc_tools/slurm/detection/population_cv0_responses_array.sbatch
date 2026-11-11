@@ -12,7 +12,7 @@
 set -euo pipefail
 
 PROJECT="${PROJECT:-${SLURM_SUBMIT_DIR:-$PWD}}"
-PROTOCOL="${DETECTION_PROTOCOL_VERSION:-canonical-cv0_tol0p01_peakfirst-imax_v3}"
+PROTOCOL="${CV0_PROTOCOL_VERSION:-canonical-cv0_tol0p01_v1}"
 INDEX_ID="${EXPECTED_INDEX_AXON_ID:-S01_140um_ph1}"
 PARTIAL_DIR="$PROJECT/data/detection/partials/$PROTOCOL/$INDEX_ID/population-cv0-responses"
 cd "$PROJECT"

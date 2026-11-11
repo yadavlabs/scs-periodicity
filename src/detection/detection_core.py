@@ -42,6 +42,7 @@ from scipy.signal import find_peaks
 from tqdm import tqdm
 
 from detection.protocol import (
+    CV0_PROTOCOL_VERSION,
     DEFAULT_EXPECTED_INDEX_AXON_ID,
     DETECTION_PROTOCOL_VERSION,
     I_MAX_BRANCH_SEARCH_WIDTH_UA,
@@ -135,14 +136,14 @@ DEFAULT_DIAMETER_PRUNING_AUDIT_RATE = 0.01
 
 # --------------- Population SpaceTimeV loading --------------- #
 
-def _detection_partial_dir(root: Path, family: str) -> Path:
+def _detection_partial_dir(root: Path, family: str, *, protocol_version: str = DETECTION_PROTOCOL_VERSION) -> Path:
     """Return the cache-isolated partial directory for this protocol."""
     expected_index = os.environ.get(
         "EXPECTED_INDEX_AXON_ID", DEFAULT_EXPECTED_INDEX_AXON_ID,
     )
     return (
         root / "data" / "detection" / "partials"
-        / DETECTION_PROTOCOL_VERSION / expected_index / family
+        / protocol_version / expected_index / family
     )
 
 def load_population_basis(basis_path: Path) -> dict[str, Any]:
@@ -1306,7 +1307,7 @@ def _build_cv0_regime_jobs(root: Path, cv0_table: pd.DataFrame) -> pd.DataFrame:
                     if pd.isna(amp):
                         continue
                     rows.append({
-                        "detection_protocol_version": DETECTION_PROTOCOL_VERSION,
+                        "detection_protocol_version": str(table_row.detection_protocol_version),
                         "index_axon_id": index["axon_id"], "index_cutline_id": index["cutline_id"],
                         "index_diameter_um": index["diameter_um"], "file": index_path.name,
                         "cv": cv, "freq": freq, "rep_index": rep_index, "rep_label": rep_label,
@@ -1381,7 +1382,18 @@ def population_recruitment_jobs(
 
 def _cv0_regimes_for_condition(root: Path, cv: float, freq: float) -> pd.DataFrame:
     """Build only one expanded CV0 condition, avoiding a 49,500-row table per task."""
-    cv0 = compute_index_cv0_threshold_max(root=root, force=False)
+    from detection.accepted_cv0 import INDEX_SHA256, checked_csv
+
+    cv0 = checked_csv(
+        root / "data/detection/index_cv0_threshold_max.csv",
+        INDEX_SHA256, normalize_newlines=True,
+    )
+    protocols = cv0["detection_protocol_version"].dropna().astype(str).unique().tolist()
+    if protocols != [CV0_PROTOCOL_VERSION]:
+        raise RuntimeError(
+            f"CV0 recruitment requires {CV0_PROTOCOL_VERSION}; found {protocols}. "
+            "Run detection.accepted_cv0 prepare before population CV0 jobs."
+        )
     row = cv0[np.isclose(cv0["freq"].astype(float), float(freq))]
     if len(row) != 1:
         raise RuntimeError(f"Expected one CV0 threshold row for frequency {freq}, found {len(row)}")
@@ -1405,7 +1417,7 @@ def _cv0_regimes_for_condition(root: Path, cv: float, freq: float) -> pd.DataFra
             if pd.isna(amp):
                 continue
             rows.append({
-                "detection_protocol_version": DETECTION_PROTOCOL_VERSION,
+                "detection_protocol_version": str(table_row["detection_protocol_version"]),
                 "index_axon_id": index["axon_id"], "index_cutline_id": index["cutline_id"],
                 "index_diameter_um": index["diameter_um"], "file": index_path.name,
                 "cv": cv, "freq": freq, "rep_index": rep_index, "rep_label": rep_label,
@@ -1754,6 +1766,7 @@ def run_population_recruitment_job(
         raise ValueError("mode must be 'true' or 'cv0'")
     partial_dir = (partial_dir or _detection_partial_dir(
         root, "population-responses" if mode == "true" else "population-cv0-responses",
+        protocol_version=CV0_PROTOCOL_VERSION if mode == "cv0" else DETECTION_PROTOCOL_VERSION,
     )).resolve()
     return _run_population_recruitment_condition(
         root=root, mode=mode, job=job, n_jobs=n_jobs, partial_dir=partial_dir,
@@ -1805,6 +1818,7 @@ def run_population_target_condition(
     }
     partial_dir = (partial_dir or _detection_partial_dir(
         root, "population-responses" if mode == "true" else "population-cv0-responses",
+        protocol_version=CV0_PROTOCOL_VERSION if mode == "cv0" else DETECTION_PROTOCOL_VERSION,
     )).resolve()
     return _run_population_recruitment_condition(
         root=root, mode=mode, job=job, n_jobs=n_jobs, partial_dir=partial_dir,
@@ -1831,6 +1845,7 @@ def run_population_trajectory_condition_job(
     job = jobs[trajectory_job_index]
     partial_dir = (partial_dir or _detection_partial_dir(
         root, "population-responses" if mode == "true" else "population-cv0-responses",
+        protocol_version=CV0_PROTOCOL_VERSION if mode == "cv0" else DETECTION_PROTOCOL_VERSION,
     )).resolve()
     outputs: list[Path] = []
     previous: Path | None = None
@@ -1867,6 +1882,7 @@ def merge_population_recruitment_partials(
         raise ValueError("mode must be 'true' or 'cv0'")
     partial_dir = (partial_dir or _detection_partial_dir(
         root, "population-responses" if mode == "true" else "population-cv0-responses",
+        protocol_version=CV0_PROTOCOL_VERSION if mode == "cv0" else DETECTION_PROTOCOL_VERSION,
     )).resolve()
     output_csv = output_csv or root / "data" / "detection" / (POPULATION_RESPONSES_CSV.name if mode == "true" else POPULATION_CV0_RESPONSES_CSV.name)
     jobs = population_recruitment_jobs(root, population_manifest)
@@ -1875,14 +1891,18 @@ def merge_population_recruitment_partials(
     if missing:
         raise RuntimeError(f"Cannot merge {mode} recruitment; {len(missing)} task files are missing (first: {missing[0]})")
 
-    # CV0-expanded jobs cannot know their trial-specific index response until
-    # the index axon itself is simulated.  Build that small (49,500-condition)
-    # lookup first, then propagate the realized count into every target-axon
-    # row while streaming the large merged response table.  This keeps
-    # n_index_spikes complete at the source instead of relying on downstream
-    # code to infer it from whichever target block happens to appear first.
+    # The accepted v1 CV0 table stores the realized index count on the index
+    # axon's rows only. Later CV0 protocols propagate that count to all targets.
     index_count_by_condition: dict[tuple[str, str, str, str], str] | None = None
+    cv0_protocol = None
     if mode == "cv0":
+        protocols = compute_index_cv0_threshold_max(root=root, force=False)[
+            "detection_protocol_version"
+        ].dropna().astype(str).unique().tolist()
+        if len(protocols) != 1:
+            raise ValueError(f"Expected one CV0 protocol, found {protocols}")
+        cv0_protocol = protocols[0]
+    if mode == "cv0" and cv0_protocol != CV0_PROTOCOL_VERSION:
         index = identify_index_axon(root=root, n_jobs=1, force=False)
         index_id = str(index["axon_id"])
         index_parts = [
@@ -2036,7 +2056,9 @@ def simulate_population_at_index_regimes(*, root: Path = PROJECT_ROOT, n_jobs: i
 def simulate_population_at_index_cv0_regimes(*, root: Path = PROJECT_ROOT, n_jobs: int = 4, overwrite: bool = False) -> Path:
     """Run every axon/CV/repetition at index CV0-derived amplitudes locally."""
     root = root.resolve()
-    partial_dir = _detection_partial_dir(root, "population-cv0-responses")
+    partial_dir = _detection_partial_dir(
+        root, "population-cv0-responses", protocol_version=CV0_PROTOCOL_VERSION,
+    )
     for job_index in tqdm(range(len(population_recruitment_jobs(root))), desc="Population CV0 recruitment conditions"):
         run_population_recruitment_job(
             root=root, mode="cv0", job_index=job_index, n_jobs=n_jobs,
@@ -3034,7 +3056,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         identify_index_axon(root=args.root, n_jobs=args.n_jobs, force=args.force)
         compute_index_regimes(root=args.root, n_jobs=args.n_jobs, force=args.force)
-        compute_index_cv0_threshold_max(root=args.root, force=args.force)
+        from detection.accepted_cv0 import prepare_accepted_index
+        prepare_accepted_index(
+            args.root.resolve(), args.root.resolve() / "data/detection/index_cv0_threshold_max.csv",
+        )
         print(simulate_population_at_index_regimes(root=args.root, n_jobs=args.n_jobs, overwrite=args.force))
         print(simulate_population_at_index_cv0_regimes(root=args.root, n_jobs=args.n_jobs, overwrite=args.force))
     return 0

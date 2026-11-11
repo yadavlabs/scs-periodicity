@@ -16,6 +16,7 @@ module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 export PROJECT EXPECTED_INDEX_AXON_ID POPULATION_MANIFEST
+python hpc_tools/verify_behavior_fit_inputs.py
 
 N_AXON_JOBS=$(python -m space_time_v.spacetime_core job-count --root "$PROJECT" | tail -n 1)
 N_PHASE_GROUPS=$((N_AXON_JOBS / 6))

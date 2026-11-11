@@ -26,16 +26,19 @@ module load python/3.12.4
 source venv/bin/activate
 export PYTHONPATH="$PROJECT/src${PYTHONPATH:+:$PYTHONPATH}"
 DETECTION_PROTOCOL_VERSION=$(python -c "from detection.protocol import DETECTION_PROTOCOL_VERSION; print(DETECTION_PROTOCOL_VERSION)" | tail -n 1)
-export DETECTION_PROTOCOL_VERSION
+CV0_PROTOCOL_VERSION=$(python -c "from detection.protocol import CV0_PROTOCOL_VERSION; print(CV0_PROTOCOL_VERSION)" | tail -n 1)
+export DETECTION_PROTOCOL_VERSION CV0_PROTOCOL_VERSION
 
 # Regime and response caches contain amplitudes defined by a particular index
 # axon. Preserve, but remove from active paths, anything anchored elsewhere.
 python hpc_tools/prepare_population_index_cache.py \
   --root "$PROJECT" --expected-index-axon-id "$EXPECTED_INDEX_AXON_ID" \
-  --expected-protocol-version "$DETECTION_PROTOCOL_VERSION"
+  --expected-protocol-version "$DETECTION_PROTOCOL_VERSION" \
+  --expected-cv0-protocol-version "$CV0_PROTOCOL_VERSION"
 python hpc_tools/prepare_population_index_cache.py \
   --root "$PROJECT" --expected-index-axon-id "$EXPECTED_INDEX_AXON_ID" \
-  --expected-protocol-version "$DETECTION_PROTOCOL_VERSION" --apply
+  --expected-protocol-version "$DETECTION_PROTOCOL_VERSION" \
+  --expected-cv0-protocol-version "$CV0_PROTOCOL_VERSION" --apply
 N_REGIME_CONDITIONS=$(python -c "from detection.detection_core import index_regime_conditions; print(len(index_regime_conditions()))" | tail -n 1)
 if [[ -n "${RECRUITMENT_TASK_COUNT:-}" ]]; then
   N_RECRUITMENT_TASKS="$RECRUITMENT_TASK_COUNT"
@@ -84,8 +87,9 @@ echo "  recruitment tasks=$N_RECRUITMENT_TASKS in batches of at most $MAX_ARRAY_
 echo "  response concurrency: true=$TRUE_PARALLEL cv0=$CV0_PARALLEL total=$MAX_PARALLEL_RESPONSES"
 echo "  pruning audits: maximum=$MAX_PRUNING_AUDIT_RATE diameter=$DIAMETER_PRUNING_AUDIT_RATE"
 echo "  expected index axon=$EXPECTED_INDEX_AXON_ID"
-echo "  detection protocol=$DETECTION_PROTOCOL_VERSION"
-echo "  partial namespace=$DETECTION_PROTOCOL_VERSION/$EXPECTED_INDEX_AXON_ID"
+echo "  true-CV protocol=$DETECTION_PROTOCOL_VERSION"
+echo "  CV0 protocol=$CV0_PROTOCOL_VERSION"
+echo "  partial namespaces=$DETECTION_PROTOCOL_VERSION/$EXPECTED_INDEX_AXON_ID and $CV0_PROTOCOL_VERSION/$EXPECTED_INDEX_AXON_ID"
 
 UPSTREAM_DEPENDENCY=()
 if [[ -n "${PIPELINE_DEPENDENCY:-}" ]]; then

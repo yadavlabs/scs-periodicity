@@ -98,3 +98,9 @@ archive. These are value-level comparisons; the recovered 20,790,000-row raw
 response table remains on Longleaf in the isolated recovery directory. The
 accepted data ZIP remains unchanged while the full pipeline and downstream
 observer differences are resolved.
+
+The one-command Slurm coordinator has been updated to reconstruct the accepted
+v1 CV0 index table before its CV0 population array, while the true-CV index
+regimes and population responses retain the peak-first v3 protocol. The feature
+job and final release validation now require v1 CV0. This direct full-run path
+still requires a fresh Longleaf end-to-end run and downstream comparison.

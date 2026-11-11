@@ -33,7 +33,7 @@ import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
 
-from detection.protocol import DETECTION_PROTOCOL_VERSION
+from detection.protocol import CV0_PROTOCOL_VERSION
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -156,7 +156,7 @@ def _iter_axon_blocks(
     input_csv: Path,
     *,
     read_chunksize: int,
-    expected_protocol_version: str = DETECTION_PROTOCOL_VERSION,
+    expected_protocol_version: str = CV0_PROTOCOL_VERSION,
 ) -> Iterator[pd.DataFrame]:
     """Yield contiguous target-axon blocks without assuming a block row count."""
     header = pd.read_csv(input_csv, nrows=0)
@@ -331,7 +331,7 @@ def extract_population_features(
     trace_npz: Path | str | None = TRACE_NPZ,
     read_chunksize: int = 100_000,
     overwrite: bool = False,
-    expected_protocol_version: str = DETECTION_PROTOCOL_VERSION,
+    expected_protocol_version: str = CV0_PROTOCOL_VERSION,
 ) -> Path:
     """Stream the CV0 response table and write one fixed-feature row per trial."""
     root = Path(root).resolve()
@@ -1021,7 +1021,7 @@ def run_population_feature_pipeline(
     read_chunksize: int = 100_000,
     jnd_k: float = JND_K,
     overwrite: bool = False,
-    expected_protocol_version: str = DETECTION_PROTOCOL_VERSION,
+    expected_protocol_version: str = CV0_PROTOCOL_VERSION,
 ) -> tuple[Path, Path]:
     features = extract_population_features(
         root=root,
@@ -1050,7 +1050,7 @@ def _parser() -> argparse.ArgumentParser:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--root", type=Path, default=PROJECT_ROOT)
     common.add_argument("--overwrite", action="store_true")
-    common.add_argument("--expected-protocol", default=DETECTION_PROTOCOL_VERSION)
+    common.add_argument("--expected-protocol", default=CV0_PROTOCOL_VERSION)
 
     extract = sub.add_parser("extract", parents=[common])
     extract.add_argument("--input", type=Path, default=INPUT_CSV)

@@ -86,10 +86,10 @@ Copy-Item (Join-Path $reference 'data/detection/behavior_fit_inputs/*') `
 Set-Location $run
 ```
 
-The recovered inputs reproduce the detection fit used in the accepted
-manuscript. The uploader transfers them but excludes completed response and
-observer outputs. Keep the reference extraction separate while comparing the
-newly generated tables and figures.
+The recovered inputs reproduce the detection fit and supply the accepted CV0
+index amplitudes used in the manuscript. The uploader transfers them but
+excludes completed response and observer outputs. Keep the reference extraction
+separate while comparing the newly generated tables and figures.
 
 From the clean run directory, upload and submit to a fresh Longleaf project.
 Do not pass `--skip-observer-inputs`: the Slack behavioral inputs are required.
@@ -108,12 +108,13 @@ coordinator did:
 
 1. Regenerate the 55 time-pattern bundles, then generate and validate 23,100
    SpaceTimeV files.
-2. Compile NEURON, identify the index axon, calculate index regimes, and run
-   both population response branches.
+2. Compile NEURON, identify the index axon, calculate the peak-first v3 index
+   regimes for the true-CV branch, reconstruct the accepted v1 CV0 index table
+   from the archived input bundle, and run both population response branches.
 3. Execute the data-summary cells of detection notebook 03, independently
    summarize the 49,500 true-CV population trials, and refit the accepted
    detection observer from the verified pre-Imax input bundle.
-4. Extract the CV0 population features and evidence.
+4. Extract accepted-v1 CV0 population features, evidence, and traces.
 5. Fit and validate the comprehensive observer controls and the four manuscript
    scope hypotheses. Their arrays can run concurrently after feature completion.
 6. Prepare the locked primary mixtures from the validated scope fits, run the
@@ -151,6 +152,7 @@ separate accepted-data extraction:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe hpc_tools/release_checks/verify_accepted_cv0_recovery.py --candidate-dir data/features --reference (Join-Path $reference 'data/features')
 .\.venv\Scripts\python.exe hpc_tools/release_checks/verify_population_figures.py --python .\.venv\Scripts\python.exe
 .\.venv\Scripts\python.exe hpc_tools/release_checks/finalize_population_figures.py
 .\.venv\Scripts\python.exe hpc_tools/release_checks/compare_release_reference.py --reference $reference

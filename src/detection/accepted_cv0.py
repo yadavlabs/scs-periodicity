@@ -17,9 +17,10 @@ import sys
 
 import numpy as np
 import pandas as pd
+from detection.protocol import CV0_PROTOCOL_VERSION
 
 
-ACCEPTED_PROTOCOL = "canonical-cv0_tol0p01_v1"
+ACCEPTED_PROTOCOL = CV0_PROTOCOL_VERSION
 REGIMES = (
     "I_first", "I_volley5", "I_volley10", "I_5", "I_10", "I_15",
     "I_25", "I_50", "I_all",
@@ -89,6 +90,18 @@ def build_cv0_index_table(regimes: pd.DataFrame, index: pd.DataFrame) -> pd.Data
         row["N_max_spikes"] = row["I_all0_n_index_spikes"]
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+def prepare_accepted_index(root: Path, output: Path) -> Path:
+    """Write the accepted five-row CV0 table from the archived fit input."""
+    source = root / "data/detection/behavior_fit_inputs/index_regime_amplitudes_pre_imax.csv"
+    index = root / "data/detection/index_axon.csv"
+    table = build_cv0_index_table(checked_csv(source, SOURCE_SHA256), pd.read_csv(index))
+    output.parent.mkdir(parents=True, exist_ok=True)
+    table.to_csv(output, index=False)
+    if sha256(output.read_bytes().replace(b"\r\n", b"\n")).hexdigest() != INDEX_SHA256:
+        raise ValueError("Reconstructed CV0 index table differs from the accepted table")
+    return output
 
 
 def simulate_pilot(root: Path, *, axon_id: str, cv: float, rep_index: int) -> dict[str, object]:
@@ -437,14 +450,7 @@ def main() -> None:
         print(json.dumps(result, indent=2))
         return
     output = args.output or root / DEFAULT_INDEX
-    source = root / "data/detection/behavior_fit_inputs/index_regime_amplitudes_pre_imax.csv"
-    index = root / "data/detection/index_axon.csv"
-    table = build_cv0_index_table(checked_csv(source, SOURCE_SHA256), pd.read_csv(index))
-    output.parent.mkdir(parents=True, exist_ok=True)
-    table.to_csv(output, index=False)
-    if sha256(output.read_bytes().replace(b"\r\n", b"\n")).hexdigest() != INDEX_SHA256:
-        raise ValueError("Reconstructed CV0 index table differs from the accepted table")
-    print(f"Reconstructed {len(table)} accepted CV0 operating states: {output}")
+    print(f"Reconstructed 5 accepted CV0 operating states: {prepare_accepted_index(root, output)}")
 
 
 if __name__ == "__main__":

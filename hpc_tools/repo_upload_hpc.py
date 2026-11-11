@@ -49,6 +49,7 @@ EXCLUDE_PATTERNS = (
     "__pycache__", "*/__pycache__", "*/__pycache__/*", "*.pyc",
     "logs", "logs/*", "results", "results/*", "*.tar", "*.tar.gz",
     "notebooks/cache/cache_*.csv",
+    "data/space-time-V/*SpaceTimeV.npz",
     "hpc_tools/release_checks/*",
 )
 LF_SUFFIXES = (".sh", ".sbatch")
@@ -289,7 +290,7 @@ def main() -> int:
     parser.add_argument("--project-name", default=PROJECT_NAME)
     parser.add_argument("--archive", type=Path, help="Create a local TAR/TAR.GZ instead of uploading.")
     parser.add_argument("--skip-upstream-inputs", action="store_true", help="Exclude COMSOL cutlines and time patterns.")
-    parser.add_argument("--skip-detection-inputs", action="store_true", help="Exclude population SpaceTimeV data for a code-only update.")
+    parser.add_argument("--skip-detection-inputs", action="store_true", help="Exclude population Ve bases and manifest for a code-only update.")
     parser.add_argument("--skip-observer-inputs", action="store_true", help="Exclude population evidence and Slack behavioral inputs.")
     parser.add_argument("--setup-env", action="store_true", help="Create/update venv, install NEURON, and compile AXNODE.mod.")
     parser.add_argument("--submit", action="store_true", help="Submit the full population generation/detection workflow after upload/setup.")
@@ -317,6 +318,7 @@ def main() -> int:
         include_observer_inputs=not args.skip_observer_inputs,
     )
     total_bytes = sum(path.stat().st_size for path in files)
+    print(f"Local source: {REPO_ROOT}")
     print(f"Selected {len(files):,} files totaling {total_bytes / (1024 ** 3):.2f} GiB")
     if args.list_files:
         for path in files:
