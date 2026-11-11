@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 
@@ -14,6 +15,7 @@ FILES = (
     "population_collapsed_regime_diagnostic.csv",
     "population_regime_response_equivalence.csv",
 )
+TRACE = "population_cv0_time_representations_v5.npz"
 
 
 def main() -> None:
@@ -34,11 +36,22 @@ def main() -> None:
             )
         except AssertionError as error:
             failures.append(f"{name}: {str(error).splitlines()[0]}")
+    with np.load(args.reference / TRACE, allow_pickle=False) as expected, np.load(
+        args.candidate_dir / TRACE, allow_pickle=False
+    ) as observed:
+        if expected.files != observed.files:
+            failures.append(f"{TRACE}: array names differ")
+        else:
+            for name in expected.files:
+                try:
+                    np.testing.assert_array_equal(expected[name], observed[name])
+                except AssertionError as error:
+                    failures.append(f"{TRACE}/{name}: {str(error).splitlines()[0]}")
     if failures:
         for failure in failures:
             print(f"MISMATCH {failure}")
-        raise SystemExit(f"{len(failures)} of {len(FILES)} accepted CV0 tables differ")
-    print(f"Matched all {len(FILES)} accepted CV0 feature/evidence tables")
+        raise SystemExit(f"{len(failures)} accepted CV0 comparisons differ")
+    print(f"Matched all {len(FILES)} accepted CV0 tables and the full trace archive")
 
 
 if __name__ == "__main__":
