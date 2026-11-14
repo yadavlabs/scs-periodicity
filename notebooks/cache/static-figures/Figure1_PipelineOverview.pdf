@@ -103,7 +103,7 @@
                <rdf:li rdf:parseType="Resource">
                   <stMfs:linkForm>EmbedByReference</stMfs:linkForm>
                   <stMfs:reference rdf:parseType="Resource">
-                     <stRef:filePath>C:\Users\Yadav_Lab_Enzo\OneDrive - tvrdy9\OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig1a_axon_trajectories_colorbar.png</stRef:filePath>
+                     <stRef:filePath>released-source-assets/___________________OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig1a_axon_trajectories_colorbar.png</stRef:filePath>
                      <stRef:documentID>0</stRef:documentID>
                      <stRef:instanceID>0</stRef:instanceID>
                   </stMfs:reference>
@@ -111,7 +111,7 @@
                <rdf:li rdf:parseType="Resource">
                   <stMfs:linkForm>EmbedByReference</stMfs:linkForm>
                   <stMfs:reference rdf:parseType="Resource">
-                     <stRef:filePath>C:\Users\Yadav_Lab_Enzo\OneDrive - tvrdy9\OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig1b_dorsal_column_axons.tif</stRef:filePath>
+                     <stRef:filePath>released-source-assets/___________________OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig1b_dorsal_column_axons.tif</stRef:filePath>
                      <stRef:documentID>0</stRef:documentID>
                      <stRef:instanceID>0</stRef:instanceID>
                   </stMfs:reference>
@@ -119,7 +119,7 @@
                <rdf:li rdf:parseType="Resource">
                   <stMfs:linkForm>EmbedByReference</stMfs:linkForm>
                   <stMfs:reference rdf:parseType="Resource">
-                     <stRef:filePath>C:\Users\Yadav_Lab_Enzo\OneDrive - tvrdy9\OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig1a_axon_trajectories.tif</stRef:filePath>
+                     <stRef:filePath>released-source-assets/___________________OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig1a_axon_trajectories.tif</stRef:filePath>
                      <stRef:documentID>0</stRef:documentID>
                      <stRef:instanceID>0</stRef:instanceID>
                   </stMfs:reference>
@@ -1559,7 +1559,7 @@ endstreamendobj201 0 obj<</LastModified(D:20261006002459-04'00')/Private 203 
 %!PS-Adobe-3.0 
 %%Creator: Adobe Illustrator(R) 24.0
 %%AI8_CreatorVersion: 30.8.2
-%%For: (Yadav_Lab_Enzo) ()
+%%For: (Figure_Creator) ()
 %%Title: (Figure1_PipelineOverview.ai)
 %%CreationDate: 10/6/2026 12:24 AM
 %%Canvassize: 16383

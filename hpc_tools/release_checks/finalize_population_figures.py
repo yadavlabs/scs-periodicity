@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 FIGURES = ROOT / "results/figures"
-OLD_ROOT = "C:\\Users\\tvrdy\\Desktop\\simulation-behavioral-prediction\\"
+SOURCE_PROJECT = "/simulation-behavioral-prediction/"
 PATH_REMAP = {
     "data/detection/imax_population_refresh/population_responses.csv":
         "data/detection/population_responses.csv",
@@ -30,9 +30,12 @@ def portable(value: object) -> object:
         return {portable(key): portable(item) for key, item in value.items()}
     if isinstance(value, list):
         return [portable(item) for item in value]
-    if isinstance(value, str) and value.lower().startswith(OLD_ROOT.lower()):
-        relative = value[len(OLD_ROOT):].replace("\\", "/")
-        return PATH_REMAP.get(relative, relative)
+    if isinstance(value, str) and len(value) > 2 and value[1] == ":" and value[2] in "\\/":
+        normalized = value.replace("\\", "/")
+        source_index = normalized.lower().find(SOURCE_PROJECT)
+        if source_index >= 0:
+            relative = normalized[source_index + len(SOURCE_PROJECT):]
+            return PATH_REMAP.get(relative, relative)
     return value
 
 
@@ -68,7 +71,7 @@ def main() -> None:
 
     for path in FIGURES.rglob("*.json"):
         contents = path.read_text(encoding="utf-8")
-        if "simulation-behavioral-prediction" in contents or "C:\\\\Users\\\\tvrdy" in contents:
+        if "simulation-behavioral-prediction" in contents or "C:\\\\Users\\\\" in contents:
             raise ValueError(f"Source-machine path remains in {path}")
 
     promotion = FIGURES / "promotion_manifest.json"

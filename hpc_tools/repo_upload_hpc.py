@@ -51,6 +51,7 @@ EXCLUDE_PATTERNS = (
     "notebooks/cache/cache_*.csv",
     "data/space-time-V/*SpaceTimeV.npz",
     "hpc_tools/release_checks/*",
+    "hpc_tools/restore_behavior_fit_inputs.py",
 )
 LF_SUFFIXES = (".sh", ".sbatch")
 
@@ -286,7 +287,7 @@ def stream_upload(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", help="SSH destination, e.g. ONYEN@longleaf.unc.edu.")
-    parser.add_argument("--remote-dir", help="Remote parent, e.g. /work/users/t/v/ONYEN.")
+    parser.add_argument("--remote-dir", help="Remote parent, e.g. /work/users/FIRST/SECOND/ONYEN.")
     parser.add_argument("--project-name", default=PROJECT_NAME)
     parser.add_argument("--archive", type=Path, help="Create a local TAR/TAR.GZ instead of uploading.")
     parser.add_argument("--skip-upstream-inputs", action="store_true", help="Exclude COMSOL cutlines and time patterns.")

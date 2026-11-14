@@ -67,10 +67,10 @@ download installed all 76 selected outputs; notebook 06 executed all 23 code
 cells, and its export check validated 68 figure records. The existing accepted
 data ZIP passed its SHA-256 and 228-entry archive check.
 
-The fresh run is not an exact reproduction of the accepted archive. A strict
+That initial fresh run is not an exact reproduction of the accepted archive. A strict
 comparison matched 8 of 26 manuscript-facing tables; 18 differed. The
 accepted CV0 response table was produced under detection protocol
-`canonical-cv0_tol0p01_v1`, while the current pipeline regenerates that branch
+`canonical-cv0_tol0p01_v1`, while that initial pipeline regenerated the branch
 under `canonical-cv0_tol0p01_peakfirst-imax_v3`. This changes a small number of
 feature values before the observer fits. Numerical fit results also differ:
 the largest detection weight difference was 0.00086, and the largest control
@@ -99,8 +99,13 @@ response table remains on Longleaf in the isolated recovery directory. The
 accepted data ZIP remains unchanged while the full pipeline and downstream
 observer differences are resolved.
 
-The one-command Slurm coordinator has been updated to reconstruct the accepted
-v1 CV0 index table before its CV0 population array, while the true-CV index
-regimes and population responses retain the peak-first v3 protocol. The feature
-job and final release validation now require v1 CV0. This direct full-run path
-still requires a fresh Longleaf end-to-end run and downstream comparison.
+The one-command Slurm coordinator now reconstructs the accepted v1 CV0 index
+table before its CV0 population array, while the true-CV branch retains the
+peak-first v3 protocol. A clean full-run upload submitted the entire dependency
+chain; its regenerated four CV0 feature/evidence tables and full trace archive
+match the accepted reference exactly. One control-observer Monte Carlo shard
+completed nine of ten fits before reaching its requested 10-hour wall time.
+Only that shard is being retried with a 16-hour request; its merge, control
+validation, and final release check are dependent jobs. The production Slurm
+request was raised to 16 hours without changing numerical code. Figure and
+manuscript-facing table comparisons remain pending final validation.

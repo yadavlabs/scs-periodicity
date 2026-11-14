@@ -1,4 +1,4 @@
-"""Compare independently regenerated CV0 features with the accepted archive."""
+"""Compare regenerated CV0 features and traces with the accepted archive."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ TRACE = "population_cv0_time_representations_v5.npz"
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate-dir", type=Path, required=True,
-                        help="Downloaded logs/accepted-cv0-10hz directory")
+                        help="Directory containing the regenerated CV0 feature files")
     parser.add_argument("--reference", type=Path,
                         default=Path(__file__).resolve().parents[2] / "data/features")
     args = parser.parse_args()

@@ -32,13 +32,13 @@ not redistribute the upstream HOC. See [hpc_tools/MRG_model/README.md](hpc_tools
 and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 The transfer and accepted-fit history are documented in [PROVENANCE.md](PROVENANCE.md).
 
-## HPC test run
+## HPC regeneration
 
-The transferred cohort passes the local preflight: 35 cutlines, 55 time
-patterns, 420 Ve bases, and reference index axon `S01_140um_ph1`. Longleaf
-pilot job `7866889` completed successfully with three passing checks across
-two diameters and both nodal phases. See [hpc_tools/README.md](hpc_tools/README.md)
-for the pilot and dependent full-run commands.
+The source inputs cover 35 cutlines, 55 time patterns, 420 Ve bases, and the
+reference index axon `S01_140um_ph1`. The optional Longleaf workflow includes
+a small NEURON pilot and a dependent full run. See
+[hpc_tools/README.md](hpc_tools/README.md) for preparation, submission,
+monitoring, and download.
 
 ## Data release
 
@@ -46,8 +46,8 @@ Generated population response tables and fitted observer outputs are too large
 for the Git source tree. `src/package_data.py` selects them and the figure
 exports for the v1.1.0 data ZIP. The source ZIP contains the COMSOL, Slack,
 time-pattern, Ve-basis, and reference inputs. The data ZIP contains generated
-outputs and the recovered historical detection-fit inputs, with no duplicate
-paths between the archives.
+outputs and the archived pre-Imax inputs needed to reproduce the accepted
+behavioral fit, with no duplicate paths between the archives.
 Run `python src/package_data.py --dry-run` to inspect the selection, then
 `python src/package_data.py` to build the ZIP, SHA-256 checksum, and file
 manifest. The packager rejects missing production outputs and historical

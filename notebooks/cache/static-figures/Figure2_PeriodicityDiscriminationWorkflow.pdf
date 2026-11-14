@@ -65,7 +65,7 @@
                <rdf:li rdf:parseType="Resource">
                   <stMfs:linkForm>EmbedByReference</stMfs:linkForm>
                   <stMfs:reference rdf:parseType="Resource">
-                     <stRef:filePath>C:\Users\Yadav_Lab_Enzo\OneDrive - tvrdy9\OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig2_psychometrics_100Hz.pdf</stRef:filePath>
+                     <stRef:filePath>released-source-assets/___________________OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures &amp; Tables\partials\fig2_psychometrics_100Hz.pdf</stRef:filePath>
                      <stRef:documentID>0</stRef:documentID>
                      <stRef:instanceID>0</stRef:instanceID>
                   </stMfs:reference>
@@ -291,14 +291,14 @@ endstreamendobj202 0 obj<</LastModified(D:20260929034300-04'00')/Private 204 
 %!PS-Adobe-3.0 
 %%Creator: Adobe Illustrator(R) 24.0
 %%AI8_CreatorVersion: 30.8.2
-%%For: (Yadav_Lab_Enzo) ()
+%%For: (Figure_Creator) ()
 %%Title: (Figure2_PeriodicityDiscriminationWorkflow.ai)
 %%CreationDate: 9/29/2026 3:43 AM
 %%Canvassize: 16383
 %%BoundingBox: 0 -1 631 408
 %%HiResBoundingBox: 0 -0.089996337890625 630.75 407.160003662109
 %%DocumentProcessColors: Cyan Magenta Yellow Black
-%%DocumentFiles:C:\Users\Yadav_Lab_Enzo\OneDrive - tvrdy9\OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures & Tables\partials\fig2_psychometrics_100Hz.pdf
+%%DocumentFiles:released-source-assets/___________________OneDrive - University of North Carolina at Chapel Hill\BSMI Lab\Projects\SCS Model - Behavioral Prediction\Population Figures & Tables\partials\fig2_psychometrics_100Hz.pdf
 %AI5_FileFormat 14.0
 %AI12_BuildNumber: 7
 %AI3_ColorUsage: Color

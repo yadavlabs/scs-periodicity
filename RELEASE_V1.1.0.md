@@ -6,17 +6,15 @@ historical single-axon version.
 
 ## Release gate
 
-The full Longleaf rerun passed its pipeline validation and figure notebook, but
-its strict comparison with the accepted manuscript data matched only 8 of 26
-tables. The accepted CV0 response data use the earlier v1 detection protocol;
-the initial full rerun regenerated that branch under the peak-first v3
-protocol. An isolated Longleaf recovery of the accepted v1 CV0 branch matched
-all four accepted feature/evidence tables and the full population trace archive.
-The one-command Slurm coordinator now generates v1 CV0 directly from the
-archived input while retaining v3 for the true-CV branch. Keep the existing
-accepted data ZIP as the manuscript reference. Run the updated full pipeline
-and resolve the remaining numerical fit differences before publishing a v1.1.0
-record or Git tag. See `PROVENANCE.md` for the audit.
+An initial Longleaf rerun exposed a mismatch between the submitted v1 CV0
+protocol and a later peak-first v3 update. The one-command coordinator now
+generates v1 CV0 directly while retaining v3 for the true-CV branch. The
+direct full-run CV0 features and trace archive match the accepted data. One
+control-observer shard reached its original 10-hour Slurm request; its retry,
+dependent merge, and final validation are pending. The public release remains
+on hold until the final validation, figure notebook, and manuscript-facing
+table comparison pass. Keep the accepted data ZIP as the reference until those
+checks are complete. See `PROVENANCE.md` for the audit.
 
 ## Local release files
 
