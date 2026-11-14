@@ -5,7 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=8G
-#SBATCH --time=10:00:00
+#SBATCH --time=16:00:00
 #SBATCH --array=0-0%1
 #SBATCH --output=logs/pop_disc_%A_%a.out
 #SBATCH --error=logs/pop_disc_%A_%a.err
