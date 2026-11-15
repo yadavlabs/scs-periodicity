@@ -119,11 +119,21 @@ and SciPy versions. All 12 detection-fit CSVs matched the accepted archive,
 including with the single-thread environment variables used on Longleaf. The
 Longleaf fit has small numeric differences, consistent with platform-dependent
 optimization; this is an inference, not an isolated proof of the library cause.
+The transferred observer fitting core differs from the analysis checkout only
+in import and output paths; its numerical fitting code is identical. The Slack
+parser has the same syntax tree, and all 104 behavioral CSVs are byte-identical.
 The largest control-observer mean RMSE difference is 0.000853 in a training
-`best_single` row. The regenerated Table 1 retains the accepted model ranking,
-and all five RMSE and rate-share values agree when rounded to three decimals;
-its AIC/BIC differences agree when rounded to integers. The reliance and RMSE
-tests have no 0.05 significance-decision or confidence-interval sign changes.
+`best_single` row; the largest test-set difference is 0.000451 in the same
+configuration. Across mixture test summaries, the largest RMSE difference is
+0.000032. The regenerated Table 1 retains the accepted model ranking, all RMSE
+values to four decimals, rate shares to three decimals, and AIC/BIC differences
+to integer precision. The reliance and RMSE tests have no changes in
+significance decisions at p < 0.05 or in confidence-interval signs. One
+manuscript p-value changes at its displayed precision: the Holm-adjusted
+Wilcoxon comparison of independent hybrid and timing models in the std1 block
+is 0.000316 in the accepted analysis
+and 0.000336 in the Longleaf rerun. Its corrected-resampling sensitivity p-value
+remains 0.565 to three decimals.
 The accepted numerical outputs remain the reference for the published figures
 and statistics; the full-run outputs remain separate for audit. The release
 data ZIP was cleaned of four unused source CSV/HTML files from an optional

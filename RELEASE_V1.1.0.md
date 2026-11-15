@@ -15,8 +15,10 @@ One control-observer shard reached its original 10-hour Slurm request; its
 local download installed all 76 release outputs, and notebook 06 executed all
 23 code cells. The strict accepted-data comparison still flags 18 of 26 tables
 at full precision. A local rerun of the behavioral fit matches all 12 accepted
-fit tables exactly. Regenerated Table 1 retains its model ranking and RMSE and
-rate-share values at three decimals; significance decisions are unchanged.
+fit tables exactly. Regenerated Table 1 retains its model ranking and RMSE
+values at four decimals, and rate-share values at three decimals. Significance
+decisions are unchanged, although one manuscript p-value shifts from 0.000316
+to 0.000336 at its printed precision.
 The paired data ZIP retains the accepted numerical outputs and published
 figures. Four unused locked-mixture preview source files were removed; all
 other archived data bytes are unchanged. Review the numerical portability
