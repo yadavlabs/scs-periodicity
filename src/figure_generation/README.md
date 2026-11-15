@@ -35,7 +35,5 @@ comparisons using 200 Monte Carlo splits and 100 simulated repetitions. These
 statistics are conditional on the saved observer fits; they do not treat the
 simulated repetitions as independent animals.
 
-The expected production outputs and their validation status are documented in
-`PROVENANCE.md`. Figure exports and supporting data are distributed
-through the Zenodo release data ZIP, while the code and notebook are in the
-source ZIP.
+Figure exports and supporting data are distributed through the Zenodo release
+data ZIP, while the code and notebook are in the source ZIP.

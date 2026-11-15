@@ -1,10 +1,9 @@
 # SCS periodicity: population analysis
 
-This repository is being updated for the accepted population-axon version of
+This repository contains the accepted population-axon analysis for
 **Axonal spike-count regimes link spinal cord stimulation periodicity to
-artificial sensory detection and discrimination in rodents**. The current
-working tree is a v1.1.0 release candidate; the published v1.0.2 archive remains
-the historical single-axon release.
+artificial sensory detection and discrimination in rodents**. Version 1.0.2
+remains the historical single-axon release.
 
 The population cohort has 35 COMSOL trajectories, six MRG diameters, and two
 nodal phases per trajectory (420 axons). An index axon defines the stimulation
@@ -30,7 +29,8 @@ setup. A small generator makes the HOC geometry configurable for the six axon
 diameters and two spatial phases; it preserves the upstream biophysics and does
 not redistribute the upstream HOC. See [hpc_tools/MRG_model/README.md](hpc_tools/MRG_model/README.md)
 and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-The transfer and accepted-fit history are documented in [PROVENANCE.md](PROVENANCE.md).
+The accepted detection fit and CV0 branch use archived pre-Imax inputs; the
+true-CV recruitment branch uses the later peak-first Imax update.
 
 ## HPC regeneration
 
@@ -48,12 +48,20 @@ exports for the v1.1.0 data ZIP. The source ZIP contains the COMSOL, Slack,
 time-pattern, Ve-basis, and reference inputs. The data ZIP contains generated
 outputs and the archived pre-Imax inputs needed to reproduce the accepted
 behavioral fit, with no duplicate paths between the archives.
+
+Numerical fit results may differ slightly across platforms because optimizer
+behavior can vary; the release data ZIP contains the outputs used for the
+accepted manuscript.
+
 Run `python src/package_data.py --dry-run` to inspect the selection, then
 `python src/package_data.py` to build the ZIP, SHA-256 checksum, and file
-manifest. The packager rejects missing production outputs and historical
+manifest. Check it with
+`python hpc_tools/release_checks/verify_population_archive.py`. The packager
+rejects missing production outputs and historical
 single-axon paths. After depositing the validated archive as a new Zenodo
 version, use that version's DOI in the manuscript Data Availability statement.
-The exact four-file deposit is described in [RELEASE_V1.1.0.md](RELEASE_V1.1.0.md).
+Deposit the source ZIP, data ZIP, data manifest CSV, and data ZIP SHA-256 file
+together as the v1.1.0 release.
 
 ## License
 

@@ -95,18 +95,6 @@ Use the local environment from step 1 to execute and check notebook 06:
 .\.venv\Scripts\python.exe hpc_tools/release_checks/finalize_population_figures.py
 ```
 
-For a strict comparison with the accepted manuscript archive, extract the
-paired data ZIP into a *separate* reference directory and run:
-
-```powershell
-$reference = 'PATH_TO_ACCEPTED_DATA_EXTRACTION'
-.\.venv\Scripts\python.exe hpc_tools/release_checks/verify_accepted_cv0.py --candidate-dir data/features --reference (Join-Path $reference 'data/features')
-.\.venv\Scripts\python.exe hpc_tools/release_checks/compare_release_reference.py --reference $reference
-```
-
-The comparison covers the accepted CV0 tables and trace archive plus 26
-manuscript-facing detection, observer, and figure-statistics tables. The 26-table
-check is deliberately strict about full numeric precision; the completed
-Longleaf audit and its small optimizer differences are described in
-`PROVENANCE.md`. After reviewing those checks, build the paired release data ZIP with
-`python src/package_data.py`.
+The figure notebook writes its exports under `results/figures/`; the finalizer
+checks the export manifest and records file hashes. To package a completed run
+as a separate data archive, run `python src/package_data.py`.

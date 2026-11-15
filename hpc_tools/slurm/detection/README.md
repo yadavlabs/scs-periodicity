@@ -17,5 +17,5 @@ from the public data ZIP.
 
 The accepted behavioral fit and CV0 table use the verified pre-Imax input
 bundle under `data/detection/behavior_fit_inputs/`. True-CV population
-responses use the final peak-first Imax definition. See `PROVENANCE.md` for the
-reason these branches use different index amplitudes.
+responses use the final peak-first Imax definition. These inputs preserve the
+analysis branches used for the accepted manuscript.
