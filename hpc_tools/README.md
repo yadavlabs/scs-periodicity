@@ -105,6 +105,8 @@ $reference = 'PATH_TO_ACCEPTED_DATA_EXTRACTION'
 ```
 
 The comparison covers the accepted CV0 tables and trace archive plus 26
-manuscript-facing detection, observer, and figure-statistics tables. After
-reviewing those checks, build the paired release data ZIP with
+manuscript-facing detection, observer, and figure-statistics tables. The 26-table
+check is deliberately strict about full numeric precision; the completed
+Longleaf audit and its small optimizer differences are described in
+`PROVENANCE.md`. After reviewing those checks, build the paired release data ZIP with
 `python src/package_data.py`.

@@ -102,10 +102,28 @@ observer differences are resolved.
 The one-command Slurm coordinator now reconstructs the accepted v1 CV0 index
 table before its CV0 population array, while the true-CV branch retains the
 peak-first v3 protocol. A clean full-run upload submitted the entire dependency
-chain; its regenerated four CV0 feature/evidence tables and full trace archive
-match the accepted reference exactly. One control-observer Monte Carlo shard
-completed nine of ten fits before reaching its requested 10-hour wall time.
-Only that shard is being retried with a 16-hour request; its merge, control
-validation, and final release check are dependent jobs. The production Slurm
-request was raised to 16 hours without changing numerical code. Figure and
-manuscript-facing table comparisons remain pending final validation.
+chain. One control-observer Monte Carlo shard completed nine of ten fits before
+reaching its requested 10-hour wall time. That shard alone was retried with a
+16-hour request, followed by its dependent merge, control validation, and final
+release check. The production Slurm request was raised to 16 hours without
+changing numerical code. Final validation reported `ready` for 49,500 trials;
+the local download installed all 76 selected outputs. The four regenerated CV0
+feature/evidence tables and full trace archive match the accepted reference
+exactly.
+
+Notebook 06 executed all 23 code cells and validated 68 figure records. A
+strict comparison matched 8 of 26 manuscript-facing tables; 18 differ at full
+numeric precision. The accepted behavioral fit was rerun locally from the same
+archived inputs using the transferred source code and pinned NumPy, pandas,
+and SciPy versions. All 12 detection-fit CSVs matched the accepted archive,
+including with the single-thread environment variables used on Longleaf. The
+Longleaf fit has small numeric differences, consistent with platform-dependent
+optimization; this is an inference, not an isolated proof of the library cause.
+The largest control-observer mean RMSE difference is 0.000853 in a training
+`best_single` row. The regenerated Table 1 retains the accepted model ranking,
+and all five RMSE and rate-share values agree when rounded to three decimals;
+its AIC/BIC differences agree when rounded to integers. The reliance and RMSE
+tests have no 0.05 significance-decision or confidence-interval sign changes.
+The accepted data archive remains the reference for the published figures and
+statistics; the full-run outputs remain separate for audit. The accepted data
+ZIP passed its SHA-256 and 228-entry manifest check after the source cleanup.

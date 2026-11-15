@@ -9,12 +9,17 @@ historical single-axon version.
 An initial Longleaf rerun exposed a mismatch between the submitted v1 CV0
 protocol and a later peak-first v3 update. The one-command coordinator now
 generates v1 CV0 directly while retaining v3 for the true-CV branch. The
-direct full-run CV0 features and trace archive match the accepted data. One
-control-observer shard reached its original 10-hour Slurm request; its retry,
-dependent merge, and final validation are pending. The public release remains
-on hold until the final validation, figure notebook, and manuscript-facing
-table comparison pass. Keep the accepted data ZIP as the reference until those
-checks are complete. See `PROVENANCE.md` for the audit.
+direct full-run CV0 features and trace archive match the accepted data exactly.
+One control-observer shard reached its original 10-hour Slurm request; its
+16-hour retry and the dependent merge and final validation completed. The
+local download installed all 76 release outputs, and notebook 06 executed all
+23 code cells. The strict accepted-data comparison still flags 18 of 26 tables
+at full precision. A local rerun of the behavioral fit matches all 12 accepted
+fit tables exactly. Regenerated Table 1 retains its model ranking and RMSE and
+rate-share values at three decimals; significance decisions are unchanged.
+Keep the accepted data ZIP as the published-figure reference. Review the
+numerical portability differences in `PROVENANCE.md` before publishing a
+v1.1.0 record or Git tag.
 
 ## Local release files
 
