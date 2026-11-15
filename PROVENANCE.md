@@ -96,8 +96,8 @@ zero exit codes. The downloaded recovery matched all four accepted CV0
 feature/evidence tables and every array in the accepted 1 ms population trace
 archive. These are value-level comparisons; the recovered 20,790,000-row raw
 response table remains on Longleaf in the isolated recovery directory. The
-accepted data ZIP remains unchanged while the full pipeline and downstream
-observer differences are resolved.
+accepted data ZIP was preserved during the isolated recovery while the full
+pipeline and downstream observer differences were investigated.
 
 The one-command Slurm coordinator now reconstructs the accepted v1 CV0 index
 table before its CV0 population array, while the true-CV branch retains the
@@ -124,6 +124,11 @@ The largest control-observer mean RMSE difference is 0.000853 in a training
 and all five RMSE and rate-share values agree when rounded to three decimals;
 its AIC/BIC differences agree when rounded to integers. The reliance and RMSE
 tests have no 0.05 significance-decision or confidence-interval sign changes.
-The accepted data archive remains the reference for the published figures and
-statistics; the full-run outputs remain separate for audit. The accepted data
-ZIP passed its SHA-256 and 228-entry manifest check after the source cleanup.
+The accepted numerical outputs remain the reference for the published figures
+and statistics; the full-run outputs remain separate for audit. The release
+data ZIP was cleaned of four unused source CSV/HTML files from an optional
+locked-mixture preview that notebook 06 does not call. Its figure promotion
+manifest now lists the 142 files produced by the clean notebook. Every other
+archived file is byte-identical to the pre-cleanup ZIP, except for the updated
+promotion manifest. The rebuilt data ZIP passed its SHA-256 and 224-entry
+manifest check; the 228-entry predecessor is retained in `.local-archive/`.

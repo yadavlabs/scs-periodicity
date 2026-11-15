@@ -17,9 +17,10 @@ local download installed all 76 release outputs, and notebook 06 executed all
 at full precision. A local rerun of the behavioral fit matches all 12 accepted
 fit tables exactly. Regenerated Table 1 retains its model ranking and RMSE and
 rate-share values at three decimals; significance decisions are unchanged.
-Keep the accepted data ZIP as the published-figure reference. Review the
-numerical portability differences in `PROVENANCE.md` before publishing a
-v1.1.0 record or Git tag.
+The paired data ZIP retains the accepted numerical outputs and published
+figures. Four unused locked-mixture preview source files were removed; all
+other archived data bytes are unchanged. Review the numerical portability
+differences in `PROVENANCE.md` before publishing a v1.1.0 record or Git tag.
 
 ## Local release files
 
