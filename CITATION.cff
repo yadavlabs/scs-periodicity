@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software or its released data archive, please cite the archived release."
 title: "Axonal spike-count regimes link spinal cord stimulation periodicity to artificial sensory detection and discrimination in rodents"
 type: software
-version: 1.0.2
+version: 1.1.0
 authors:
   - family-names: Tvrdy
     given-names: Taylor J.

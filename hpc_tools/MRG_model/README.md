@@ -1,16 +1,13 @@
-# MRG Model Runtime Directory
+# MRG runtime files
 
-The MRG axon source files required by the optional NEURON/HPC regeneration
-workflow are not redistributed in this repository.
+This directory contains no redistributed MRG source. During HPC setup,
+`hpc_tools/install_mrg_model.py` downloads ModelDB accession 3810 at the pinned
+commit and generates `MRGaxon_population_template.hoc` locally. The generator
+makes axon node count and fiber diameter configurable for the population cohort;
+the spatial nodal phases are encoded in the population Ve bases. It removes the
+upstream interactive IClamp panel because stimulation is provided through the
+extracellular Ve playback. The remaining biophysical equations and diameter
+table are unchanged.
 
-During HPC setup, `hpc_tools/install_mrg_model.py` downloads ModelDB accession
-3810 from ModelDB's official GitHub mirror at the pinned commit recorded in
-that script. After installation, this directory contains the upstream model
-files and the compiled NEURON mechanisms.
-
-Source:
-
-- ModelDB accession 3810: <https://modeldb.science/3810>
-- McIntyre CC, Richardson AG, and Grill WM. Modeling the excitability of
-  mammalian nerve fibers: influence of afterpotentials on the recovery cycle.
-  *Journal of Neurophysiology*. 2002;87:995-1006.
+The generated HOC, upstream files, and compiled mechanism are build artifacts
+and are excluded from the repository and release source archive.

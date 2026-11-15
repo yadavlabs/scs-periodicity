@@ -1,17 +1,20 @@
-# SLURM Scripts
+# Longleaf jobs
 
-The release regeneration path is:
+Run `bash hpc_tools/slurm/run_population_pipeline.sh` from the repository root
+on Longleaf. It submits the population stages with Slurm `afterok` dependencies:
+time patterns, SpaceTimeV, detection, features, discrimination, and release
+validation. The Python uploader invokes this coordinator with `--submit`.
 
-```text
-hpc_tools/slurm/pipeline/
-hpc_tools/slurm/detection/
-hpc_tools/slurm/discrimination/
-```
+The directory has one production launcher for each analysis leg and the batch
+files those launchers submit. `pilot/smoke.sbatch` is the separate three-case
+NEURON check. The population needs more array and merge jobs than v1.0.2
+because it simulates 420 axons and fits multiple observer scopes. Historical
+exploratory pilots and staged Imax migration jobs are not part of this release
+pipeline; the accepted peak-first Imax selector is in `src/detection/` and runs
+in the production detection stage.
 
-Those scripts are scheduler-policy neutral worker scripts. They do not encode
-`#SBATCH` partition, account, QOS, CPU, memory, wall-time, array, or log-path
-directives. `hpc_tools/run_pipeline.py submit` passes those values to `sbatch`
-from the command line after the user chooses cluster-appropriate settings.
+Batch filenames describe their function; the launchers define execution order
+and Slurm dependencies. The control and scope observer fits reuse the same
+four discrimination batch files with different settings.
 
-The active worker scripts live under `hpc_tools/` with the rest of the HPC-only
-runtime. The old `manuscript/` nesting used during cleanup has been removed.
+See `hpc_tools/README.md` for clean extraction, upload, validation, and download.

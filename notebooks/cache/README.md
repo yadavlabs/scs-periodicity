@@ -1,21 +1,13 @@
-# Notebook Cache Files
+# Static manuscript figures
 
-This folder stores derived tables that make the review notebooks faster to run.
-They are reproducible from the generated stage data, but are not primary
-pipeline outputs.
+`static-figures/` contains the three manually assembled composites displayed by
+`06_FigureGeneration.ipynb`. These files are tracked in Git, as they were in the
+v1.0.2 source release. The notebook copies their PNG and PDF exports to
+`results/figures/` and records them in the figure manifest. It does not
+regenerate the Adobe, BioRender, or COMSOL artwork.
 
-- `feature_metric_summaries.csv`: rate and timing feature summaries used by
-  `04_FeatureEngineering.ipynb`.
-- `cache_detection_isi_rep_stats_absref_1.10ms.csv`: detection
-  inter-spike-interval summary cache used by `06_FigureGeneration.ipynb`.
-- `table_supp02_periodicity_model_performance_statistics.csv`: paired
-  Wilcoxon/Holm model-comparison results reported in Supplementary Table 2.
-- `rate_reliance_*.csv`: repetition-level Figure 5 summaries and the paired
-  block/frequency comparisons used for displayed significance markers.
-- `static-figures/`: static schematic panels extracted from the manuscript draft
-  for display in `06_FigureGeneration.ipynb`.
-
-The static figures are tracked in Git. Other CSV/PKL cache files are excluded
-from Git, included in the release-data ZIP for rapid figure redraws, and can be
-regenerated from the current `data/` bundle by running
-`06_FigureGeneration.ipynb` with `USE_NB_CACHE = False`.
+The Figure 1, Figure 2, and Supplementary Figure 1 PNGs match the images embedded
+in the accepted population manuscript byte for byte. The PDFs are the corresponding
+artwork exports. Figure 1 and Figure 2 are the population versions; the prior
+single-axon composites are not included. Editable Adobe Illustrator project files
+are not part of this release. See `THIRD_PARTY_NOTICES.md` for BioRender rights.

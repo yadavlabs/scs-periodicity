@@ -1,5 +1,8 @@
 # Normalize line endings: store LF in the repository.
 * text=auto eol=lf
+# Preserve research input bytes: saved analysis manifests hash these files.
+data/** -text -diff
+data/README.md text eol=lf diff
 *.ipynb text eol=lf
 *.sbatch text eol=lf
 *.sh text eol=lf

@@ -1,0 +1,2 @@
+axon_id,cutline_id,diameter_um,phase_id,phase_fraction,phase_offset_mm,phase_scheme,n_valid_nodes,readout_node_number,reference_phase_width_ms,reference_interphase_ms,reference_polarity,I_first_uA,N_I_first_spikes,index_axon_id
+S01_140um_ph1,S01,14.0,ph1,0.75,1.0499999523162842,balanced-antithetic-v1,18,17,0.2,0.0,cathodic-first,271.58203125,1,S01_140um_ph1

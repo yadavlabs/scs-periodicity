@@ -1,28 +1,21 @@
-# Detection SLURM Lane
+# Detection jobs
 
-These scripts rerun the NEURON/MRG detection stage used by the data release.
-They are worker scripts: cluster scheduling options such as partition,
-account, QOS, CPU count, memory, wall time, array ranges, and log paths are
-passed by `hpc_tools/run_pipeline.py submit` rather than encoded in `#SBATCH`
-headers.
+`run_detection_pipeline.sh` submits the production detection stages after an
+optional upstream dependency. They compile the MRG mechanism, identify the
+index axon, calculate peak-first true-CV index regimes, reconstruct the
+accepted CV0 index table, run both population-response branches, and merge the
+outputs. The root coordinator then runs the notebook-03 summary, independent
+true-CV trial summary, and accepted behavioral fit jobs when their inputs are
+ready.
 
-For full end-to-end regeneration, use the top-level submitter:
+Run the full workflow with `bash hpc_tools/slurm/run_population_pipeline.sh`.
+The detection launcher can also run by itself on an existing SpaceTimeV cohort.
+Partial simulation files are namespaced by protocol and index axon under
+`data/detection/partials/`; incompatible cache files are moved under
+`logs/index-cache-archive/` before submission. These working files are excluded
+from the public data ZIP.
 
-```bash
-python hpc_tools/query_hpc.py
-python hpc_tools/run_pipeline.py submit --project "$PWD"
-```
-
-The threshold-array step writes `detection_thresholds.csv` partials and the
-matching true-threshold raster partials that merge into
-`data/detection/generated/detection_responses.csv`. The later response-array
-step writes the CV0-based replay table used downstream:
-`data/detection/generated/cv0_based_responses.csv`.
-Transient partials live under `data/partials/detection/`, are removed by the
-successful merge jobs, and are fully cleared by the finalizer before packaging.
-SLURM stdout/stderr paths are supplied by the top-level submitter and normally
-land in `logs/`.
-
-The older detection-only submitter and shell wrapper have been removed. Use
-`hpc_tools/run_pipeline.py submit` for pilot and full regeneration runs so
-resource flags, dependencies, logs, and cleanup stay consistent across stages.
+The accepted behavioral fit and CV0 table use the verified pre-Imax input
+bundle under `data/detection/behavior_fit_inputs/`. True-CV population
+responses use the final peak-first Imax definition. These inputs preserve the
+analysis branches used for the accepted manuscript.

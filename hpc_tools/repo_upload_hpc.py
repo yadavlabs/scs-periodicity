@@ -1,4 +1,9 @@
-"""Create and optionally upload a minimal HPC regeneration archive."""
+"""Package or stream the population workspace to Longleaf.
+
+The default upload includes code, SLURM files, population input bases,
+and behavioral source inputs. The MRG model is installed remotely.
+Complete remote environments and large generated outputs are excluded.
+"""
 
 from __future__ import annotations
 
@@ -6,366 +11,354 @@ import argparse
 import fnmatch
 import io
 import shlex
+import socket
 import subprocess
 import tarfile
 from pathlib import Path
+from typing import BinaryIO, Iterable
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_NAME = "scs-periodicity-population"
 
-BASE_INCLUDE_PATHS = (
+CODE_PATHS = (
     ".gitattributes",
     ".gitignore",
     "README.md",
-    "data/README.md",
-    "hpc_tools/hpc_requirements.txt",
-    "src",
+    "requirements.txt",
     "hpc_tools",
+    "src",
+    "notebooks",
+)
+UPSTREAM_INPUT_PATHS = (
     "data/comsol",
     "data/time-patterns/slack",
+    "data/time-patterns/generated",
+    "data/detection/reference",
+    "data/detection/behavior_fit_inputs",
+)
+DETECTION_INPUT_PATHS = (
+    "data/space-time-V",
+)
+OBSERVER_INPUT_PATHS = (
     "data/detection/slack",
     "data/discrimination/slack",
 )
-
-PILOT_INCLUDE_PATHS = (
-    "data/detection/generated/cv0_based_responses.csv",
-)
-
 EXCLUDE_PATTERNS = (
-    ".git",
-    ".git/*",
-    ".venv",
-    ".venv/*",
-    "venv",
-    "venv/*",
-    "__pycache__",
-    "*/__pycache__",
-    "*/__pycache__/*",
-    "*.pyc",
-    "logs",
-    "logs/*",
-    "scs-periodicity-release-data.zip",
-    "scs-periodicity-release-data.sha256",
-    "scs-periodicity-release-data-manifest.csv",
-    "scs-periodicity-hpc-data.tar.gz",
-    "data_old",
-    "data_old/*",
-    "results",
-    "results/*",
-    "*.tar.gz",
-    "notebooks/cache",
-    "notebooks/cache/*",
-    "data/partials",
-    "data/partials/*",
-    "data/time-patterns/generated",
-    "data/time-patterns/generated/*",
-    "data/space-time-V/generated",
-    "data/space-time-V/generated/*",
-    "data/discrimination/per-block",
-    "data/discrimination/per-block/*",
-    "data/discrimination/per-point",
-    "data/discrimination/per-point/*",
-    "hpc_tools/MRG_model/*.o",
-    "hpc_tools/MRG_model/*.c",
-    "hpc_tools/MRG_model/*.cpp",
-    "hpc_tools/MRG_model/*.dll",
-    "hpc_tools/MRG_model/AXNODE.mod",
-    "hpc_tools/MRG_model/MRGaxon.hoc",
-    "hpc_tools/MRG_model/MRGaxon.ses",
-    "hpc_tools/MRG_model/mosinit.hoc",
-    "hpc_tools/MRG_model/README",
-    "hpc_tools/MRG_model/MODELDB_SOURCE.txt",
-    "hpc_tools/MRG_model/x86_64",
-    "hpc_tools/MRG_model/x86_64/*",
+    ".git", ".git/*", ".venv", ".venv/*", "venv", "venv/*",
+    "__pycache__", "*/__pycache__", "*/__pycache__/*", "*.pyc",
+    "logs", "logs/*", "results", "results/*", "*.tar", "*.tar.gz",
+    "notebooks/cache/cache_*.csv",
+    "data/space-time-V/*SpaceTimeV.npz",
+    "hpc_tools/release_checks/*",
+    "hpc_tools/restore_behavior_fit_inputs.py",
 )
-
-LF_NORMALIZED_SUFFIXES = (".sbatch", ".sh")
-
-
-def _rel(path: Path) -> str:
-    return path.relative_to(REPO_ROOT).as_posix()
+LF_SUFFIXES = (".sh", ".sbatch")
 
 
-def _is_excluded(rel_path: str) -> bool:
-    rel_path = rel_path.replace("\\", "/")
-    return any(fnmatch.fnmatch(rel_path, pattern) for pattern in EXCLUDE_PATTERNS)
-
-
-def _iter_files(include_paths: tuple[str, ...]) -> list[Path]:
-    files: list[Path] = []
-    missing: list[str] = []
-    for item in include_paths:
-        path = REPO_ROOT / item
-        if not path.exists():
-            missing.append(item)
-            continue
-        if path.is_file():
-            rel_path = item.replace("\\", "/")
-            if not _is_excluded(rel_path):
-                files.append(path)
-            continue
-        for child in sorted(path.rglob("*")):
-            if child.is_file() and not _is_excluded(_rel(child)):
-                files.append(child)
-    if missing:
-        raise FileNotFoundError("Missing required upload inputs:\n" + "\n".join(f"  - {m}" for m in missing))
-    return sorted(set(files), key=lambda p: _rel(p))
-
-
-def create_archive(out_path: Path, *, pilot_inputs: bool) -> list[Path]:
-    include_paths = tuple(BASE_INCLUDE_PATHS + (PILOT_INCLUDE_PATHS if pilot_inputs else ()))
-    files = _iter_files(include_paths)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with tarfile.open(out_path, "w:gz") as tf:
-        for path in files:
-            rel_path = _rel(path)
-            if path.suffix.lower() in LF_NORMALIZED_SUFFIXES:
-                data = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
-                info = tf.gettarinfo(str(path), arcname=rel_path)
-                info.size = len(data)
-                tf.addfile(info, io.BytesIO(data))
-            else:
-                tf.add(path, arcname=rel_path)
-    return files
-
-
-def _run(cmd: list[str], *, dry_run: bool) -> None:
-    print(" ".join(shlex.quote(str(c)) for c in cmd), flush=True)
-    if dry_run:
-        return
-    subprocess.run(cmd, check=True)
-
-
-def _run_with_stdin(cmd: list[str], stdin_path: Path, *, dry_run: bool) -> None:
-    print(" ".join(shlex.quote(str(c)) for c in cmd) + f" < {stdin_path}", flush=True)
-    if dry_run:
-        return
-    with stdin_path.open("rb") as f:
-        subprocess.run(cmd, stdin=f, check=True)
-
-
-def _q(value: str) -> str:
+def _quote(value: str | Path) -> str:
     return shlex.quote(str(value))
 
 
-def upload_archive(archive: Path, *, host: str, remote_dir: str, dry_run: bool) -> None:
-    _run(["ssh", host, "mkdir", "-p", remote_dir], dry_run=dry_run)
-    _run(["scp", str(archive), f"{host}:{remote_dir.rstrip('/')}/{archive.name}"], dry_run=dry_run)
+def _relative(path: Path) -> str:
+    return path.relative_to(REPO_ROOT).as_posix()
+
+
+def _excluded(relative: str) -> bool:
+    normalized = relative.replace("\\", "/")
+    if normalized.startswith("hpc_tools/MRG_model/"):
+        return normalized != "hpc_tools/MRG_model/README.md"
+    return any(fnmatch.fnmatch(normalized, pattern) for pattern in EXCLUDE_PATTERNS)
+
+
+def collect_files(
+    *, include_upstream: bool = True, include_detection_inputs: bool = True,
+    include_observer_inputs: bool = True,
+) -> list[Path]:
+    include_paths = list(CODE_PATHS)
+    if include_upstream:
+        include_paths.extend(UPSTREAM_INPUT_PATHS)
+    if include_detection_inputs:
+        include_paths.extend(DETECTION_INPUT_PATHS)
+    if include_observer_inputs:
+        include_paths.extend(OBSERVER_INPUT_PATHS)
+    files: list[Path] = []
+    missing: list[str] = []
+    for relative in include_paths:
+        path = REPO_ROOT / relative
+        if not path.exists():
+            missing.append(relative)
+            continue
+        if path.is_file():
+            if not _excluded(relative):
+                files.append(path)
+            continue
+        files.extend(
+            child for child in sorted(path.rglob("*"))
+            if child.is_file() and not _excluded(_relative(child))
+        )
+    if missing:
+        raise FileNotFoundError(
+            "Missing required upload paths:\n" + "\n".join(f"  - {item}" for item in missing)
+        )
+    return sorted(set(files), key=_relative)
+
+
+def _add_file(archive: tarfile.TarFile, path: Path) -> None:
+    relative = _relative(path)
+    if path.suffix.lower() in LF_SUFFIXES:
+        data = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+        info = archive.gettarinfo(str(path), arcname=relative)
+        info.size = len(data)
+        archive.addfile(info, io.BytesIO(data))
+    else:
+        archive.add(path, arcname=relative, recursive=False)
+
+
+def create_archive(output: Path, files: Iterable[Path]) -> None:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    mode = "w:gz" if output.name.endswith((".tar.gz", ".tgz")) else "w"
+    with tarfile.open(output, mode) as archive:
+        for path in files:
+            _add_file(archive, path)
+
+
+class _ProgressWriter:
+    def __init__(self, stream: BinaryIO, total_bytes: int) -> None:
+        self.stream = stream
+        self.total_bytes = total_bytes
+        self.written = 0
+        self.next_report = 512 * 1024 * 1024
+        self.error: OSError | None = None
+
+    def write(self, data: bytes) -> int:
+        # If the SSH pipe failed, TarFile.__exit__ may make one final buffered
+        # write while unwinding. Pretend that cleanup write succeeded so it
+        # cannot mask the original, useful BrokenPipeError.
+        if self.error is not None:
+            return len(data)
+        try:
+            count = self.stream.write(data)
+        except OSError as error:
+            self.error = error
+            raise
+        self.written += count
+        if self.written >= self.next_report:
+            print(
+                f"Streamed {self.written / (1024 ** 3):.1f} GiB "
+                f"of approximately {self.total_bytes / (1024 ** 3):.1f} GiB",
+                flush=True,
+            )
+            self.next_report += 512 * 1024 * 1024
+        return count
+
+    def flush(self) -> None:
+        if self.error is None:
+            self.stream.flush()
 
 
 def remote_project_dir(remote_dir: str, project_name: str) -> str:
     return f"{remote_dir.rstrip('/')}/{project_name.strip('/')}"
 
 
-def extract_remote_archive(
-    archive: Path,
-    *,
-    host: str,
-    remote_dir: str,
-    project_name: str,
-    keep_remote_archive: bool,
-    dry_run: bool,
+def remote_command(
+    *, project_dir: str, setup_env: bool, submit: bool, python_module: str,
+    venv_name: str, force_compile: bool, detection_only: bool,
+    submit_discrimination: bool, submit_pilot: bool,
 ) -> str:
-    remote_archive = f"{remote_dir.rstrip('/')}/{archive.name}"
-    project_dir = remote_project_dir(remote_dir, project_name)
-    command = (
-        "set -eu; "
-        f"mkdir -p {_q(project_dir)}; "
-        f"tar -xzf {_q(remote_archive)} -C {_q(project_dir)}"
-    )
-    if not keep_remote_archive:
-        command += f"; rm -f {_q(remote_archive)}"
-    _run(["ssh", host, command], dry_run=dry_run)
-    return project_dir
-
-
-def setup_remote_environment(
-    *,
-    host: str,
-    project_dir: str,
-    python_module: str,
-    venv_name: str,
-    module_purge: bool,
-    module_load: bool,
-    install_neuron: bool,
-    compile_neuron: bool,
-    dry_run: bool,
-) -> None:
-    commands = ["set -eu", f"cd {_q(project_dir)}"]
-    if module_load:
-        if module_purge:
-            commands.append("module purge")
-        commands.append(f"module load {_q(python_module)}")
-    commands.extend(
-        [
-            f"python -m venv {_q(venv_name)}",
-            f". {_q(f'{venv_name}/bin/activate')}",
+    commands = [
+        "set -euo pipefail",
+        f"mkdir -p {_quote(project_dir)}",
+        f"tar -xf - -C {_quote(project_dir)}",
+        f"cd {_quote(project_dir)}",
+        "mkdir -p logs",
+    ]
+    if setup_env or submit or submit_discrimination or submit_pilot:
+        commands.extend(["module purge", f"module load {_quote(python_module)}"])
+    if setup_env:
+        commands.extend([
+            f"python -m venv {_quote(venv_name)}",
+            f". {_quote(f'{venv_name}/bin/activate')}",
             "python -m pip install --upgrade pip",
             "python -m pip install -r hpc_tools/hpc_requirements.txt",
-        ]
-    )
-    if install_neuron:
-        commands.append("python -m pip install neuron")
-    if compile_neuron:
-        commands.append("python hpc_tools/install_mrg_model.py --force")
-        commands.append("cd hpc_tools/MRG_model && nrnivmodl && cd ../..")
-    _run(["ssh", host, "; ".join(commands)], dry_run=dry_run)
-
-
-def upload_extract_setup_stream(
-    archive: Path,
-    *,
-    host: str,
-    remote_dir: str,
-    project_name: str,
-    setup_env: bool,
-    python_module: str,
-    venv_name: str,
-    module_purge: bool,
-    module_load: bool,
-    install_neuron: bool,
-    compile_neuron: bool,
-    keep_remote_archive: bool,
-    dry_run: bool,
-) -> str:
-    """Stream the archive to the remote host and run all requested setup in one SSH session."""
-
-    remote_archive = f"{remote_dir.rstrip('/')}/{archive.name}"
-    project_dir = remote_project_dir(remote_dir, project_name)
-    commands = [
-        "set -eu",
-        f"mkdir -p {_q(remote_dir)}",
-        f"cat > {_q(remote_archive)}",
-        f"mkdir -p {_q(project_dir)}",
-        f"tar -xzf {_q(remote_archive)} -C {_q(project_dir)}",
-    ]
-    if not keep_remote_archive:
-        commands.append(f"rm -f {_q(remote_archive)}")
-    if setup_env:
-        commands.append(f"cd {_q(project_dir)}")
-        if module_load:
-            if module_purge:
-                commands.append("module purge")
-            commands.append(f"module load {_q(python_module)}")
-        commands.extend(
-            [
-                f"python -m venv {_q(venv_name)}",
-                f". {_q(f'{venv_name}/bin/activate')}",
-                "python -m pip install --upgrade pip",
-                "python -m pip install -r hpc_tools/hpc_requirements.txt",
-            ]
+            "python hpc_tools/install_mrg_model.py" + (" --force" if force_compile else ""),
+            f"export PYTHONPATH={_quote(project_dir + '/src')}",
+            "python -c 'import neuron; print(\"NEURON\", neuron.__version__)'",
+        ])
+    elif submit:
+        commands.extend([
+            f". {_quote(f'{venv_name}/bin/activate')}",
+            f"export PYTHONPATH={_quote(project_dir + '/src')}",
+            "python hpc_tools/install_mrg_model.py",
+        ])
+    elif submit_discrimination or submit_pilot:
+        commands.extend([
+            f". {_quote(f'{venv_name}/bin/activate')}",
+            f"export PYTHONPATH={_quote(project_dir + '/src')}",
+        ])
+    if submit_pilot:
+        commands.extend([
+            f"export PROJECT={_quote(project_dir)}",
+            "sbatch --parsable hpc_tools/slurm/pilot/smoke.sbatch",
+        ])
+    elif submit:
+        submit_script = (
+            "hpc_tools/slurm/detection/run_detection_pipeline.sh"
+            if detection_only else "hpc_tools/slurm/run_population_pipeline.sh"
         )
-        if install_neuron:
-            commands.append("python -m pip install neuron")
-        if compile_neuron:
-            commands.append("python hpc_tools/install_mrg_model.py --force")
-            commands.append("cd hpc_tools/MRG_model && nrnivmodl && cd ../..")
-    _run_with_stdin(["ssh", host, "; ".join(commands)], archive, dry_run=dry_run)
-    return project_dir
+        commands.extend([
+            f"export PROJECT={_quote(project_dir)}",
+            f"bash {submit_script}",
+        ])
+    elif submit_discrimination:
+        commands.extend([
+            f"export PROJECT={_quote(project_dir)}",
+            "bash hpc_tools/slurm/discrimination/run_population_discrimination_pipeline.sh",
+        ])
+    return "; ".join(commands)
+
+
+def _ssh_endpoint(host: str) -> tuple[str, int]:
+    """Resolve the effective OpenSSH hostname/port, including SSH config aliases."""
+    result = subprocess.run(
+        ["ssh", "-G", host], text=True, stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE, check=False,
+    )
+    hostname = host.rsplit("@", 1)[-1]
+    port = 22
+    if result.returncode == 0:
+        for line in result.stdout.splitlines():
+            key, _, value = line.partition(" ")
+            if key == "hostname" and value.strip():
+                hostname = value.strip()
+            elif key == "port" and value.strip().isdigit():
+                port = int(value.strip())
+    return hostname, port
+
+
+def check_ssh_reachable(host: str, *, timeout_seconds: float) -> None:
+    hostname, port = _ssh_endpoint(host)
+    try:
+        with socket.create_connection((hostname, port), timeout=timeout_seconds):
+            pass
+    except OSError as error:
+        raise ConnectionError(
+            f"Cannot reach {hostname} on TCP port {port} within {timeout_seconds:g} seconds. "
+            "No upload was attempted. If you are off campus, connect to the UNC VPN, "
+            f"then confirm an interactive login with: ssh {host}"
+        ) from error
+
+
+def stream_upload(
+    files: list[Path], *, host: str, command: str, dry_run: bool,
+    connect_timeout_seconds: float,
+) -> None:
+    print(f"ssh {_quote(host)} {_quote(command)}", flush=True)
+    if dry_run:
+        return
+    check_ssh_reachable(host, timeout_seconds=connect_timeout_seconds)
+    process = subprocess.Popen(["ssh", host, command], stdin=subprocess.PIPE)
+    if process.stdin is None:
+        raise RuntimeError("Could not open SSH standard input")
+    writer = _ProgressWriter(process.stdin, sum(path.stat().st_size for path in files))
+    try:
+        with tarfile.open(fileobj=writer, mode="w|") as archive:
+            for path in files:
+                _add_file(archive, path)
+        process.stdin.close()
+        status = process.wait()
+    except (BrokenPipeError, OSError) as error:
+        if process.poll() is None:
+            process.kill()
+        status = process.wait()
+        raise RuntimeError(
+            f"SSH closed the upload stream before extraction completed (exit status {status}). "
+            "No local data were changed; rerun after confirming an interactive SSH login."
+        ) from error
+    except BaseException:
+        if process.poll() is None:
+            process.kill()
+        process.wait()
+        raise
+    if status != 0:
+        raise subprocess.CalledProcessError(status, ["ssh", host, command])
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Package and optionally upload a minimal HPC repo archive.")
-    parser.add_argument("--out", default="scs-periodicity-hpc.tar.gz", help="Local archive path.")
-    parser.add_argument("--pilot-inputs", action="store_true", help="Include archived stage-03 CSV needed for pilot runs.")
-    parser.add_argument("--host", default=None, help="SSH host, e.g. ONYEN@longleaf.unc.edu.")
-    parser.add_argument("--remote-dir", default=None, help="Remote parent directory for the archive and extracted project.")
-    parser.add_argument("--project-name", default="scs-periodicity", help="Project directory created under --remote-dir.")
-    parser.add_argument("--no-extract", action="store_true", help="Upload only; do not extract the archive remotely.")
-    parser.add_argument("--keep-local-archive", action="store_true", help="Keep the local tarball after a successful upload.")
-    parser.add_argument("--keep-remote-archive", action="store_true", help="Keep the uploaded tarball on the remote host after extraction.")
-    parser.add_argument("--scp", action="store_true", help="Use separate ssh/scp commands instead of the default one-connection streamed upload.")
-    parser.add_argument("--setup-env", action="store_true", help="After extraction, create the venv, install requirements, install NEURON, and compile mechanisms.")
-    parser.add_argument("--python-module", default="python/3.12.4", help="Environment module to load during --setup-env.")
-    parser.add_argument("--skip-module-load", action="store_true", help="Do not run module purge/load during --setup-env.")
-    parser.add_argument("--no-module-purge", action="store_true", help="Do not run module purge before module load.")
-    parser.add_argument("--venv-name", default="venv", help="Remote virtual environment directory name.")
-    parser.add_argument("--skip-neuron", action="store_true", help="Do not pip install neuron during --setup-env.")
-    parser.add_argument("--skip-nrnivmodl", action="store_true", help="Do not download or compile the MRG mechanisms during --setup-env.")
-    parser.add_argument("--dry-run", action="store_true", help="Print upload commands without running ssh/scp.")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--host", help="SSH destination, e.g. ONYEN@longleaf.unc.edu.")
+    parser.add_argument("--remote-dir", help="Remote parent, e.g. /work/users/FIRST/SECOND/ONYEN.")
+    parser.add_argument("--project-name", default=PROJECT_NAME)
+    parser.add_argument("--archive", type=Path, help="Create a local TAR/TAR.GZ instead of uploading.")
+    parser.add_argument("--skip-upstream-inputs", action="store_true", help="Exclude COMSOL cutlines and time patterns.")
+    parser.add_argument("--skip-detection-inputs", action="store_true", help="Exclude population Ve bases and manifest for a code-only update.")
+    parser.add_argument("--skip-observer-inputs", action="store_true", help="Exclude population evidence and Slack behavioral inputs.")
+    parser.add_argument("--setup-env", action="store_true", help="Create/update venv, install NEURON, and compile AXNODE.mod.")
+    parser.add_argument("--submit", action="store_true", help="Submit the full population generation/detection workflow after upload/setup.")
+    parser.add_argument("--submit-discrimination", action="store_true", help="Submit the population discrimination observer after upload.")
+    parser.add_argument("--submit-pilot", action="store_true", help="Submit the isolated three-condition population smoke job.")
+    parser.add_argument(
+        "--detection-only", action="store_true",
+        help="With --submit, skip Longleaf SpaceTimeV generation and validation.",
+    )
+    parser.add_argument("--python-module", default="python/3.12.4")
+    parser.add_argument("--venv-name", default="venv")
+    parser.add_argument("--force-compile", action="store_true")
+    parser.add_argument("--connect-timeout", type=float, default=15.0, help="TCP preflight timeout in seconds.")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--list-files", action="store_true")
     args = parser.parse_args()
+    if args.detection_only and not args.submit:
+        parser.error("--detection-only requires --submit")
+    if sum((bool(args.submit), bool(args.submit_discrimination), bool(args.submit_pilot))) > 1:
+        parser.error("Choose only one of --submit, --submit-discrimination, or --submit-pilot")
 
-    archive = Path(args.out).expanduser().resolve()
-    files = create_archive(archive, pilot_inputs=bool(args.pilot_inputs))
-    size_mb = archive.stat().st_size / (1024 * 1024)
-    print(f"Wrote {archive}")
-    print(f"Included {len(files)} files ({size_mb:.1f} MB archive).")
+    files = collect_files(
+        include_upstream=not args.skip_upstream_inputs,
+        include_detection_inputs=not args.skip_detection_inputs,
+        include_observer_inputs=not args.skip_observer_inputs,
+    )
+    total_bytes = sum(path.stat().st_size for path in files)
+    print(f"Local source: {REPO_ROOT}")
+    print(f"Selected {len(files):,} files totaling {total_bytes / (1024 ** 3):.2f} GiB")
+    if args.list_files:
+        for path in files:
+            print(_relative(path))
 
-    if args.host or args.remote_dir:
-        if not args.host or not args.remote_dir:
-            raise SystemExit("Pass both --host and --remote-dir to upload.")
-        project_dir = remote_project_dir(str(args.remote_dir), str(args.project_name))
-        if args.setup_env and args.no_extract:
-            raise SystemExit("--setup-env requires remote extraction; omit --no-extract.")
-
-        if args.scp:
-            upload_archive(archive, host=str(args.host), remote_dir=str(args.remote_dir), dry_run=bool(args.dry_run))
-            if not args.no_extract:
-                project_dir = extract_remote_archive(
-                    archive,
-                    host=str(args.host),
-                    remote_dir=str(args.remote_dir),
-                    project_name=str(args.project_name),
-                    keep_remote_archive=bool(args.keep_remote_archive),
-                    dry_run=bool(args.dry_run),
-                )
-            if args.setup_env:
-                setup_remote_environment(
-                    host=str(args.host),
-                    project_dir=project_dir,
-                    python_module=str(args.python_module),
-                    venv_name=str(args.venv_name),
-                    module_purge=not bool(args.no_module_purge),
-                    module_load=not bool(args.skip_module_load),
-                    install_neuron=not bool(args.skip_neuron),
-                    compile_neuron=not bool(args.skip_nrnivmodl),
-                    dry_run=bool(args.dry_run),
-                )
-        elif args.no_extract:
-            upload_archive(archive, host=str(args.host), remote_dir=str(args.remote_dir), dry_run=bool(args.dry_run))
+    if args.archive:
+        if args.host or args.remote_dir:
+            parser.error("--archive cannot be combined with --host/--remote-dir; use streaming upload or archive creation.")
+        output = args.archive.expanduser().resolve()
+        if args.dry_run:
+            print(f"Would create {output}")
         else:
-            if args.no_extract:
-                raise SystemExit("--setup-env requires remote extraction; omit --no-extract.")
-            project_dir = upload_extract_setup_stream(
-                archive,
-                host=str(args.host),
-                remote_dir=str(args.remote_dir),
-                project_name=str(args.project_name),
-                setup_env=bool(args.setup_env),
-                python_module=str(args.python_module),
-                venv_name=str(args.venv_name),
-                module_purge=not bool(args.no_module_purge),
-                module_load=not bool(args.skip_module_load),
-                install_neuron=not bool(args.skip_neuron),
-                compile_neuron=not bool(args.skip_nrnivmodl),
-                keep_remote_archive=bool(args.keep_remote_archive),
-                dry_run=bool(args.dry_run),
-            )
+            create_archive(output, files)
+            print(f"Created {output} ({output.stat().st_size / (1024 ** 3):.2f} GiB)")
+        return 0
 
-        print("\nOn the HPC system:")
-        print(f"  cd {project_dir}")
-        if args.setup_env:
-            if not args.skip_module_load:
-                if not args.no_module_purge:
-                    print("  module purge")
-                print(f"  module load {args.python_module}")
-            print(f"  source {args.venv_name}/bin/activate")
+    if not args.host or not args.remote_dir:
+        parser.error("Pass --host and --remote-dir to upload, or --archive to create a local package.")
+    project_dir = remote_project_dir(args.remote_dir, args.project_name)
+    command = remote_command(
+        project_dir=project_dir, setup_env=bool(args.setup_env), submit=bool(args.submit),
+        python_module=args.python_module, venv_name=args.venv_name,
+        force_compile=bool(args.force_compile), detection_only=bool(args.detection_only),
+        submit_discrimination=bool(args.submit_discrimination), submit_pilot=bool(args.submit_pilot),
+    )
+    stream_upload(
+        files, host=args.host, command=command, dry_run=bool(args.dry_run),
+        connect_timeout_seconds=float(args.connect_timeout),
+    )
+    print(f"Longleaf project: {args.host}:{project_dir}")
+    if not args.submit and not args.submit_discrimination and not args.submit_pilot:
+        if args.skip_upstream_inputs and args.skip_detection_inputs and not args.skip_observer_inputs:
+            submit_script = "hpc_tools/slurm/discrimination/run_population_discrimination_pipeline.sh"
         else:
-            print("  module purge")
-            print(f"  module load {args.python_module}")
-            print(f"  python -m venv {args.venv_name}")
-            print(f"  source {args.venv_name}/bin/activate")
-            print("  python -m pip install --upgrade pip")
-            print("  python -m pip install -r hpc_tools/hpc_requirements.txt")
-            print("  python -m pip install neuron")
-            print("  python hpc_tools/install_mrg_model.py --force")
-            print("  cd hpc_tools/MRG_model && nrnivmodl && cd ../..")
-        print("  python hpc_tools/query_hpc.py")
-
-        if not args.keep_local_archive and not args.dry_run:
-            archive.unlink(missing_ok=True)
-            print(f"\nRemoved local archive {archive}")
-
+            submit_script = "hpc_tools/slurm/run_population_pipeline.sh"
+        print(
+            f"Submit later: ssh {args.host} "
+            f"'cd {project_dir} && PROJECT={project_dir} bash {submit_script}'"
+        )
     return 0
 
 

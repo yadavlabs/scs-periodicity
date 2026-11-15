@@ -13,21 +13,25 @@ mammalian nerve fibers: influence of afterpotentials on the recovery cycle.
 *Journal of Neurophysiology* 87:995-1006, 2002.
 
 No explicit redistribution license was identified for these files. This
-repository therefore does not redistribute the upstream model source. During
-optional HPC setup, `hpc_tools/install_mrg_model.py` downloads the upstream
-ModelDB mirror at a pinned revision for the user's local computation. Users
-should cite both ModelDB and McIntyre et al. when using the model.
+repository therefore does not redistribute the upstream model source or the
+derived population HOC. During HPC setup, `hpc_tools/install_mrg_model.py`
+downloads the upstream ModelDB mirror at a pinned revision and
+`hpc_tools/build_population_mrg.py` generates the population HOC locally.
+The generator replaces fixed geometry values with the six-diameter,
+phase-dependent node configuration and removes the interactive IClamp panel;
+the biophysical equations and diameter table remain those of the upstream
+model. Users should cite both ModelDB and McIntyre et al. when using the model.
 
 ## BioRender Content in Figures 1 and 2
 
-Figures 1 and 2 include content created with BioRender.com under the UNC School
-of Medicine institutional plan. They are included so the manuscript-facing
-notebook displays the complete manuscript figures, but they are excluded from
-the repository's CC-BY-4.0 data grant and remain subject to applicable
-BioRender terms.
+The accepted Figure 1 and Figure 2 composites in
+`notebooks/cache/static-figures/` include content created with BioRender.com
+under the UNC School of Medicine institutional plan. Their PNG and PDF exports
+are included so the manuscript-facing notebook displays the complete figures.
+They are excluded from the repository's CC-BY-4.0 data grant and remain subject
+to applicable BioRender terms.
 
 Created with BioRender.com.
 
-The final manuscript submission should use the BioRender publication-license
-workflow and citation details corresponding to the submitted publisher and
-manuscript record.
+Publication and attribution for these composites follow the applicable
+BioRender and publisher terms.
